@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="service.subtitles.addic7ed"
+       name="Addic7ed.com"
+       version="0.0.3"
+       provider-name="Roman V.M.">
+<requires>
+    <import addon="xbmc.python" version="2.1"/>
+    <import addon="script.module.beautifulsoup4" version="4.3.0"/>
+</requires>
+<extension point="xbmc.subtitle.module" library="default.py" />
+<extension point="xbmc.addon.metadata">
+    <summary lang="en">Addic7ed.com Subtitles</summary>
+    <description lang="en">Subtitles service for Addic7ed.com.</description>
+    <platform>all</platform>
+</extension>
+</addon>
