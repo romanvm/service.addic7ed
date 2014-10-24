@@ -17,14 +17,14 @@ import xbmcgui
 import xbmcvfs
 
 
-__addon__ = xbmcaddon.Addon()
-__id__ = __addon__.getAddonInfo("id")
-__path__ = __addon__.getAddonInfo("path")
-__profile__ = xbmc.translatePath(__addon__.getAddonInfo("profile").decode("utf-8"))
-__temp__ = os.path.join(__profile__, "temp")
-__handle__ = int(sys.argv[1])
+_addon = xbmcaddon.Addon()
+_id = _addon.getAddonInfo("id")
+_path = _addon.getAddonInfo("path").decode("utf-8")
+_profile = xbmc.translatePath(_addon.getAddonInfo("profile").decode("utf-8"))
+_temp = os.path.join(_profile, "temp")
+_handle = int(sys.argv[1])
 
-sys.path.append(os.path.join(__path__.decode("utf-8"), "resources", "lib"))
+sys.path.append(os.path.join(_path, "resources", "lib"))
 import addic7ed
 
 
@@ -33,7 +33,7 @@ def _log(message):
     Write message to the Kodi log
     for debuging purposes.
     """
-    xbmc.log("{0}: {1}".format(__id__, message))
+    xbmc.log("{0}: {1}".format(_id, message))
 
 
 def get_params():
@@ -160,8 +160,8 @@ def display_subs(subs_list, episode_url, filename):
             # Set "sunc" = "true" if the subs for the same release.
             list_item.setProperty("sync", "true")
         url = "plugin://{0}/?action=download&link={1}&ref={2}&filename={3}".format(
-            __id__, item["link"], episode_url, urllib.quote_plus(filename))
-        xbmcplugin.addDirectoryItem(handle=__handle__, url=url, listitem=list_item, isFolder=False)
+            _id, item["link"], episode_url, urllib.quote_plus(filename))
+        xbmcplugin.addDirectoryItem(handle=_handle, url=url, listitem=list_item, isFolder=False)
 
 
 def download_subs(link, referrer, filename):
@@ -177,11 +177,11 @@ def download_subs(link, referrer, filename):
     label: the download location for subs.
     """
     # Re-create a download location in a temporary folder
-    if xbmcvfs.exists(__temp__):
-        shutil.rmtree(__temp__)
-    xbmcvfs.mkdirs(__temp__)
+    if xbmcvfs.exists(_temp):
+        shutil.rmtree(_temp)
+    xbmcvfs.mkdirs(_temp)
     # Combine a path where to download the subs
-    subspath = os.path.join(__temp__, filename[:-3] + "srt")
+    subspath = os.path.join(_temp, filename[:-3] + "srt")
     # Download the subs from addic7ed.com
     result = addic7ed.download_subs(link, referrer, subspath)
     if result == 1:
@@ -192,7 +192,7 @@ def download_subs(link, referrer, filename):
         # in "Settings > Video > Subtitles" section.
         # A 2-letter language code will be added to subs filename.
         list_item = xbmcgui.ListItem(label=subspath)
-        xbmcplugin.addDirectoryItem(handle=__handle__, url=subspath, listitem=list_item, isFolder=False)
+        xbmcplugin.addDirectoryItem(handle=_handle, url=subspath, listitem=list_item, isFolder=False)
         title = "Success!"
         message = "Subtitles for {0} downloaded.".format(filename)
         icon = "info"
@@ -237,4 +237,4 @@ if __name__ == "__main__":
     elif params["action"] == "manualsearch":
         # Manual search is not supported!
         show_message("Error!", "Manual search is not implemented.", "error")
-    xbmcplugin.endOfDirectory(__handle__)
+    xbmcplugin.endOfDirectory(_handle)
