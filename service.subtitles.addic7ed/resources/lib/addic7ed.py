@@ -17,10 +17,11 @@ from bs4 import BeautifulSoup
 from xbmcvfs import File
 
 SITE = "http://www.addic7ed.com"
-HEADER = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; rv:23.0) Gecko/20100101 Firefox/23.0",
-            "Host": SITE[7:],
-            "Referer": SITE,
-            "Accept-Charset": "UTF-8"}
+HEADER = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0",
+          "Accept": "text/html",
+          "Host": SITE[7:],
+          "Referer": SITE,
+          "Accept-Charset": "UTF-8"}
 
 
 def search_episode(show_name, season, episode, languages=[("English", "English")]):
