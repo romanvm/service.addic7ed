@@ -53,9 +53,10 @@ def get_now_played():
     Alternatively this can be done via Kodi InfoLabels.
     """
     request = json.dumps({"jsonrpc": "2.0",
-        "method": "Player.GetItem",
-        "params": {"playerid": 1, "properties": ["file", "showtitle", "season", "episode", "streamdetails"]},
-        "id": "1"})
+                          "method": "Player.GetItem",
+                          "params": {"playerid": 1,
+                                     "properties": ["file", "showtitle", "season", "episode", "streamdetails"]},
+                          "id": "1"})
     reply = json.loads(xbmc.executeJSONRPC(request))
     return reply["result"]["item"]
 
@@ -66,9 +67,9 @@ def show_message(title, message, icon="info", duration=5000):
     Alternatively this can be done via a Kodi Built-In function.
     """
     request = json.dumps({"jsonrpc": "2.0",
-        "method": "GUI.ShowNotification",
-        "params": {"title": title, "message": message, "image": icon, "displaytime": duration},
-        "id": "1"})
+                          "method": "GUI.ShowNotification",
+                          "params": {"title": title, "message": message, "image": icon, "displaytime": duration},
+                          "id": "1"})
     xbmc.executeJSONRPC(request)
 
 
@@ -109,10 +110,10 @@ def filename_parse(filename):
     Filename parser for extracting show name, season # and episode # from a filename.
     """
     PATTERNS = (r"(.*?)[ \.](?:[\d]*?[ \.])?[Ss]([\d]+)[ \.]?[Ee]([\d]+)",
-                    r"(.*?)[ \.](?:[\d]*?[ \.])?([\d]+)[Xx]([\d]+)",
-                    r"(.*?)[ \.](?:[\d]*?[ \.])?[Ss]([\d]{2})[ \.]?([\d]{2})",
-                    r"(.*?)[ \.][\d]{4}()()",
-                    r"(.*?)[ \.]([\d])([\d]{2})")
+                r"(.*?)[ \.](?:[\d]*?[ \.])?([\d]+)[Xx]([\d]+)",
+                r"(.*?)[ \.](?:[\d]*?[ \.])?[Ss]([\d]{2})[ \.]?([\d]{2})",
+                r"(.*?)[ \.][\d]{4}()()",
+                r"(.*?)[ \.]([\d])([\d]{2})")
     for regexp in PATTERNS:
         episode_data = re.search(regexp, filename)
         if episode_data is not None:
