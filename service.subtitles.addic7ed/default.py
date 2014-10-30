@@ -108,11 +108,11 @@ def filename_parse(filename):
     """
     Filename parser for extracting show name, season # and episode # from a filename.
     """
-    PATTERNS = (r"(.*?)[ \.](?:[0-9]*?[ \.])?[Ss]([0-9]+)[ \.]?[Ee]([0-9]+)",
-                    r"(.*?)[ \.](?:[0-9]*?[ \.])?([0-9]+)[Xx]([0-9]+)",
-                    r"(.*?)[ \.](?:[0-9]*?[ \.])?[Ss]([0-9]{2})[ \.]?([0-9]{2})",
-                    r"(.*?)[ \.][0-9]{4}()()",
-                    r"(.*?)[ \.]([0-9])([0-9]{2})")
+    PATTERNS = (r"(.*?)[ \.](?:[\d]*?[ \.])?[Ss]([\d]+)[ \.]?[Ee]([\d]+)",
+                    r"(.*?)[ \.](?:[\d]*?[ \.])?([\d]+)[Xx]([\d]+)",
+                    r"(.*?)[ \.](?:[\d]*?[ \.])?[Ss]([\d]{2})[ \.]?([\d]{2})",
+                    r"(.*?)[ \.][\d]{4}()()",
+                    r"(.*?)[ \.]([\d])([\d]{2})")
     for regexp in PATTERNS:
         episode_data = re.search(regexp, filename)
         if episode_data is not None:
