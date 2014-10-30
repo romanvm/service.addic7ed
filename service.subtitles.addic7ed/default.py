@@ -36,6 +36,16 @@ def _log(message):
     xbmc.log("{0}: {1}".format(_id, message))
 
 
+def _string(string_id):
+    """
+    Get language string by ID
+
+    :param string_id: string ID
+    :return: None
+    """
+    return _addon.getLocalizedString(string_id).encode("utf-8")
+
+
 def get_params():
     """
     Get the script call parameters as a dictionary.
@@ -194,16 +204,16 @@ def download_subs(link, referrer, filename):
         # A 2-letter language code will be added to subs filename.
         list_item = xbmcgui.ListItem(label=subspath)
         xbmcplugin.addDirectoryItem(handle=_handle, url=subspath, listitem=list_item, isFolder=False)
-        title = "Success!"
-        message = "Subtitles for {0} downloaded.".format(filename)
+        title = _string(32000)
+        message = _string(32001).format(filename)
         icon = "info"
     elif result == -1:
-        title = "Error!"
-        message = "Exceeded daily limit for subs downloads."
+        title = _string(32002)
+        message = _string(32003)
         icon = "error"
     else:
-        title = "Error!"
-        message = "Unable to download subtitles for {0}.".format(filename)
+        title = _string(32002)
+        message = _string(32004).format(filename)
         icon = "error"
     show_message(title, message, icon)
 
@@ -232,10 +242,10 @@ if __name__ == "__main__":
         if found_list != -1 and episode_url:
             display_subs(found_list, episode_url, filename)
         elif found_list == -1:
-            show_message("Error!", "Unable to connect to addic7ed.com.", "error")
+            show_message(_string(32002), _string(32005), "error")
     elif params["action"] == "download":
         download_subs(params["link"], params["ref"], urllib.unquote_plus(params["filename"]))
     elif params["action"] == "manualsearch":
         # Manual search is not supported!
-        show_message("Error!", "Manual search is not implemented.", "error")
+        show_message(_string(32002), _string(32006), "error")
     xbmcplugin.endOfDirectory(_handle)
