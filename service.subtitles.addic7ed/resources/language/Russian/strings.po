@@ -1,0 +1,36 @@
+﻿# XBMC Media Center language file
+msgid ""
+msgstr ""
+
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+
+
+msgctxt "#32000"
+msgid "Success!"
+msgstr "Готово!"
+
+msgctxt "#32001"
+msgid "Subtitles for {0} downloaded."
+msgstr "Субтитры для {0} загружены."
+
+msgctxt "#32002"
+msgid "Error!"
+msgstr "Ошибка!"
+
+msgctxt "#32003"
+msgid "Exceeded daily limit for subs downloads."
+msgstr "Превышен дневной лимит на загрузку субитров."
+
+msgctxt "#32004"
+msgid "Unable to download subtitles for {0}."
+msgstr "Не удалось загрузить субтитры для {0}."
+
+msgctxt "#32005"
+msgid "Unable to connect to addic7ed.com."
+msgstr "Не удалось подключиться к addic7ed.com."
+
+msgctxt "#32006"
+msgid "Manual search is not implemented."
+msgstr "Поиск вручную не поддерживается."
