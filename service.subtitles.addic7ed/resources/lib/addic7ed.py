@@ -68,22 +68,26 @@ def parse_episode(episode_page, languages):
     listing = []
     soup = BeautifulSoup(episode_page)
     sub_cells = soup.find_all("table", {"width": "100%", "border": "0", "align": "center", "class": "tabel95"})
-    for cell in sub_cells:
-        for language in languages:
-            if language[1] in cell.find("td", {"class": "language"}).get_text():
-                item = {"language": language[0]}
-                item["version"] = re.search(r"Version (.*?),",
-                            cell.find("td", {"colspan": "3", "align": "center", "class": "NewsTitle"}).text).group(1)
-                works_with = cell.find("td", {"class": "newsDate", "colspan": "3"}).get_text(strip=True)
-                if works_with:
-                    item["version"] += ", " + works_with
-                download_tag = cell.find("a", {"class": "buttonDownload"}, text="most updated")
-                if download_tag is None:
-                    download_tag = cell.find("a", {"class": "buttonDownload"}, text="Download")
-                item["link"] = SITE + download_tag["href"]
-                item["hi"] = download_tag.find_next("tr").contents[1].find("img", title="Hearing Impaired") is not None
-                listing.append(item)
-                break
+    for sub_cell in sub_cells:
+        version = re.search(r"Version (.*?),",
+                            sub_cell.find("td", {"colspan": "3", "align": "center", "class": "NewsTitle"}).text).group(1)
+        works_with = sub_cell.find("td", {"class": "newsDate", "colspan": "3"}).get_text(strip=True)
+        if works_with:
+            version += ", " + works_with
+        lang_cells = sub_cell.find_all("td", {"class": "language"})
+        for lang_cell in lang_cells:
+            for language in languages:
+                if language[1] in lang_cell.get_text():
+                    item = {"language": language[0]}
+                    item["version"] = version
+                    download_cell = lang_cell.find_next("td", {"colspan": "3"})
+                    download_tag = download_cell.find("a", {"class": "buttonDownload"}, text="most updated")
+                    if download_tag is None:
+                        download_tag = download_cell.find("a", {"class": "buttonDownload"}, text="Download")
+                    item["link"] = SITE + download_tag["href"]
+                    item["hi"] = download_tag.find_next("tr").contents[1].find("img", title="Hearing Impaired") is not None
+                    listing.append(item)
+                    break
     return listing
 
 
