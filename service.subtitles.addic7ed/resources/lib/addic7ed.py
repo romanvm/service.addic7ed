@@ -47,7 +47,8 @@ def search_episode(show_name, season, episode, languages=[("English", "English")
     else:
         results_page = session.read()
         session.close()
-        if re.search(r"<table width=\"100%\" border=\"0\" align=\"center\" class=\"tabel95\">", results_page) is not None:
+        if (re.search(r"<table width=\"100%\" border=\"0\" align=\"center\" class=\"tabel95\">", results_page)
+                is not None):
             listing = parse_episode(results_page, languages)
             episode_url = session.geturl()
     return listing, episode_url
@@ -78,15 +79,15 @@ def parse_episode(episode_page, languages):
         for lang_cell in lang_cells:
             for language in languages:
                 if language[1] in lang_cell.get_text():
-                    item = {"language": language[0]}
-                    item["version"] = version
                     download_cell = lang_cell.find_next("td", {"colspan": "3"})
                     download_tag = download_cell.find("a", {"class": "buttonDownload"}, text="most updated")
                     if download_tag is None:
                         download_tag = download_cell.find("a", {"class": "buttonDownload"}, text="Download")
-                    item["link"] = SITE + download_tag["href"]
-                    item["hi"] = download_tag.find_next("tr").contents[1].find("img", title="Hearing Impaired") is not None
-                    listing.append(item)
+                    listing.append({"language": language[0],
+                                    "version": version,
+                                    "link": SITE + download_tag["href"],
+                                    "hi": (download_tag.find_next("tr").contents[1].find("img", title="Hearing Impaired")
+                                           is not None)})
                     break
     return listing
 
@@ -115,6 +116,7 @@ def download_subs(url, referer, filename="subtitles.srt"):
             success = -1
         page.close()
     return success
+
 
 if __name__ == "__main__":
     pass
