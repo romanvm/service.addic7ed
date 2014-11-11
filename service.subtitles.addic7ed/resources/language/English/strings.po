@@ -1,0 +1,36 @@
+# XBMC Media Center language file
+msgid ""
+msgstr ""
+
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+
+
+msgctxt "#32000"
+msgid "Success!"
+msgstr ""
+
+msgctxt "#32001"
+msgid "Subtitles for {0} downloaded."
+msgstr ""
+
+msgctxt "#32002"
+msgid "Error!"
+msgstr ""
+
+msgctxt "#32003"
+msgid "Exceeded daily limit for subs downloads."
+msgstr ""
+
+msgctxt "#32004"
+msgid "Unable to download subtitles for {0}."
+msgstr ""
+
+msgctxt "#32005"
+msgid "Unable to connect to addic7ed.com."
+msgstr ""
+
+msgctxt "#32006"
+msgid "Manual search is not implemented."
+msgstr ""
