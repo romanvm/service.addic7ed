@@ -4,7 +4,7 @@
        version="0.0.3"
        provider-name="Roman V.M.">
 <requires>
-    <import addon="xbmc.python" version="2.1"/>
+    <import addon="xbmc.python" version="2.14.0"/>
     <import addon="script.module.beautifulsoup4" version="4.3.0"/>
 </requires>
 <extension point="xbmc.subtitle.module" library="default.py" />
