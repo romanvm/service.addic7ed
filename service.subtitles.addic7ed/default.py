@@ -207,14 +207,17 @@ def download_subs(link, referrer, filename):
         title = _string(32000)
         message = _string(32001).format(filename)
         icon = "info"
+        _log("Subs downloaded.")
     elif result == -1:
         title = _string(32002)
         message = _string(32003)
         icon = "error"
+        _log("Exceeded daily limit for subs downloads.")
     else:
         title = _string(32002)
         message = _string(32004).format(filename)
         icon = "error"
+        _log("Unable to download subs.")
     show_message(title, message, icon)
 
 
@@ -238,11 +241,14 @@ if __name__ == "__main__":
             season = str(now_played["season"]).zfill(2)
             episode = str(now_played["episode"]).zfill(2)
         # Search subtitles in Addic7ed.com.
+        _log("Seaching subs for {0} {1}x{2}".format(show, season, episode))
         found_list, episode_url = addic7ed.search_episode(normalize_showname(show), season, episode, languages)
         if found_list != -1 and episode_url:
+            _log("Subs found: {0}".format(len(found_list)))
             display_subs(found_list, episode_url, filename)
         elif found_list == -1:
             show_message(_string(32002), _string(32005), "error")
+            _log("No subs found.")
     elif params["action"] == "download":
         download_subs(params["link"], params["ref"], urllib.unquote_plus(params["filename"]))
     elif params["action"] == "manualsearch":
