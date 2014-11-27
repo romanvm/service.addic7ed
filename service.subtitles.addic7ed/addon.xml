@@ -4,13 +4,15 @@
        version="0.0.4"
        provider-name="Roman V.M.">
 <requires>
-    <import addon="xbmc.python" version="2.1"/>
+    <import addon="xbmc.python" version="2.14.0"/>
     <import addon="script.module.beautifulsoup4" version="4.3.0"/>
 </requires>
 <extension point="xbmc.subtitle.module" library="default.py" />
 <extension point="xbmc.addon.metadata">
     <summary lang="en">Addic7ed.com Subtitles</summary>
+    <summary lang="ru">Субтитры Addic7ed.com</summary>
     <description lang="en">Subtitles service for Addic7ed.com.</description>
+    <description lang="ru">Служба субтитров для сайта Addic7ed.com.</description>
     <platform>all</platform>
 </extension>
 <extension point="xbmc.addon.repository" name="romanvm repository">
