@@ -83,6 +83,5 @@ docs/_build/
 target/
 
 # Arhcive files
-.zip
-.rar
-.7z
+*.zip
+

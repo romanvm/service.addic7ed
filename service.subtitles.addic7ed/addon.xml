@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="service.subtitles.addic7ed"
        name="Addic7ed.com"
-       version="0.0.5"
+       version="0.0.6"
        provider-name="Roman V.M.">
 <requires>
     <import addon="xbmc.python" version="2.14.0"/>
@@ -14,10 +14,5 @@
     <description lang="en">Subtitles service for Addic7ed.com.</description>
     <description lang="ru">Служба субтитров для сайта Addic7ed.com.</description>
     <platform>all</platform>
-</extension>
-<extension point="xbmc.addon.repository" name="romanvm repository">
-  <info compressed="true">https://dl.dropboxusercontent.com/u/24356082/kodi_repo/addons.xml</info>
-  <checksum>https://dl.dropboxusercontent.com/u/24356082/kodi_repo/addons.xml.md5</checksum>
-  <datadir zip="true">https://dl.dropboxusercontent.com/u/24356082/kodi_repo</datadir>
 </extension>
 </addon>
