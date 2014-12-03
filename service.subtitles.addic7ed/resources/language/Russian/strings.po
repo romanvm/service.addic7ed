@@ -12,8 +12,8 @@ msgid "Success!"
 msgstr "Готово!"
 
 msgctxt "#32001"
-msgid "Subtitles for {0} downloaded."
-msgstr "Субтитры для {0} загружены."
+msgid "Subtitles downloaded."
+msgstr "Субтитры загружены."
 
 msgctxt "#32002"
 msgid "Error!"
@@ -24,8 +24,8 @@ msgid "Exceeded daily limit for subs downloads."
 msgstr "Превышен дневной лимит на загрузку субитров."
 
 msgctxt "#32004"
-msgid "Unable to download subtitles for {0}."
-msgstr "Не удалось загрузить субтитры для {0}."
+msgid "Unable to download subtitles."
+msgstr "Не удалось загрузить субтитры."
 
 msgctxt "#32005"
 msgid "Unable to connect to addic7ed.com."
