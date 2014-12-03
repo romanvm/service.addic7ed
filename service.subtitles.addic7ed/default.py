@@ -205,7 +205,7 @@ def download_subs(link, referrer, filename):
         list_item = xbmcgui.ListItem(label=subspath)
         xbmcplugin.addDirectoryItem(handle=_handle, url=subspath, listitem=list_item, isFolder=False)
         title = _string(32000)
-        message = _string(32001).format(filename)
+        message = _string(32001)
         icon = "info"
         _log("Subs downloaded.")
     elif result == -1:
@@ -215,7 +215,7 @@ def download_subs(link, referrer, filename):
         _log("Exceeded daily limit for subs downloads.")
     else:
         title = _string(32002)
-        message = _string(32004).format(filename)
+        message = _string(32004)
         icon = "error"
         _log("Unable to download subs.")
     show_message(title, message, icon)

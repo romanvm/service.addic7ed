@@ -12,7 +12,7 @@ msgid "Success!"
 msgstr ""
 
 msgctxt "#32001"
-msgid "Subtitles for {0} downloaded."
+msgid "Subtitles downloaded."
 msgstr ""
 
 msgctxt "#32002"
@@ -24,7 +24,7 @@ msgid "Exceeded daily limit for subs downloads."
 msgstr ""
 
 msgctxt "#32004"
-msgid "Unable to download subtitles for {0}."
+msgid "Unable to download subtitles."
 msgstr ""
 
 msgctxt "#32005"
