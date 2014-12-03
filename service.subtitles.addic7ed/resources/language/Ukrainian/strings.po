@@ -1,10 +1,10 @@
-﻿# XBMC Media Center language file
+# Kodi Media Center language file
 msgid ""
 msgstr ""
 
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ru\n"
+"Language: uk\n"
 
 
 msgctxt "#32000"
@@ -13,28 +13,28 @@ msgstr "Готово!"
 
 msgctxt "#32001"
 msgid "Subtitles downloaded."
-msgstr "Субтитры загружены."
+msgstr "Субтитри завантажено."
 
 msgctxt "#32002"
 msgid "Error!"
-msgstr "Ошибка!"
+msgstr "Помилка!"
 
 msgctxt "#32003"
 msgid "Exceeded daily limit for subs downloads."
-msgstr "Превышен дневной лимит на загрузку субитров."
+msgstr "Перевищено щоденний ліміт на завантаження субтитрів."
 
 msgctxt "#32004"
 msgid "Unable to download subtitles."
-msgstr "Не удалось загрузить субтитры."
+msgstr "Не вдалося завантажити субтитри"
 
 msgctxt "#32005"
 msgid "Unable to connect to addic7ed.com."
-msgstr "Не удалось подключиться к addic7ed.com."
+msgstr "Не вдалося підключится до addic7ed.com."
 
 msgctxt "#32006"
 msgid "Manual search is not implemented."
-msgstr "Поиск вручную не поддерживается."
+msgstr "Пошук уручну не підтримується."
 
 msgctxt "#32007"
 msgid "Always use the filename for subs search."
-msgstr "Всегда искать субтитры по имени файла."
+msgstr "Завжди шукати субтитри по імені файлу."

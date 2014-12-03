@@ -34,3 +34,7 @@ msgstr ""
 msgctxt "#32006"
 msgid "Manual search is not implemented."
 msgstr ""
+
+msgctxt "#32007"
+msgid "Always use the filename for subs search."
+msgstr ""

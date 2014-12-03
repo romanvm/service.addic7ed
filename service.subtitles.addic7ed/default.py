@@ -40,7 +40,7 @@ def _string(string_id):
     """
     Get language string by ID
 
-    :param string_id: string ID
+    :param string_id: string
     :return: None
     """
     return _addon.getLocalizedString(string_id).encode("utf-8")
@@ -140,14 +140,17 @@ def display_subs(subs_list, episode_url, filename):
     """
     Display the list of found subtitles
 
-    :param subs_list: the list of dictionaries with the following keys:
+    :param subs_list: list
+    the list of dictionaries with the following keys:
         language: Kodi language name for the subtitles.
         verison: a descriptive text for the subtitles.
         hi (bool): are the subs for hearing impaired?
         link: download link for the subtitles.
-    :param episode_url: the URL for the episode page on addic7ed.com.
+    :param episode_url: str
+    the URL for the episode page on addic7ed.com.
         Needed for downloading subs as "Referer" HTTP header.
-    :param filename: the name of the video-file being played.
+    :param filename: str
+    the name of the video-file being played.
     :return: None
 
     Each item in the list is a ListItem instance with the following properties:
@@ -207,18 +210,21 @@ def download_subs(link, referrer, filename):
         title = _string(32000)
         message = _string(32001)
         icon = "info"
+        duration = 3000
         _log("Subs downloaded.")
     elif result == -1:
         title = _string(32002)
         message = _string(32003)
         icon = "error"
+        duration = 5000
         _log("Exceeded daily limit for subs downloads.")
     else:
         title = _string(32002)
         message = _string(32004)
         icon = "error"
+        duration = 5000
         _log("Unable to download subs.")
-    show_message(title, message, icon)
+    show_message(title, message, icon, duration)
 
 
 if __name__ == "__main__":
@@ -226,9 +232,10 @@ if __name__ == "__main__":
     if params["action"] == "search":
         languages = get_languages(urllib.unquote_plus(params["languages"]).split(","))
         now_played = get_now_played()
-        if now_played["file"][:4] in ("http", "plug"):
+        if _addon.getSetting("use_filename") == "true" or now_played["file"][:4] in ("http", "plug"):
             # Try to get showname/season/episode data from
-            # the filename if the video-file is being played
+            # the filename if "use_filename" setting is true
+            # or the video-file is being played
             # by a video plugin via a network link.
             filename = now_played["label"]
             show, season, episode = filename_parse(filename)

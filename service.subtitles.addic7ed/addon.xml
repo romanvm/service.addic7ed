@@ -11,8 +11,10 @@
 <extension point="xbmc.addon.metadata">
     <summary lang="en">Addic7ed.com Subtitles</summary>
     <summary lang="ru">Субтитры Addic7ed.com</summary>
+    <summary lang="uk">Субтитри Addic7ed.com</summary>
     <description lang="en">Subtitles service for Addic7ed.com.</description>
     <description lang="ru">Служба субтитров для сайта Addic7ed.com.</description>
+    <description lang="uk">Служба субтитрів для сайту Addic7ed.com.</description>
     <platform>all</platform>
 </extension>
 </addon>
