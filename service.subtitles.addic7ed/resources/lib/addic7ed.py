@@ -12,19 +12,24 @@
 
 import re
 import urllib2
-from urllib import quote_plus
 from bs4 import BeautifulSoup
 from xbmcvfs import File
 
 SITE = "http://www.addic7ed.com"
-HEADER = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0",
-          "Accept": "text/html",
-          "Host": SITE[7:],
-          "Referer": SITE,
-          "Accept-Charset": "UTF-8"}
 
 
-def search_episode(show_name, season, episode, languages=[("English", "English")]):
+def open_url(url, ref=SITE):
+    """Open the provided URL and return a session object."""
+    header = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0",
+              "Accept": "text/html",
+              "Host": SITE[7:],
+              "Referer": ref,
+              "Accept-Charset": "UTF-8"}
+    request = urllib2.Request(url, None, header)
+    return urllib2.urlopen(request, None)
+
+
+def search_episode(query, languages=[("English", "English")]):
     """
     Search episode function. Accepts a TV show name, a season #, an episode # and language.
     Note that season and episode #s must be strings, not integers!
@@ -37,11 +42,9 @@ def search_episode(show_name, season, episode, languages=[("English", "English")
     """
     listing = []
     episode_url = ""
-    url = "{site}/search.php?search={show}+{season}x{episode}&Submit=Search".format(
-        site=SITE, show=quote_plus(show_name.encode("utf-8")), season=season, episode=episode)
-    request = urllib2.Request(url, None, HEADER)
+    url = "{0}/search.php?search={1}&Submit=Search".format(SITE, query)
     try:
-        session = urllib2.urlopen(request, None)
+        session = open_url(url)
     except urllib2.URLError:
         listing = -1
     else:
@@ -98,15 +101,12 @@ def download_subs(url, referer, filename="subtitles.srt"):
     where to save subs. Returns 1 if the subs have been downloaded, 0 if there has been a connection error
     or -1 if addic7ed.com returns "Daily limit exceeded" page.
     """
-    header = HEADER
-    header["Referer"] = referer
-    request = urllib2.Request(url, None, header)
     try:
-        page = urllib2.urlopen(request, None)
+        session = open_url(url, ref=referer)
     except urllib2.URLError:
         success = 0
     else:
-        subtitles = page.read()
+        subtitles = session.read()
         if subtitles[:9] != "<!DOCTYPE":
             file_ = File(filename, "w")
             file_.write(subtitles)
@@ -114,7 +114,7 @@ def download_subs(url, referer, filename="subtitles.srt"):
             success = 1
         else:
             success = -1
-        page.close()
+        session.close()
     return success
 
 

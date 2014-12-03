@@ -9,6 +9,7 @@ import json
 import re
 import urllib
 import shutil
+from urllib import quote_plus
 #XBMC modules
 import xbmc
 import xbmcaddon
@@ -50,6 +51,7 @@ def get_params():
     """
     Get the script call parameters as a dictionary.
     """
+    _log(sys.argv[2])
     paramstring = sys.argv[2].replace("?", "")
     params = urlparse.parse_qs(paramstring)
     for key in params.keys():
@@ -229,7 +231,8 @@ def download_subs(link, referrer, filename):
 
 if __name__ == "__main__":
     params = get_params()
-    if params["action"] == "search":
+    if params["action"] in ("search", "manualsearch"):
+        # Search for subs
         languages = get_languages(urllib.unquote_plus(params["languages"]).split(","))
         now_played = get_now_played()
         if _addon.getSetting("use_filename") == "true" or now_played["file"][:4] in ("http", "plug"):
@@ -248,17 +251,22 @@ if __name__ == "__main__":
             season = str(now_played["season"]).zfill(2)
             episode = str(now_played["episode"]).zfill(2)
         # Search subtitles in Addic7ed.com.
-        _log("Seaching subs for {0} {1}x{2}".format(show, season, episode))
-        found_list, episode_url = addic7ed.search_episode(normalize_showname(show), season, episode, languages)
-        if found_list != -1 and episode_url:
-            _log("Subs found: {0}".format(len(found_list)))
-            display_subs(found_list, episode_url, filename)
-        elif found_list == -1:
-            show_message(_string(32002), _string(32005), "error")
-            _log("No subs found.")
+        if params["action"] == "search":
+            # Create a search query string
+            query = "{0}+{1}x{2}".format(quote_plus(normalize_showname(show.encode("utf-8"))), season, episode)
+        else:
+            # Get the query string typed on the on-screen keyboard
+            query = params["searchstring"]
+        if query:
+            _log("Search query: {0}".format(query))
+            found_list, episode_url = addic7ed.search_episode(query, languages)
+            if found_list != -1 and episode_url:
+                _log("Subs found: {0}".format(len(found_list)))
+                display_subs(found_list, episode_url, filename)
+            elif found_list == -1:
+                show_message(_string(32002), _string(32005), "error")
+                _log("No subs found.")
     elif params["action"] == "download":
+        # Display subs.
         download_subs(params["link"], params["ref"], urllib.unquote_plus(params["filename"]))
-    elif params["action"] == "manualsearch":
-        # Manual search is not supported!
-        show_message(_string(32002), _string(32006), "error")
     xbmcplugin.endOfDirectory(_handle)
