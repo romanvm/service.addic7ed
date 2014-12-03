@@ -5,7 +5,6 @@
 import os
 import sys
 import urlparse
-import json
 import re
 import urllib
 import shutil
@@ -27,6 +26,7 @@ _handle = int(sys.argv[1])
 
 sys.path.append(os.path.join(_path, "resources", "lib"))
 import addic7ed
+import functions
 
 
 def _log(message):
@@ -57,85 +57,6 @@ def get_params():
     for key in params.keys():
         params[key] = params[key][0]
     return params
-
-
-def get_now_played():
-    """
-    Get info about the currently played file via JSON-RPC.
-    Alternatively this can be done via Kodi InfoLabels.
-    """
-    request = json.dumps({"jsonrpc": "2.0",
-                          "method": "Player.GetItem",
-                          "params": {"playerid": 1,
-                                     "properties": ["file", "showtitle", "season", "episode", "streamdetails"]},
-                          "id": "1"})
-    reply = json.loads(xbmc.executeJSONRPC(request))
-    return reply["result"]["item"]
-
-
-def show_message(title, message, icon="info", duration=5000):
-    """
-    Show a poup-up message.
-    Alternatively this can be done via a Kodi Built-In function.
-    """
-    request = json.dumps({"jsonrpc": "2.0",
-                          "method": "GUI.ShowNotification",
-                          "params": {"title": title, "message": message, "image": icon, "displaytime": duration},
-                          "id": "1"})
-    xbmc.executeJSONRPC(request)
-
-
-def normalize_showname(showtitle):
-    """
-    Normalize showname if there are differences
-    between TheTVDB and Addic7ed
-    """
-    if "castle" in showtitle.lower():
-        showtitle = showtitle.replace("(2009)", "")
-    return showtitle.replace(":", "")
-
-
-def get_languages(languages_raw):
-    """
-    Create the list of pairs of language names.
-    The 1st item in a pair is used by Kodi.
-    The 2nd item in a pair is used by
-    the addic7ed web site parser.
-    """
-    languages = []
-    for language in languages_raw:
-        kodi_lang = language
-        if "English" in kodi_lang:
-            add7_lang = "English"
-        elif kodi_lang == "Portuguese (Brazil)":
-            add7_lang = "Portuguese (Brazilian)"
-        elif re.match(r"Spanish \(.*?\)", kodi_lang) is not None:
-            add7_lang = "Spanish (Latin America)"
-        else:
-            add7_lang = language
-        languages.append((kodi_lang, add7_lang))
-    return languages
-
-
-def filename_parse(filename):
-    """
-    Filename parser for extracting show name, season # and episode # from a filename.
-    """
-    PATTERNS = (r"(.*?)[ \.](?:[\d]*?[ \.])?[Ss]([\d]+)[ \.]?[Ee]([\d]+)",
-                r"(.*?)[ \.](?:[\d]*?[ \.])?([\d]+)[Xx]([\d]+)",
-                r"(.*?)[ \.](?:[\d]*?[ \.])?[Ss]([\d]{2})[ \.]?([\d]{2})",
-                r"(.*?)[ \.][\d]{4}()()",
-                r"(.*?)[ \.]([\d])([\d]{2})")
-    for regexp in PATTERNS:
-        episode_data = re.search(regexp, filename)
-        if episode_data is not None:
-            show = episode_data.group(1).replace(".", " ")
-            season = episode_data.group(2).zfill(2)
-            episode = episode_data.group(3).zfill(2)
-            break
-    else:
-        show = season = episode = ""
-    return show, season, episode
 
 
 def display_subs(subs_list, episode_url, filename):
@@ -226,22 +147,22 @@ def download_subs(link, referrer, filename):
         icon = "error"
         duration = 5000
         _log("Unable to download subs.")
-    show_message(title, message, icon, duration)
+    functions.show_message(title, message, icon, duration)
 
 
 if __name__ == "__main__":
     params = get_params()
     if params["action"] in ("search", "manualsearch"):
         # Search for subs
-        languages = get_languages(urllib.unquote_plus(params["languages"]).split(","))
-        now_played = get_now_played()
+        languages = functions.get_languages(urllib.unquote_plus(params["languages"]).split(","))
+        now_played = functions.get_now_played()
         if _addon.getSetting("use_filename") == "true" or now_played["file"][:4] in ("http", "plug"):
             # Try to get showname/season/episode data from
             # the filename if "use_filename" setting is true
             # or the video-file is being played
             # by a video plugin via a network link.
             filename = now_played["label"]
-            show, season, episode = filename_parse(filename)
+            show, season, episode = functions.filename_parse(filename)
         else:
             # Get get showname/season/episode data from
             # Kodi if the video-file is being played from
@@ -253,7 +174,7 @@ if __name__ == "__main__":
         # Search subtitles in Addic7ed.com.
         if params["action"] == "search":
             # Create a search query string
-            query = "{0}+{1}x{2}".format(quote_plus(normalize_showname(show.encode("utf-8"))), season, episode)
+            query = "{0}+{1}x{2}".format(quote_plus(functions.normalize_showname(show.encode("utf-8"))), season, episode)
         else:
             # Get the query string typed on the on-screen keyboard
             query = params["searchstring"]
@@ -264,7 +185,7 @@ if __name__ == "__main__":
                 _log("Subs found: {0}".format(len(found_list)))
                 display_subs(found_list, episode_url, filename)
             elif found_list == -1:
-                show_message(_string(32002), _string(32005), "error")
+                functions.show_message(_string(32002), _string(32005), "error")
                 _log("No subs found.")
     elif params["action"] == "download":
         # Display subs.
