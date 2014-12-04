@@ -36,5 +36,5 @@ msgid "Manual search is not implemented."
 msgstr "Пошук уручну не підтримується."
 
 msgctxt "#32007"
-msgid "Always use the filename for subs search."
+msgid "Always use the filename for subs search"
 msgstr "Завжди шукати субтитри по імені файлу"
