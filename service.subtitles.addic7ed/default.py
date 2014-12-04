@@ -51,7 +51,6 @@ def get_params():
     """
     Get the script call parameters as a dictionary.
     """
-    _log(sys.argv[2])
     paramstring = sys.argv[2].replace("?", "")
     params = urlparse.parse_qs(paramstring)
     for key in params.keys():
@@ -151,30 +150,35 @@ def download_subs(link, referrer, filename):
 
 
 if __name__ == "__main__":
+    _log("Searching for subs...")
     params = get_params()
     if params["action"] in ("search", "manualsearch"):
         # Search for subs
         languages = functions.get_languages(urllib.unquote_plus(params["languages"]).split(","))
         now_played = functions.get_now_played()
+        filename = os.path.basename(now_played["file"])
         if _addon.getSetting("use_filename") == "true" or now_played["file"][:4] in ("http", "plug"):
             # Try to get showname/season/episode data from
             # the filename if "use_filename" setting is true
             # or the video-file is being played
             # by a video plugin via a network link.
-            filename = now_played["label"]
+            if _addon.getSetting("use_filename") == "false":
+                filename = now_played["label"]
+            _log("Using filename: {0}".format(filename))
             show, season, episode = functions.filename_parse(filename)
         else:
             # Get get showname/season/episode data from
             # Kodi if the video-file is being played from
             # the TV-Shows library.
-            filename = os.path.basename(now_played["file"])
             show = now_played["showtitle"]
             season = str(now_played["season"]).zfill(2)
             episode = str(now_played["episode"]).zfill(2)
+            _log("Using library metadata: {0} - {1}x{2}".format(show, season, episode))
         # Search subtitles in Addic7ed.com.
         if params["action"] == "search":
             # Create a search query string
-            query = "{0}+{1}x{2}".format(quote_plus(functions.normalize_showname(show.encode("utf-8"))), season, episode)
+            query = "{0}+{1}x{2}".format(
+                quote_plus(functions.normalize_showname(show.encode("utf-8"))), season, episode)
         else:
             # Get the query string typed on the on-screen keyboard
             query = params["searchstring"]

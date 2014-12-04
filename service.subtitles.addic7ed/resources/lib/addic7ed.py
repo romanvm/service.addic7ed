@@ -74,7 +74,8 @@ def parse_episode(episode_page, languages):
     sub_cells = soup.find_all("table", {"width": "100%", "border": "0", "align": "center", "class": "tabel95"})
     for sub_cell in sub_cells:
         version = re.search(r"Version (.*?),",
-                            sub_cell.find("td", {"colspan": "3", "align": "center", "class": "NewsTitle"}).text).group(1)
+                            sub_cell.find("td",
+                                          {"colspan": "3", "align": "center", "class": "NewsTitle"}).text).group(1)
         works_with = sub_cell.find("td", {"class": "newsDate", "colspan": "3"}).get_text(strip=True)
         if works_with:
             version += ", " + works_with
@@ -89,7 +90,8 @@ def parse_episode(episode_page, languages):
                     listing.append({"language": language[0],
                                     "version": version,
                                     "link": SITE + download_tag["href"],
-                                    "hi": (download_tag.find_next("tr").contents[1].find("img", title="Hearing Impaired")
+                                    "hi": (download_tag.find_next("tr").contents[1].find(
+                                        "img", title="Hearing Impaired")
                                            is not None)})
                     break
     return listing
