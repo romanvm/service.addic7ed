@@ -106,13 +106,13 @@ def download_subs(link, referrer, filename):
     """
     Download selected subs
 
-    :param link: a download link for the subs.
-    :param referrer: a referer URL for the episode page (required by addic7ed.com).
-    :param filename: the name of the video-file being played.
+    :param link: str - a download link for the subs.
+    :param referrer: str - a referer URL for the episode page (required by addic7ed.com).
+    :param filename: str - the name of the video-file being played.
     :return: None
 
     The function must add a single ListItem instance with one property:
-    label: the download location for subs.
+        label - the download location for subs.
     """
     # Re-create a download location in a temporary folder
     if xbmcvfs.exists(_temp):
