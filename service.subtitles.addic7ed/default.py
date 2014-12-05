@@ -131,24 +131,13 @@ def download_subs(link, referrer, filename):
         # A 2-letter language code will be added to subs filename.
         list_item = xbmcgui.ListItem(label=subspath)
         xbmcplugin.addDirectoryItem(handle=_handle, url=subspath, listitem=list_item, isFolder=False)
-        title = _string(32000)
-        message = _string(32001)
-        icon = 'info'
-        duration = 3000
+        functions.show_message(_string(32000), _string(32001), 'info', 3000)
         _log('Subs downloaded.')
     elif result == -1:
-        title = _string(32002)
-        message = _string(32003)
-        icon = 'error'
-        duration = 5000
+        functions.show_message(_string(32002), _string(32003), 'error', 3000)
         _log('Exceeded daily limit for subs downloads.')
     else:
-        title = _string(32002)
-        message = _string(32004)
-        icon = 'error'
-        duration = 5000
         _log('Unable to download subs.')
-    functions.show_message(title, message, icon, duration)
 
 
 if __name__ == '__main__':
