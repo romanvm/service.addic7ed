@@ -91,8 +91,7 @@ def parse_episode(episode_page, languages):
                                     "version": version,
                                     "link": SITE + download_tag["href"],
                                     "hi": (download_tag.find_next("tr").contents[1].find(
-                                        "img", title="Hearing Impaired")
-                                           is not None)})
+                                        "img", title="Hearing Impaired") is not None)})
                     break
     return listing
 

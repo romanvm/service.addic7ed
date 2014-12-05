@@ -50,11 +50,13 @@ def _string(string_id):
 def get_params():
     """
     Get the script call parameters as a dictionary.
+    Note that a subtitles plugin always receives a paramstring,
+    so we don't check if it is actually present.
     """
     paramstring = sys.argv[2].replace("?", "")
-    params = urlparse.parse_qs(paramstring)
-    for key in params.keys():
-        params[key] = params[key][0]
+    params = {}
+    for pair in urlparse.parse_qsl(paramstring):
+        params[pair[0]] = pair[1]
     return params
 
 
