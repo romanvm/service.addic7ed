@@ -3,7 +3,6 @@
 #-------------------------------------------------------------------------------
 # Name:        addic7ed
 # Purpose:     Parsing and downloading subs from addic7ed.com
-# Version:
 # Author:      Roman Miroshnychenko
 # Created on:  05.03.2013
 # Copyright:   (c) Roman Miroshnychenko, 2013
@@ -108,6 +107,7 @@ def download_subs(url, referer, filename='subtitles.srt'):
         success = 0
     else:
         subtitles = session.read()
+        session.close()
         if subtitles[:9] != '<!DOCTYPE':
             file_ = File(filename, 'w')
             file_.write(subtitles)
@@ -115,7 +115,6 @@ def download_subs(url, referer, filename='subtitles.srt'):
             success = 1
         else:
             success = -1
-        session.close()
     return success
 
 
