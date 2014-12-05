@@ -30,29 +30,29 @@ import functions
 
 
 def _log(message):
-    '''
+    """
     Write message to the Kodi log
     for debuging purposes.
-    '''
+    """
     xbmc.log('{0}: {1}'.format(_id, message.encode('utf-8')))
 
 
 def _string(string_id):
-    '''
+    """
     Get language string by ID
 
     :param string_id: string
     :return: None
-    '''
+    """
     return _addon.getLocalizedString(string_id).encode('utf-8')
 
 
 def get_params():
-    '''
+    """
     Get the script call parameters as a dictionary.
     Note that a subtitles plugin always receives a paramstring,
     so we don't check if it is actually present.
-    '''
+    """
     paramstring = sys.argv[2].replace('?', '')
     params = {}
     for pair in urlparse.parse_qsl(paramstring):
@@ -61,7 +61,7 @@ def get_params():
 
 
 def display_subs(subs_list, episode_url, filename):
-    '''
+    """
     Display the list of found subtitles
 
     :param subs_list: list
@@ -85,7 +85,7 @@ def display_subs(subs_list, episode_url, filename):
         'sync': if 'true' then (SYNC) icon is displayed for the list item.
 
     url: a plugin call-back URL for downloading selected subs.
-    '''
+    """
     for item in subs_list:
         list_item = xbmcgui.ListItem(label=item['language'], label2=item['version'],
                                      thumbnailImage=xbmc.convertLanguage(item['language'], xbmc.ISO_639_1))
@@ -103,7 +103,7 @@ def display_subs(subs_list, episode_url, filename):
 
 
 def download_subs(link, referrer, filename):
-    '''
+    """
     Download selected subs
 
     :param link: str - a download link for the subs.
@@ -113,7 +113,7 @@ def download_subs(link, referrer, filename):
 
     The function must add a single ListItem instance with one property:
         label - the download location for subs.
-    '''
+    """
     # Re-create a download location in a temporary folder
     if xbmcvfs.exists(_temp):
         shutil.rmtree(_temp)

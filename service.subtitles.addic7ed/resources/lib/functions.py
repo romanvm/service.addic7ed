@@ -10,11 +10,11 @@ import xbmc
 
 
 def get_now_played():
-    '''
+    """
     Get info about the currently played file via JSON-RPC.
     Alternatively this can be done via Kodi InfoLabels.
     :return: dict
-    '''
+    """
     request = json.dumps({'jsonrpc': '2.0',
                           'method': 'Player.GetItem',
                           'params': {'playerid': 1,
@@ -25,14 +25,14 @@ def get_now_played():
 
 
 def show_message(title, message, icon='info', duration=5000):
-    '''
+    """
     Show a poup-up message.
     Alternatively this can be done via a Kodi Built-In function.
     :param title: str
     :param message: str
     :param icon: str
     :param duration: int
-    '''
+    """
     request = json.dumps({'jsonrpc': '2.0',
                           'method': 'GUI.ShowNotification',
                           'params': {'title': title, 'message': message, 'image': icon, 'displaytime': duration},
@@ -41,24 +41,24 @@ def show_message(title, message, icon='info', duration=5000):
 
 
 def normalize_showname(showtitle):
-    '''
+    """
     Normalize showname if there are differences
     between TheTVDB and Addic7ed
     :param showtitle: str
-    '''
+    """
     if 'castle' in showtitle.lower():
         showtitle = showtitle.replace('(2009)', '')
     return showtitle.replace(':', '')
 
 
 def get_languages(languages_raw):
-    '''
+    """
     Create the list of pairs of language names.
     The 1st item in a pair is used by Kodi.
     The 2nd item in a pair is used by
     the addic7ed web site parser.
     :param languages_raw: str
-    '''
+    """
     languages = []
     for language in languages_raw:
         kodi_lang = language
@@ -75,10 +75,10 @@ def get_languages(languages_raw):
 
 
 def filename_parse(filename):
-    '''
+    """
     Filename parser for extracting show name, season # and episode # from a filename.
     :param filename: str
-    '''
+    """
     PATTERNS = (r'(.*?)[ \.](?:[\d]*?[ \.])?[Ss]([\d]+)[ \.]?[Ee]([\d]+)',
                 r'(.*?)[ \.](?:[\d]*?[ \.])?([\d]+)[Xx]([\d]+)',
                 r'(.*?)[ \.](?:[\d]*?[ \.])?[Ss]([\d]{2})[ \.]?([\d]{2})',
