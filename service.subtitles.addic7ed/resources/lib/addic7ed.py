@@ -11,6 +11,7 @@
 
 import re
 import urllib2
+import socket
 from bs4 import BeautifulSoup
 from xbmcvfs import File
 
@@ -44,7 +45,7 @@ def search_episode(query, languages=[('English', 'English')]):
     url = '{0}/search.php?search={1}&Submit=Search'.format(SITE, query)
     try:
         session = open_url(url)
-    except urllib2.URLError:
+    except urllib2.URLError, socket.timeout:
         listing = -1
     else:
         results_page = session.read()
@@ -103,7 +104,7 @@ def download_subs(url, referer, filename='subtitles.srt'):
     """
     try:
         session = open_url(url, ref=referer)
-    except urllib2.URLError:
+    except urllib2.URLError, socket.timeout:
         success = 0
     else:
         subtitles = session.read()
