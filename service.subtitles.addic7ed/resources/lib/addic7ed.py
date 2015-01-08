@@ -13,7 +13,22 @@ import re
 import urllib2
 import socket
 from bs4 import BeautifulSoup
-from xbmcvfs import File
+try:
+    from xbmcvfs import File
+except ImportError:
+    class File(object):
+        def __init__(self, filename, mode='w'):
+            self.file_object = open(filename, mode=mode + 'b')
+
+        def write(self, string):
+            self.file_object.write(string)
+
+        def read(self):
+            return self.file_object.read()
+
+        def close(self):
+            self.file_object.close()
+
 
 SITE = 'http://www.addic7ed.com'
 
