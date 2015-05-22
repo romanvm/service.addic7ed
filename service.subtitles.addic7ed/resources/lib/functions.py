@@ -4,6 +4,7 @@
 # Created on: 03.12.2014
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
+import json
 import re
 import xbmc
 import xbmcgui
