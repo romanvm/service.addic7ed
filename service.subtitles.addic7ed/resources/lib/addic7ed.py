@@ -13,22 +13,7 @@ import re
 import urllib2
 import socket
 from bs4 import BeautifulSoup
-try:
-    from xbmcvfs import File
-except ImportError:
-    class File(object):
-        def __init__(self, filename, mode='w'):
-            self.file_object = open(filename, mode=mode + 'b')
-
-        def write(self, string):
-            self.file_object.write(string)
-
-        def read(self):
-            return self.file_object.read()
-
-        def close(self):
-            self.file_object.close()
-
+from xbmcvfs import File
 
 SITE = 'http://www.addic7ed.com'
 
@@ -133,6 +118,3 @@ def download_subs(url, referer, filename='subtitles.srt'):
             success = -1
     return success
 
-
-if __name__ == '__main__':
-    pass

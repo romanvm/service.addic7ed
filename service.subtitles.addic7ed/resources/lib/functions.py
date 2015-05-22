@@ -4,9 +4,9 @@
 # Created on: 03.12.2014
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
-import json
 import re
 import xbmc
+import xbmcgui
 
 
 def get_now_played():
@@ -24,7 +24,7 @@ def get_now_played():
     return reply['result']['item']
 
 
-def show_message(title, message, icon='info', duration=5000):
+def show_message(title, message, icon='info', duration=3000):
     """
     Show a poup-up message.
     Alternatively this can be done via a Kodi Built-In function.
@@ -33,11 +33,7 @@ def show_message(title, message, icon='info', duration=5000):
     :param icon: str
     :param duration: int
     """
-    request = json.dumps({'jsonrpc': '2.0',
-                          'method': 'GUI.ShowNotification',
-                          'params': {'title': title, 'message': message, 'image': icon, 'displaytime': duration},
-                          'id': '1'})
-    xbmc.executeJSONRPC(request)
+    xbmcgui.Dialog().notification(title, message, icon, duration)
 
 
 def normalize_showname(showtitle):

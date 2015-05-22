@@ -47,19 +47,6 @@ def _string(string_id):
     return _addon.getLocalizedString(string_id).encode('utf-8')
 
 
-def get_params():
-    """
-    Get the script call parameters as a dictionary.
-    Note that a subtitles plugin always receives a paramstring,
-    so we don't check if it is actually present.
-    """
-    paramstring = sys.argv[2].replace('?', '')
-    params = {}
-    for pair in urlparse.parse_qsl(paramstring):
-        params[pair[0]] = pair[1]
-    return params
-
-
 def display_subs(subs_list, episode_url, filename):
     """
     Display the list of found subtitles
@@ -142,7 +129,8 @@ def download_subs(link, referrer, filename):
 
 if __name__ == '__main__':
     _log('Searching for subs...')
-    params = get_params()
+    # Get plugin call params
+    params = dict(urlparse.parse_qsl(sys.argv[2][1:]))
     if params['action'] in ('search', 'manualsearch'):
         # Search for subs
         languages = functions.get_languages(urllib.unquote_plus(params['languages']).split(','))
