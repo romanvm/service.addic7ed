@@ -29,7 +29,7 @@ def open_url(url, ref=SITE):
     return urllib2.urlopen(request, None)
 
 
-def search_episode(query, languages=[('English', 'English')]):
+def search_episode(query, languages=(('English', 'English'),)):
     """
     Search episode function. Accepts a TV show name, a season #, an episode # and language.
     Note that season and episode #s must be strings, not integers!

@@ -23,6 +23,7 @@ _path = _addon.getAddonInfo('path').decode('utf-8')
 _profile = xbmc.translatePath(_addon.getAddonInfo('profile').decode('utf-8'))
 _temp = os.path.join(_profile, 'temp')
 _handle = int(sys.argv[1])
+_icon = os.path.join(_path, 'icon.png')
 
 sys.path.append(os.path.join(_path, 'resources', 'lib'))
 import addic7ed
@@ -118,7 +119,7 @@ def download_subs(link, referrer, filename):
         # A 2-letter language code will be added to subs filename.
         list_item = xbmcgui.ListItem(label=subspath)
         xbmcplugin.addDirectoryItem(handle=_handle, url=subspath, listitem=list_item, isFolder=False)
-        functions.show_message(_string(32000), _string(32001), 'info', 3000)
+        functions.show_message(_string(32000), _string(32001), _icon, 3000)
         _log('Subs downloaded.')
     elif result == -1:
         functions.show_message(_string(32002), _string(32003), 'error', 3000)
