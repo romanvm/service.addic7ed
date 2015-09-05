@@ -136,14 +136,15 @@ if __name__ == '__main__':
         # Search for subs
         languages = functions.get_languages(urllib.unquote_plus(params['languages']).split(','))
         now_played = functions.get_now_played()
-        filename = os.path.basename(now_played['file'])
+        if xbmc.getInfoLabel('Player.Folderpath') != 'plugin://plugin.video.rarbg.tv/':
+            filename = os.path.basename(now_played['file'])
+        else:
+            filename = '{0}.s{1}e{2}.foo'.format(now_played['showtitle'], now_played['season'], now_played['episode'])
         if _addon.getSetting('use_filename') == 'true' or now_played['file'][:4] in ('http', 'plug'):
             # Try to get showname/season/episode data from
             # the filename if 'use_filename' setting is true
             # or the video-file is being played
             # by a video plugin via a network link.
-            if _addon.getSetting('use_filename') == 'false':
-                filename = now_played['label']
             _log('Using filename: {0}'.format(filename))
             show, season, episode = functions.filename_parse(filename)
         else:
