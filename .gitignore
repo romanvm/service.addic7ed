@@ -85,3 +85,4 @@ target/
 # Arhcive files
 *.zip
 
+publish.py
