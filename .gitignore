@@ -85,3 +85,4 @@ target/
 # Arhcive files
 *.zip
 
+pyblish.py
