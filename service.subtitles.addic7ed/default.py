@@ -142,8 +142,6 @@ if __name__ == '__main__':
             # the filename if 'use_filename' setting is true
             # or the video-file is being played
             # by a video plugin via a network link.
-            if _addon.getSetting('use_filename') == 'false':
-                filename = now_played['label']
             _log('Using filename: {0}'.format(filename))
             show, season, episode = functions.filename_parse(filename)
         else:
