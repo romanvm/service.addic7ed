@@ -67,10 +67,10 @@ def display_subs(subs_list, episode_url, filename):
 
     Each item in the list is a ListItem instance with the following properties:
         label: Kodi language name (e.g. 'English')
-        label2: a descriptive test for subs (e.g. 'LOL, works with DIMENSION release').
+        label2: a descriptive text for subs (e.g. 'LOL, works with DIMENSION release').
         thumbnailImage: a 2-letter language code (e.g. 'en') to display a country flag.
-        'hearing_imp': if 'true' then (CC) icon is displayed for the list item.
-        'sync': if 'true' then (SYNC) icon is displayed for the list item.
+        'hearing_imp': if 'true' then 'CC' icon is displayed for the list item.
+        'sync': if 'true' then 'SYNC' icon is displayed for the list item.
 
     url: a plugin call-back URL for downloading selected subs.
     """
@@ -137,11 +137,12 @@ if __name__ == '__main__':
         languages = functions.get_languages(urllib.unquote_plus(params['languages']).split(','))
         now_played = functions.get_now_played()
         filename = os.path.basename(now_played['file'])
-        if _addon.getSetting('use_filename') == 'true' or now_played['file'][:4] in ('http', 'plug'):
+        if _addon.getSetting('use_filename') == 'true' or not now_played['showtitle']:
             # Try to get showname/season/episode data from
             # the filename if 'use_filename' setting is true
-            # or the video-file is being played
-            # by a video plugin via a network link.
+            # or if the video-file does not have library metadata.
+            if not os.path.splitext(filename)[1]:
+                filename = now_played['label']
             _log('Using filename: {0}'.format(filename))
             show, season, episode = functions.filename_parse(filename)
         else:
@@ -151,6 +152,8 @@ if __name__ == '__main__':
             show = now_played['showtitle']
             season = str(now_played['season']).zfill(2)
             episode = str(now_played['episode']).zfill(2)
+            if not os.path.splitext(filename)[1]:
+                filename = u'{0}.{1}x{2}.foo'.format(show, season, episode)
             _log(u'Using library metadata: {0} - {1}x{2}'.format(show, season, episode))
         # Search subtitles in Addic7ed.com.
         if params['action'] == 'search':
