@@ -29,6 +29,8 @@ sys.path.append(os.path.join(_path, 'resources', 'lib'))
 import addic7ed
 import functions
 
+VIDEOFILES = ('.avi', '.mkv', '.mp4', '.ts', '.m2ts', '.mov')
+
 
 def _log(message):
     """
@@ -46,6 +48,19 @@ def _string(string_id):
     :return: None
     """
     return _addon.getLocalizedString(string_id).encode('utf-8')
+
+
+def _is_filename_valid(filename):
+    """
+    Check if the filename is a valid name of a videofile
+
+    :param filename:
+    :return:
+    """
+    if os.path.splitext(filename)[1].lower() in VIDEOFILES:
+        return True
+    else:
+        return False
 
 
 def display_subs(subs_list, episode_url, filename):
@@ -141,7 +156,7 @@ if __name__ == '__main__':
             # Try to get showname/season/episode data from
             # the filename if 'use_filename' setting is true
             # or if the video-file does not have library metadata.
-            if not os.path.splitext(filename)[1]:
+            if not _is_filename_valid(filename):
                 filename = now_played['label']
             _log('Using filename: {0}'.format(filename))
             show, season, episode = functions.filename_parse(filename)
@@ -152,7 +167,7 @@ if __name__ == '__main__':
             show = now_played['showtitle']
             season = str(now_played['season']).zfill(2)
             episode = str(now_played['episode']).zfill(2)
-            if not os.path.splitext(filename)[1]:
+            if not _is_filename_valid(filename):
                 filename = u'{0}.{1}x{2}.foo'.format(show, season, episode)
             _log(u'Using library metadata: {0} - {1}x{2}'.format(show, season, episode))
         # Search subtitles in Addic7ed.com.
