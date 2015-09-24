@@ -45,6 +45,8 @@ def normalize_showname(showtitle):
     """
     if 'castle' in showtitle.lower():
         showtitle = showtitle.replace('(2009)', '')
+    elif showtitle.lower() == 'law & order: special victims unit':
+        showtitle = 'Law and order SVU'
     return showtitle.replace(':', '')
 
 
