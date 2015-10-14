@@ -57,10 +57,7 @@ def _is_filename_valid(filename):
     :param filename:
     :return:
     """
-    if os.path.splitext(filename)[1].lower() in VIDEOFILES:
-        return True
-    else:
-        return False
+    return os.path.splitext(filename)[1].lower() in VIDEOFILES
 
 
 def display_subs(subs_list, episode_url, filename):
