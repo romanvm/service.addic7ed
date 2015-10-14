@@ -8,7 +8,6 @@ import urlparse
 import re
 import urllib
 import shutil
-from urllib import quote_plus
 #XBMC modules
 import xbmc
 import xbmcaddon
@@ -171,7 +170,7 @@ if __name__ == '__main__':
         if params['action'] == 'search':
             # Create a search query string
             query = '{0}+{1}x{2}'.format(
-                quote_plus(functions.normalize_showname(show.encode('utf-8'))), season, episode)
+                urllib.quote_plus(functions.normalize_showname(show.encode('utf-8'))), season, episode)
         else:
             # Get the query string typed on the on-screen keyboard
             query = params['searchstring']
