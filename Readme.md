@@ -11,4 +11,4 @@ The plugin is avaliable in [my Kodi addons repository](https://romanvm.github.io
 Addic7ed.com logo is the property of the site owners.
 
 **Note**: This is a completely independent project that I've created for my personal use.
-It has no relations to other Kodi plugins for addic7ed.com site that may exits.
+It has no relations to other Kodi plugins for addic7ed.com site that may exist.
