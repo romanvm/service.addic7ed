@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 #-------------------------------------------------------------------------------
 # Name:        addic7ed
@@ -12,6 +11,7 @@
 import re
 import urllib2
 import socket
+from contextlib import closing
 from bs4 import BeautifulSoup
 from xbmcvfs import File
 
@@ -44,14 +44,12 @@ def search_episode(query, languages=(('English', 'English'),)):
     episode_url = ''
     url = '{0}/search.php?search={1}&Submit=Search'.format(SITE, query)
     try:
-        session = open_url(url)
-    except urllib2.URLError, socket.timeout:
+        with closing(open_url(url)) as session:
+            results_page = session.read()
+    except (urllib2.URLError, socket.timeout):
         listing = -1
     else:
-        results_page = session.read()
-        session.close()
-        if (re.search(r'<table width="100%" border="0" align="center" class="tabel95">', results_page)
-                is not None):
+        if re.search(r'<table width="100%" border="0" align="center" class="tabel95">', results_page) is not None:
             listing = parse_episode(results_page, languages)
             episode_url = session.geturl()
     return listing, episode_url
@@ -103,18 +101,15 @@ def download_subs(url, referer, filename='subtitles.srt'):
     or -1 if addic7ed.com returns 'Daily limit exceeded' page.
     """
     try:
-        session = open_url(url, ref=referer)
-    except urllib2.URLError, socket.timeout:
+        with closing(open_url(url, ref=referer)) as session:
+            subtitles = session.read()
+    except (urllib2.URLError, socket.timeout):
         success = 0
     else:
-        subtitles = session.read()
-        session.close()
-        if subtitles[:9] != '<!DOCTYPE':
-            file_ = File(filename, 'w')
-            file_.write(subtitles)
-            file_.close()
+        if subtitles[:9].lower() != '<!doctype':
+            with closing(File(filename, 'w')) as file_:
+                file_.write(subtitles)
             success = 1
         else:
             success = -1
     return success
-
