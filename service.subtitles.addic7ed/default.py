@@ -155,7 +155,7 @@ if __name__ == '__main__':
             if not _is_filename_valid(filename):
                 filename = now_played['label']
             _log('Using filename: {0}'.format(filename))
-            show, season, episode = functions.filename_parse(filename)
+            show, season, episode = functions.parse_filename(filename)
         else:
             # Get get showname/season/episode data from
             # Kodi if the video-file is being played from

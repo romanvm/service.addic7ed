@@ -80,7 +80,7 @@ def get_languages(languages_raw):
     return languages
 
 
-def filename_parse(filename):
+def parse_filename(filename):
     """
     Filename parser for extracting show name, season # and episode # from a filename.
 
