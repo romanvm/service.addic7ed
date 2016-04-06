@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="service.subtitles.addic7ed"
-       name="Addic7ed.com"
-       version="1.9.900"
-       provider-name="Roman V.M.">
+  name="Addic7ed.com"
+  version="1.9.900"
+  provider-name="Roman V.M.">
 <requires>
-    <import addon="xbmc.python" version="2.14.0"/>
-    <import addon="script.module.beautifulsoup4" version="4.3.0"/>
-    <import addon="script.module.html5lib" version="0.999.0"/>
-    <import addon="script.module.six" version="1.4.0"/>
+  <import addon="xbmc.python" version="2.19.0"/>
+  <import addon="script.module.beautifulsoup" version="3.2.0"/>
+  <import addon="script.module.requests" version="2.9.0"/>
 </requires>
 <extension point="xbmc.subtitle.module" library="default.py" />
 <extension point="xbmc.addon.metadata">
-    <summary lang="en">Addic7ed.com Subtitles</summary>
-    <summary lang="ru">Субтитры Addic7ed.com</summary>
-    <summary lang="uk">Субтитри Addic7ed.com</summary>
-    <description lang="en">Subtitles service for Addic7ed.com.</description>
-    <description lang="ru">Служба субтитров для сайта Addic7ed.com.</description>
-    <description lang="uk">Служба субтитрів для сайту Addic7ed.com.</description>
-    <platform>all</platform>
+  <summary lang="en">Addic7ed.com Subtitles</summary>
+  <summary lang="ru">Субтитры Addic7ed.com</summary>
+  <summary lang="uk">Субтитри Addic7ed.com</summary>
+  <description lang="en">Subtitles service for Addic7ed.com.</description>
+  <description lang="ru">Служба субтитров для сайта Addic7ed.com.</description>
+  <description lang="uk">Служба субтитрів для сайту Addic7ed.com.</description>
+  <platform>all</platform>
 </extension>
 </addon>
