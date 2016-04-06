@@ -95,7 +95,7 @@ def parse_episode(episode_page, languages):
     :type list:
     :return: generator function that yields :class:`SubsItem` items.
     """
-    soup = BeautifulSoup(episode_page, parseOnlyThese=SoupStrainer('table'))
+    soup = BeautifulSoup(episode_page, parseOnlyThese=SoupStrainer('table', {'width': '100%', 'class': 'tabel95'}))
     sub_cells = soup.findAll('table', {'width': '100%', 'border': '0', 'align': 'center', 'class': 'tabel95'})
     for sub_cell in sub_cells:
         version = re.search(r'Version (.*?),',
@@ -109,9 +109,10 @@ def parse_episode(episode_page, languages):
             for language in languages:
                 if language[1] in lang_cell.text:
                     download_cell = lang_cell.findNext('td', {'colspan': '3'})
-                    download_tag = download_cell.find('a', {'class': 'buttonDownload'}, text='most updated')
-                    if download_tag is None:
-                        download_tag = download_cell.find('a', {'class': 'buttonDownload'}, text='Download')
+                    download_button = download_cell.find(text='most updated')
+                    if download_button is None:
+                        download_button = download_cell.find(text='Download')
+                    download_tag = download_button.parent.parent
                     yield SubsItem(language=language[0],
                                    version=version,
                                    link=SITE + download_tag['href'],
