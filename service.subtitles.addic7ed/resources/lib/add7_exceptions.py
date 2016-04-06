@@ -9,3 +9,15 @@ class Add7Exception(Exception):
 
 class ParseError(Add7Exception):
     pass
+
+
+class SubsSearchError(Add7Exception):
+    pass
+
+
+class ConnectionError(Add7Exception):
+    pass
+
+
+class DailyLimitError(Add7Exception):
+    pass

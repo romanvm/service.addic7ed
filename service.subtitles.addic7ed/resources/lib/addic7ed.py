@@ -9,27 +9,42 @@
 #-------------------------------------------------------------------------------
 
 import re
-import urllib2
-import socket
 from contextlib import closing
-from bs4 import BeautifulSoup
+from collections import namedtuple
+import requests
+from BeautifulSoup import BeautifulSoup, SoupStrainer
 from xbmcvfs import File
+from add7_exceptions import ConnectionError, SubsSearchError, DailyLimitError
 
 SITE = 'http://www.addic7ed.com'
+SubsSearchResult = namedtuple('SubsSearchResult', ['subtitles', 'episode_url'])
+SubsItem = namedtuple('SubsItem', ['language', 'version', 'link', 'hi'])
 
 
-def open_url(url, ref=SITE):
-    """Open the provided URL and return a session object."""
-    header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0',
-              'Accept': 'text/html',
-              'Host': SITE[7:],
-              'Referer': ref,
-              'Accept-Charset': 'UTF-8'}
-    request = urllib2.Request(url, None, header)
-    return urllib2.urlopen(request, None)
+def open_url(url, ref=SITE, params=None):
+    """
+    Open webpage from url
+
+    :param url: URL to open
+    :type url: str
+    :param ref: referer header contents
+    :type ref: str
+    :param params: query params
+    :type params: dict
+    :return: response object
+    """
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Host': SITE[7:],
+        'Referer': ref,
+        'Accept-Charset': 'UTF-8',
+        'Accept-Encoding': 'gzip,deflate'
+        }
+    return requests.get(url, params=params, headers=headers)
 
 
-def search_episode(query, languages=(('English', 'English'),)):
+def search_episode(query, languages=None):
     """
     Search episode function. Accepts a TV show name, a season #, an episode # and language.
     Note that season and episode #s must be strings, not integers!
@@ -38,21 +53,27 @@ def search_episode(query, languages=(('English', 'English'),)):
     ('Kodi language name', 'addic7ed language name')
     If search returns only 1 match, addic7ed.com redirects to the found episode page.
     In this case the function returns the list of available subs and an episode page URL.
-    If connection error occurs, the function returns -1 and an empty string.
+
+    :param query: subs search query
+    :type query: str
+    :param languages: the list of languages to search
+    :type languages: list
+    :return: search results as the list of subtitles and episode page URL
+    :rtype: SubsSearchResult
+    :raises: ConnectionError if addic7ed.com cannot be opened
+    :raises: SubsSearchError if search returns ambiguous results or no results
     """
-    listing = []
-    episode_url = ''
-    url = '{0}/search.php?search={1}&Submit=Search'.format(SITE, query)
+    if languages is None:
+        languages = [('English', 'English')]
     try:
-        with closing(open_url(url)) as session:
-            results_page = session.read()
-    except (urllib2.URLError, socket.timeout):
-        listing = -1
+        response = open_url(SITE + '/search.php', params={'search': query, 'Submit': 'Search'})
+    except requests.RequestException:
+        raise ConnectionError
     else:
-        if re.search(r'<table width="100%" border="0" align="center" class="tabel95">', results_page) is not None:
-            listing = parse_episode(results_page, languages)
-            episode_url = session.geturl()
-    return listing, episode_url
+        if re.search(r'<table width="100%" border="0" align="center" class="tabel95">', response.text) is not None:
+            return SubsSearchResult(parse_episode(response.text, languages), response.url)
+        else:
+            raise SubsSearchError
 
 
 def parse_episode(episode_page, languages):
@@ -60,56 +81,66 @@ def parse_episode(episode_page, languages):
     Parse episode page. Accepts an episode page and a language.
     languages param must be a list of tuples
     ('Kodi language name', 'addic7ed language name')
-    Returns the list of available subs where each item is a dictionary
-    with the following keys:
-    'language': subtitles language (Kodi)
-    'version': subtitles version (description on addic7ed.com)
-    'link': subtitles link
-    'hi' (bool): True for subs for hearing impaired.
+    Returns the generator of available subs where each item is a named tuple
+    with the following fields:
+
+    - ``language``: subtitles language (Kodi)
+    - ``version``: subtitles version (description on addic7ed.com)
+    - ``link``: subtitles link
+    - ``hi``: ``True`` for subs for hearing impaired, else ``False``
+
+    :param episode_page: episode page html code from addic7ed.com
+    :type episode_page: str
+    :param languages: the list of languages to search
+    :type list:
+    :return: generator function that yields :class:`SubsItem` items.
     """
-    listing = []
-    soup = BeautifulSoup(episode_page)
-    sub_cells = soup.find_all('table', {'width': '100%', 'border': '0', 'align': 'center', 'class': 'tabel95'})
+    soup = BeautifulSoup(episode_page, parseOnlyThese=SoupStrainer('table'))
+    sub_cells = soup.findAll('table', {'width': '100%', 'border': '0', 'align': 'center', 'class': 'tabel95'})
     for sub_cell in sub_cells:
         version = re.search(r'Version (.*?),',
                             sub_cell.find('td',
                                           {'colspan': '3', 'align': 'center', 'class': 'NewsTitle'}).text).group(1)
-        works_with = sub_cell.find('td', {'class': 'newsDate', 'colspan': '3'}).get_text(strip=True)
+        works_with = sub_cell.find('td', {'class': 'newsDate', 'colspan': '3'}).text
         if works_with:
             version += ', ' + works_with
-        lang_cells = sub_cell.find_all('td', {'class': 'language'})
+        lang_cells = sub_cell.findAll('td', {'class': 'language'})
         for lang_cell in lang_cells:
             for language in languages:
-                if language[1] in lang_cell.get_text():
-                    download_cell = lang_cell.find_next('td', {'colspan': '3'})
+                if language[1] in lang_cell.text:
+                    download_cell = lang_cell.findNext('td', {'colspan': '3'})
                     download_tag = download_cell.find('a', {'class': 'buttonDownload'}, text='most updated')
                     if download_tag is None:
                         download_tag = download_cell.find('a', {'class': 'buttonDownload'}, text='Download')
-                    listing.append({'language': language[0],
-                                    'version': version,
-                                    'link': SITE + download_tag['href'],
-                                    'hi': (download_tag.find_next('tr').contents[1].find(
-                                        'img', title='Hearing Impaired') is not None)})
+                    yield SubsItem(language=language[0],
+                                   version=version,
+                                   link=SITE + download_tag['href'],
+                                   hi=(download_tag.findNext('tr').contents[1].find(
+                                       'img', title='Hearing Impaired') is not None)
+                                   )
                     break
-    return listing
 
 
 def download_subs(url, referer, filename='subtitles.srt'):
     """
-    Sub downloader function. Accepts a URL to a sub, an episode page URL as a referrer and the name of a file
-    where to save subs. Returns 1 if the subs have been downloaded, 0 if there has been a connection error
-    or -1 if addic7ed.com returns 'Daily limit exceeded' page.
+    Download subtitles from addic7ed.com
+
+    :param url: subtitles URL
+    :type url: str
+    :param referer: episode page for referer header
+    :type referer: str
+    :param filename: file name for subtitles
+    :type filename: str
+    :raises: ConnectionError if addic7ed.com cannot be opened
+    :raises: DailyLimitError if a user exceeded their daily download quota (10 subtitles).
     """
     try:
-        with closing(open_url(url, ref=referer)) as session:
-            subtitles = session.read()
-    except (urllib2.URLError, socket.timeout):
-        success = 0
+        subtitles = open_url(url, ref=referer).text
+    except requests.RequestException:
+        raise ConnectionError
     else:
         if subtitles[:9].lower() != '<!doctype':
             with closing(File(filename, 'w')) as file_:
                 file_.write(subtitles)
-            success = 1
         else:
-            success = -1
-    return success
+            raise DailyLimitError
