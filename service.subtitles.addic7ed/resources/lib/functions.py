@@ -17,7 +17,6 @@ EPISODE_PATTERNS = (
     )
 
 LanguageData = namedtuple('LanguageData', ['kodi_lang', 'add7_lang'])
-EpisodeData = namedtuple('EpisodeData', ['showname', 'season', 'episode'])
 
 
 def get_now_played():
@@ -96,6 +95,6 @@ def parse_filename(filename):
             showname = episode_data.group(1).replace('.', ' ')
             season = episode_data.group(2).zfill(2)
             episode = episode_data.group(3).zfill(2)
-            return EpisodeData(showname, season, episode)
+            return showname, season, episode
     raise ParseError
 

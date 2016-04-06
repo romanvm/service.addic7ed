@@ -92,7 +92,7 @@ def parse_episode(episode_page, languages):
     :param episode_page: episode page html code from addic7ed.com
     :type episode_page: str
     :param languages: the list of languages to search
-    :type list:
+    :type languages:
     :return: generator function that yields :class:`SubsItem` items.
     """
     soup = BeautifulSoup(episode_page, parseOnlyThese=SoupStrainer('table', {'width': '100%', 'class': 'tabel95'}))
@@ -107,13 +107,13 @@ def parse_episode(episode_page, languages):
         lang_cells = sub_cell.findAll('td', {'class': 'language'})
         for lang_cell in lang_cells:
             for language in languages:
-                if language[1] in lang_cell.text:
+                if language.add7_lang in lang_cell.text:
                     download_cell = lang_cell.findNext('td', {'colspan': '3'})
                     download_button = download_cell.find(text='most updated')
                     if download_button is None:
                         download_button = download_cell.find(text='Download')
                     download_tag = download_button.parent.parent
-                    yield SubsItem(language=language[0],
+                    yield SubsItem(language=language.kodi_lang,
                                    version=version,
                                    link=SITE + download_tag['href'],
                                    hi=(download_tag.findNext('tr').contents[1].find(
@@ -136,12 +136,12 @@ def download_subs(url, referer, filename='subtitles.srt'):
     :raises: DailyLimitError if a user exceeded their daily download quota (10 subtitles).
     """
     try:
-        subtitles = open_url(url, ref=referer).text
+        subtitles = open_url(url, ref=referer).content
     except requests.RequestException:
         raise ConnectionError
     else:
         if subtitles[:9].lower() != '<!doctype':
-            with closing(File(filename, 'w')) as file_:
-                file_.write(subtitles)
+            with closing(File(filename, 'w')) as fo:
+                fo.write(subtitles)
         else:
             raise DailyLimitError

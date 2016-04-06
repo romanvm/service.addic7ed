@@ -8,7 +8,7 @@
   <import addon="script.module.beautifulsoup" version="3.2.0"/>
   <import addon="script.module.requests" version="2.9.0"/>
 </requires>
-<extension point="xbmc.subtitle.module" library="default.py" />
+<extension point="xbmc.subtitle.module" library="main.py" />
 <extension point="xbmc.addon.metadata">
   <summary lang="en">Addic7ed.com Subtitles</summary>
   <summary lang="ru">Субтитры Addic7ed.com</summary>

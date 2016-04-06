@@ -50,7 +50,8 @@ class ParseEpisodeTestCase(unittest.TestCase):
     def test_parsing_episode_page(self):
         with codecs.open(os.path.join(basedir, 'test_data', 'WalkingDead.S04E01.htm'), 'rb', 'utf-8') as fo:
             page_html = fo.read()
-        subtitles = list(addic7ed.parse_episode(page_html, [('English', 'English')]))
+        english = functions.LanguageData('English', 'English')
+        subtitles = list(addic7ed.parse_episode(page_html, [english]))
         self.assertEqual(len(subtitles), 3)
         self.assertEqual(subtitles[0].version, 'ASAP, Works with IMMERSE, AFG, HDTV mSD')
         self.assertTrue(subtitles[0].hi)
