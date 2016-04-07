@@ -95,9 +95,12 @@ def parse_episode(episode_page, languages):
     :type languages:
     :return: generator function that yields :class:`SubsItem` items.
     """
-    soup = BeautifulSoup(episode_page, parseOnlyThese=SoupStrainer('table', {'width': '100%', 'class': 'tabel95'}))
-    sub_cells = soup.findAll('table', {'width': '100%', 'border': '0', 'align': 'center', 'class': 'tabel95'})
-    for sub_cell in sub_cells:
+    soup = BeautifulSoup(episode_page, parseOnlyThese=SoupStrainer('table',
+                                                                   {'width': '100%',
+                                                                    'border': '0',
+                                                                    'align': 'center',
+                                                                    'class': 'tabel95'}))
+    for sub_cell in soup:
         version = re.search(r'Version (.*?),',
                             sub_cell.find('td',
                                           {'colspan': '3', 'align': 'center', 'class': 'NewsTitle'}).text).group(1)
@@ -117,8 +120,7 @@ def parse_episode(episode_page, languages):
                                    version=version,
                                    link=SITE + download_tag['href'],
                                    hi=(download_tag.findNext('tr').contents[1].find(
-                                       'img', title='Hearing Impaired') is not None)
-                                   )
+                                       'img', title='Hearing Impaired') is not None))
                     break
 
 

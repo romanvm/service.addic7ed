@@ -23,23 +23,23 @@ class ParseEpisodeFileNameTestCase(unittest.TestCase):
     def test_parsing_sXXeYY_pattern(self):
         filename = 'FooBar.S02E05.mp4'
         result = functions.parse_filename(filename)
-        self.assertEqual(result.showname, 'FooBar')
-        self.assertEqual(result.season, '02')
-        self.assertEqual(result.episode, '05')
+        self.assertEqual(result[0], 'FooBar')
+        self.assertEqual(result[1], '02')
+        self.assertEqual(result[2], '05')
 
     def test_parsing_SSxEE_pattern(self):
         filename = 'FooBar.02x05.mp4'
         result = functions.parse_filename(filename)
-        self.assertEqual(result.showname, 'FooBar')
-        self.assertEqual(result.season, '02')
-        self.assertEqual(result.episode, '05')
+        self.assertEqual(result[0], 'FooBar')
+        self.assertEqual(result[1], '02')
+        self.assertEqual(result[2], '05')
 
     def test_parsing_SSEE_pattern(self):
         filename = 'FooBar.1205.mp4'
         result = functions.parse_filename(filename)
-        self.assertEqual(result.showname, 'FooBar')
-        self.assertEqual(result.season, '12')
-        self.assertEqual(result.episode, '05')
+        self.assertEqual(result[0], 'FooBar')
+        self.assertEqual(result[1], '12')
+        self.assertEqual(result[2], '05')
 
     def test_parsing_failed(self):
         filename = 'FooBar.Baz.mp4'
