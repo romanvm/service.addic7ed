@@ -12,3 +12,4 @@ Addic7ed.com logo is the property of the site owners.
 
 **Note**: This is a completely independent project that I've created for my personal use.
 It has no relations to other Kodi plugins for addic7ed.com site that may exist.
+I use it regularly and try to maintain it in working state.
