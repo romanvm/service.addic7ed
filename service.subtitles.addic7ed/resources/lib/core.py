@@ -138,7 +138,7 @@ def search_subs(params):
     log('Searching for subs...', xbmc.LOGNOTICE)
     languages = functions.get_languages(urllib.unquote_plus(params['languages']).split(','))
     now_played = functions.get_now_played()
-    filename = os.path.basename(now_played['file'])
+    filename = os.path.basename(urllib.unquote(now_played['file']))
     if _addon.getSetting('use_filename') == 'true' or not now_played['showtitle']:
         # Try to get showname/season/episode data from
         # the filename if 'use_filename' setting is true
