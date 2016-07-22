@@ -6,46 +6,50 @@
 
 import json
 import re
+from collections import namedtuple
 import xbmc
-import xbmcgui
+from add7_exceptions import ParseError
+
+EPISODE_PATTERNS = (
+    r'^(.*?)[ \.](?:\d*?[ \.])?s(\d+)[ \.]?e(\d+)\.',
+    r'^(.*?)[ \.](?:\d*?[ \.])?(\d+)x(\d+)\.',
+    r'^(.*?)[ \.](?:\d*?[ \.])?(\d{1,2}?)[ \.]?(\d{2})\.',
+    )
+
+LanguageData = namedtuple('LanguageData', ['kodi_lang', 'add7_lang'])
 
 
 def get_now_played():
     """
     Get info about the currently played file via JSON-RPC.
     Alternatively this can be done via Kodi InfoLabels.
-    :return: dict
+
+    :return: currently played item's data
+    :rtype: dict
     """
     request = json.dumps({'jsonrpc': '2.0',
                           'method': 'Player.GetItem',
                           'params': {'playerid': 1,
                                      'properties': ['file', 'showtitle', 'season', 'episode']},
                           'id': '1'})
-    reply = json.loads(xbmc.executeJSONRPC(request))
-    return reply['result']['item']
+    return json.loads(xbmc.executeJSONRPC(request))['result']['item']
 
 
-def show_message(title, message, icon='info', duration=3000):
-    """
-    Show a poup-up message.
-    Alternatively this can be done via a Kodi Built-In function.
-    :param title: str
-    :param message: str
-    :param icon: str
-    :param duration: int
-    """
-    xbmcgui.Dialog().notification(title, message, icon, duration)
-
-
-def normalize_showname(showtitle):
+def normalize_showname(showname):
     """
     Normalize showname if there are differences
     between TheTVDB and Addic7ed
-    :param showtitle: str
+
+    :param showname: TV show name
+    :type showname: str
+    :return: normalized show name
+    :rtype: str
     """
-    if 'castle' in showtitle.lower():
-        showtitle = showtitle.replace('(2009)', '')
-    return showtitle.replace(':', '')
+    if 'castle' in showname.lower():
+        showname = showname.replace('(2009)', '')
+    elif showname.lower() == 'law & order: special victims unit':
+        showname = 'Law and order SVU'
+    return showname.replace(':', '')
 
 
 def get_languages(languages_raw):
@@ -54,7 +58,11 @@ def get_languages(languages_raw):
     The 1st item in a pair is used by Kodi.
     The 2nd item in a pair is used by
     the addic7ed web site parser.
-    :param languages_raw: str
+
+    :param languages_raw: the list of subtitle languages from Kodi
+    :type languages_raw: list
+    :return: the list of language pairs
+    :rtype: list
     """
     languages = []
     for language in languages_raw:
@@ -63,31 +71,30 @@ def get_languages(languages_raw):
             add7_lang = 'English'
         elif kodi_lang == 'Portuguese (Brazil)':
             add7_lang = 'Portuguese (Brazilian)'
-        elif re.match(r'Spanish \(.*?\)', kodi_lang) is not None:
+        elif re.search(r'Spanish \(.*?\)', kodi_lang) is not None:
             add7_lang = 'Spanish (Latin America)'
         else:
             add7_lang = language
-        languages.append((kodi_lang, add7_lang))
+        languages.append(LanguageData(kodi_lang, add7_lang))
     return languages
 
 
-def filename_parse(filename):
+def parse_filename(filename):
     """
     Filename parser for extracting show name, season # and episode # from a filename.
-    :param filename: str
+
+    :param filename: episode filename
+    :type filename: str
+    :return: parsed showname, season and episode
+    :rtype: EpisodeData
+    :raises: ParseError if the filename does not match any episode patterns
     """
-    PATTERNS = (r'(.*?)[ \.](?:[\d]*?[ \.])?[Ss]([\d]+)[ \.]?[Ee]([\d]+)',
-                r'(.*?)[ \.](?:[\d]*?[ \.])?([\d]+)[Xx]([\d]+)',
-                r'(.*?)[ \.](?:[\d]*?[ \.])?[Ss]([\d]{2})[ \.]?([\d]{2})',
-                r'(.*?)[ \.][\d]{4}()()',
-                r'(.*?)[ \.]([\d])([\d]{2})')
-    for regexp in PATTERNS:
-        episode_data = re.search(regexp, filename)
+    for regexp in EPISODE_PATTERNS:
+        episode_data = re.search(regexp, filename, re.I | re.U)
         if episode_data is not None:
-            show = episode_data.group(1).replace('.', ' ')
+            showname = episode_data.group(1).replace('.', ' ')
             season = episode_data.group(2).zfill(2)
             episode = episode_data.group(3).zfill(2)
-            break
-    else:
-        show = season = episode = ''
-    return show, season, episode
+            return showname, season, episode
+    raise ParseError
+

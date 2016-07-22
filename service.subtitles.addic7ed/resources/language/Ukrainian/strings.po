@@ -21,7 +21,7 @@ msgstr "Помилка!"
 
 msgctxt "#32003"
 msgid "Exceeded daily limit for subs downloads."
-msgstr "Перевищено щоденний ліміт на завантаження субтитрів."
+msgstr "Перевищено щоденний ліміт завантаження субтитрів."
 
 msgctxt "#32004"
 msgid "Unable to download subtitles."
@@ -32,9 +32,9 @@ msgid "Unable to connect to addic7ed.com."
 msgstr "Не вдалося підключится до addic7ed.com."
 
 msgctxt "#32006"
-msgid "Manual search is not implemented."
-msgstr "Пошук уручну не підтримується."
+msgid "Unable to determine episode data."
+msgstr "Не вдалося визначити дані серії."
 
 msgctxt "#32007"
-msgid "Always use the filename for subs search"
+msgid "Always use filename for subs search"
 msgstr "Завжди шукати субтитри за іменем файлу"

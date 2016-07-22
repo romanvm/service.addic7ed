@@ -32,9 +32,9 @@ msgid "Unable to connect to addic7ed.com."
 msgstr ""
 
 msgctxt "#32006"
-msgid "Manual search is not implemented."
+msgid "Unable to determine episode data."
 msgstr ""
 
 msgctxt "#32007"
-msgid "Always use the filename for subs search"
+msgid "Always use filename for subs search"
 msgstr ""
