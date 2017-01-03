@@ -78,7 +78,8 @@ def display_subs(subs_list, episode_url, filename):
         - url: a plugin call-back URL for downloading selected subs.
     """
     for item in subs_list:
-        list_item = xbmcgui.ListItem(label=item.language, label2=item.version,
+        list_item = xbmcgui.ListItem(label=item.language,
+                                     label2=item.version.encode('utf-8'),
                                      thumbnailImage=xbmc.convertLanguage(item.language, xbmc.ISO_639_1))
         if item.hi:
             list_item.setProperty('hearing_imp', 'true')
@@ -86,7 +87,7 @@ def display_subs(subs_list, episode_url, filename):
         # and compare it with the subs description on addic7ed.com.
         release_match = re.search(r'\-(.*?)\.', filename)
         if release_match is not None and release_match.group(1).lower() in item.version.lower():
-            # Set 'sunc' = 'true' if the subs for the same release.
+            # Set 'sync' = 'true' if the subs for the same release.
             list_item.setProperty('sync', 'true')
         url = '{0}?{1}'.format(
             sys.argv[0],
