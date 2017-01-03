@@ -40,7 +40,9 @@ def log(message, level=xbmc.LOGDEBUG):
     Write message to the Kodi log
     for debuging purposes.
     """
-    xbmc.log('{0}: {1}'.format(_id, message.encode('utf-8')), level)
+    if isinstance(message, unicode):
+        message = message.encode('utf-8')
+    xbmc.log('{0}: {1}'.format(_id, message), level)
 
 
 def ui_string(string_id):
@@ -165,8 +167,8 @@ def search_subs(params):
         season = str(now_played['season']).zfill(2)
         episode = str(now_played['episode']).zfill(2)
         if not os.path.splitext(filename)[1].lower() in VIDEOFILES:
-            filename = u'{0}.{1}x{2}.foo'.format(showname, season, episode)
-        log(u'Using library metadata: {0} - {1}x{2}'.format(showname, season, episode))
+            filename = '{0}.{1}x{2}.foo'.format(showname.encode('utf-8'), season, episode)
+        log('Using library metadata: {0} - {1}x{2}'.format(showname.encode('utf-8'), season, episode))
     # Search subtitles in Addic7ed.com.
     if params['action'] == 'search':
         # Create a search query string
