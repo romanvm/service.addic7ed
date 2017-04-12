@@ -15,6 +15,7 @@ import requests
 from BeautifulSoup import BeautifulSoup, SoupStrainer
 from xbmcvfs import File
 from add7_exceptions import ConnectionError, SubsSearchError, DailyLimitError
+from functions import LanguageData
 
 SITE = 'http://www.addic7ed.com'
 SubsSearchResult = namedtuple('SubsSearchResult', ['subtitles', 'episode_url'])
@@ -64,7 +65,7 @@ def search_episode(query, languages=None):
     :raises: SubsSearchError if search returns ambiguous results or no results
     """
     if languages is None:
-        languages = [('English', 'English')]
+        languages = [LanguageData('English', 'English')]
     try:
         response = open_url(SITE + '/search.php', params={'search': query, 'Submit': 'Search'})
     except requests.RequestException:
