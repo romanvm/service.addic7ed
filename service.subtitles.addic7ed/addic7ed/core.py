@@ -16,7 +16,7 @@ import xbmcplugin
 import xbmcgui
 import xbmcvfs
 
-import addic7ed
+import parser
 import functions
 from add7_exceptions import *
 
@@ -117,7 +117,7 @@ def download_subs(link, referrer, filename):
     subspath = os.path.join(_temp, filename[:-3] + 'srt')
     # Download the subs from addic7ed.com
     try:
-        addic7ed.download_subs(link, referrer, subspath)
+        parser.download_subs(link, referrer, subspath)
     except ConnectionError:
         log('Unable to connect to addic7ed.com', xbmc.LOGERROR)
         dialog.notification(ui_string(32002), ui_string(32005), 'error')
@@ -180,7 +180,7 @@ def search_subs(params):
     if query:
         log('Search query: {0}'.format(query))
         try:
-            results = addic7ed.search_episode(query, languages)
+            results = parser.search_episode(query, languages)
         except ConnectionError:
             log('Unable to connect to addic7ed.com', xbmc.LOGERROR)
             dialog.notification(ui_string(32002), ui_string(32005), 'error')
