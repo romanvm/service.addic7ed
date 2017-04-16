@@ -173,7 +173,11 @@ def search_subs(params):
     if params['action'] == 'search':
         # Create a search query string
         query = '{0}+{1}x{2}'.format(
-            urllib.quote_plus(functions.normalize_showname(showname.encode('utf-8'))), season, episode)
+            urllib.quote_plus(
+                functions.normalize_showname(showname).encode('utf-8')
+            ),
+            season, episode
+        )
     else:
         # Get the query string typed on the on-screen keyboard
         query = params['searchstring']
