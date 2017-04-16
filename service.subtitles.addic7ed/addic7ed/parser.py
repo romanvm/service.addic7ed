@@ -19,6 +19,7 @@ from functions import LanguageData
 
 SITE = 'http://www.addic7ed.com'
 SubsSearchResult = namedtuple('SubsSearchResult', ['subtitles', 'episode_url'])
+EpisodeItem = namedtuple('EpisodeItem', ['title', 'link'])
 SubsItem = namedtuple('SubsItem', ['language', 'version', 'link', 'hi'])
 
 
@@ -71,15 +72,58 @@ def search_episode(query, languages=None):
     except requests.RequestException:
         raise ConnectionError
     else:
-        if re.search(
-                r'<table width="100%" border="0" align="center" class="tabel95">',
-                response.text) is not None:
-            return SubsSearchResult(parse_episode(response.text, languages), response.url)
+        soup = BeautifulSoup(response.text, 'html5lib')
+        table = soup.find('table',
+                          {'class': 'tabel', 'align': 'center', 'width': '80%',
+                           'border': '0'}
+                          )
+        if table is not None:
+            return list(parse_search_results(table))
+        else:
+            sub_cells = soup.find_all('table',
+                                  {'width': '100%', 'border': '0', 'align': 'center', 'class': 'tabel95'}
+                                  )
+            if sub_cells:
+                return SubsSearchResult(parse_episode(sub_cells , languages), response.url)
+            else:
+                raise SubsSearchError
+
+
+def parse_search_results(table):
+    """
+    
+    :param table: 
+    :return: 
+    """
+    a_tags = table.find_all('a', href=re.compile(r'^serie'))
+    for tag in a_tags:
+        yield EpisodeItem(tag.text, tag['href'])
+
+
+def get_episode(link, languages=None):
+    """
+    
+    :param link: 
+    :return: 
+    """
+    if languages is None:
+        languages = [LanguageData('English', 'English')]
+    try:
+        response = open_url(SITE + '/' + link)
+    except requests.RequestException:
+        raise ConnectionError
+    else:
+        soup = BeautifulSoup(response.text, 'html5lib')
+        sub_cells = soup.find_all('table',
+                                  {'width': '100%', 'border': '0', 'align': 'center',
+                                   'class': 'tabel95'})
+        if sub_cells:
+            return SubsSearchResult(parse_episode(sub_cells, languages), response.url)
         else:
             raise SubsSearchError
 
 
-def parse_episode(episode_page, languages):
+def parse_episode(sub_cell, languages):
     """
     Parse episode page. Accepts an episode page and a language.
     languages param must be a list of tuples
@@ -92,21 +136,19 @@ def parse_episode(episode_page, languages):
     - ``link``: subtitles link
     - ``hi``: ``True`` for subs for hearing impaired, else ``False``
 
-    :param episode_page: episode page html code from addic7ed.com
-    :type episode_page: str
+    :param sub_cell: BS nodes with episode subtitles
     :param languages: the list of languages to search
     :type languages:
     :return: generator function that yields :class:`SubsItem` items.
     """
-    soup = BeautifulSoup(episode_page, 'html5lib')
-    for sub_cell in soup:
+    for sub_cell in sub_cell:
         version = re.search(r'Version (.*?),',
                             sub_cell.find('td',
                                           {'colspan': '3',
                                            'align': 'center',
                                            'class': 'NewsTitle'}).text
                             ).group(1)
-        works_with = sub_cell.find('td', {'class': 'newsDate', 'colspan': '3'}).text
+        works_with = sub_cell.find('td', {'class': 'newsDate', 'colspan': '3'}).get_text(strip=True)
         if works_with:
             version += ', ' + works_with
         lang_cells = sub_cell.find_all('td', {'class': 'language'})

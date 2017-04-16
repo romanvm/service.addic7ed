@@ -7,16 +7,16 @@ import sys
 import unittest
 import codecs
 from mock import MagicMock
+from bs4 import BeautifulSoup
 
 basedir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(basedir, 'service.subtitles.addic7ed', 'resources', 'lib'))
+sys.path.append(os.path.join(basedir, 'service.subtitles.addic7ed'))
 
 sys.modules['xbmc'] = MagicMock()
 sys.modules['xbmcvfs'] = MagicMock()
 sys.modules['requests'] = MagicMock()
 
-import functions
-import addic7ed
+from addic7ed import parser, functions
 
 
 class ParseEpisodeFileNameTestCase(unittest.TestCase):
@@ -51,10 +51,29 @@ class ParseEpisodeTestCase(unittest.TestCase):
         with codecs.open(os.path.join(basedir, 'test_data', 'WalkingDead.S04E01.htm'), 'rb', 'utf-8') as fo:
             page_html = fo.read()
         english = functions.LanguageData('English', 'English')
-        subtitles = list(addic7ed.parse_episode(page_html, [english]))
+        soup = BeautifulSoup(page_html, 'html5lib')
+        cells = soup.find_all('table',
+                          {'width': '100%', 'border': '0', 'align': 'center',
+                           'class': 'tabel95'}
+                          )
+        subtitles = list(parser.parse_episode(cells, [english]))
         self.assertEqual(len(subtitles), 3)
         self.assertEqual(subtitles[0].version, 'ASAP, Works with IMMERSE, AFG, HDTV mSD')
         self.assertTrue(subtitles[0].hi)
+
+
+class ParseSearchResultsTestCase(unittest.TestCase):
+    def test_parse_search_results(self):
+        with codecs.open(os.path.join(basedir, 'test_data', 'Six.htm'), 'rb', 'utf-8') as fo:
+            page_html = fo.read()
+        soup = BeautifulSoup(page_html, 'html5lib')
+        table = soup.find('table',
+                          {'class': 'tabel', 'align': 'center', 'width': '80%',
+                           'border': '0'}
+                          )
+        episodes = list(parser.parse_search_results(table))
+        print episodes
+        self.assertEqual(len(episodes), 103)
 
 
 if __name__ == '__main__':
