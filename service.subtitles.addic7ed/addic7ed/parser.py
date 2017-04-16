@@ -12,7 +12,7 @@ import re
 from contextlib import closing
 from collections import namedtuple
 import requests
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+from bs4 import BeautifulSoup
 from xbmcvfs import File
 from add7_exceptions import ConnectionError, SubsSearchError, DailyLimitError
 from functions import LanguageData
@@ -71,7 +71,9 @@ def search_episode(query, languages=None):
     except requests.RequestException:
         raise ConnectionError
     else:
-        if re.search(r'<table width="100%" border="0" align="center" class="tabel95">', response.text) is not None:
+        if re.search(
+                r'<table width="100%" border="0" align="center" class="tabel95">',
+                response.text) is not None:
             return SubsSearchResult(parse_episode(response.text, languages), response.url)
         else:
             raise SubsSearchError
@@ -96,23 +98,22 @@ def parse_episode(episode_page, languages):
     :type languages:
     :return: generator function that yields :class:`SubsItem` items.
     """
-    soup = BeautifulSoup(episode_page, parseOnlyThese=SoupStrainer('table',
-                                                                   {'width': '100%',
-                                                                    'border': '0',
-                                                                    'align': 'center',
-                                                                    'class': 'tabel95'}))
+    soup = BeautifulSoup(episode_page, 'html5lib')
     for sub_cell in soup:
         version = re.search(r'Version (.*?),',
                             sub_cell.find('td',
-                                          {'colspan': '3', 'align': 'center', 'class': 'NewsTitle'}).text).group(1)
+                                          {'colspan': '3',
+                                           'align': 'center',
+                                           'class': 'NewsTitle'}).text
+                            ).group(1)
         works_with = sub_cell.find('td', {'class': 'newsDate', 'colspan': '3'}).text
         if works_with:
             version += ', ' + works_with
-        lang_cells = sub_cell.findAll('td', {'class': 'language'})
+        lang_cells = sub_cell.find_all('td', {'class': 'language'})
         for lang_cell in lang_cells:
             for language in languages:
                 if language.add7_lang in lang_cell.text:
-                    download_cell = lang_cell.findNext('td', {'colspan': '3'})
+                    download_cell = lang_cell.find_next('td', {'colspan': '3'})
                     download_button = download_cell.find(text='most updated')
                     if download_button is None:
                         download_button = download_cell.find(text='Download')
