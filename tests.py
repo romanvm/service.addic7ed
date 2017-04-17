@@ -48,7 +48,9 @@ class ParseEpisodeFileNameTestCase(unittest.TestCase):
 
 class ParseEpisodeTestCase(unittest.TestCase):
     def test_parsing_episode_page(self):
-        with codecs.open(os.path.join(basedir, 'test_data', 'WalkingDead.S04E01.htm'), 'rb', 'utf-8') as fo:
+        with codecs.open(
+                os.path.join(basedir, 'test_data', 'WalkingDead.S04E01.htm'),
+                'rb', 'utf-8') as fo:
             page_html = fo.read()
         english = functions.LanguageData('English', 'English')
         soup = BeautifulSoup(page_html, 'html5lib')
@@ -72,7 +74,6 @@ class ParseSearchResultsTestCase(unittest.TestCase):
                            'border': '0'}
                           )
         episodes = list(parser.parse_search_results(table))
-        print episodes
         self.assertEqual(len(episodes), 103)
 
 

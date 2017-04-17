@@ -5,7 +5,7 @@
   provider-name="Roman V.M.">
 <requires>
   <import addon="xbmc.python" version="2.19.0"/>
-  <import addon="script.module.bs4"/>
+  <import addon="script.module.beautifulsoup4"/>
   <import addon="script.module.html5lib"/>
   <import addon="script.module.requests"/>
 </requires>

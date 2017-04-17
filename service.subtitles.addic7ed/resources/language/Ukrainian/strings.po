@@ -38,3 +38,7 @@ msgstr "Не вдалося визначити дані серії."
 msgctxt "#32007"
 msgid "Always use filename for subs search"
 msgstr "Завжди шукати субтитри за іменем файлу"
+
+msgctxt "#32008"
+msgid "Select episode"
+msgstr "Виберіть серію"

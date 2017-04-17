@@ -191,6 +191,23 @@ def search_subs(params):
         except SubsSearchError:
             log('No subs found.', xbmc.LOGNOTICE)
         else:
+            if isinstance(results, list):
+                log('Multiple episode found:\n{0}'.format(results), xbmc.LOGNOTICE)
+                i = dialog.select(ui_string(32008), [item.title for item in results])
+                if i >= 0:
+                    try:
+                        results = parser.get_episode(results[i].link, languages)
+                    except ConnectionError:
+                        log('Unable to connect to addic7ed.com', xbmc.LOGERROR)
+                        dialog.notification(ui_string(32002), ui_string(32005),
+                                            'error')
+                        return
+                    except SubsSearchError:
+                        log('No subs found.', xbmc.LOGNOTICE)
+                        return
+                else:
+                    log('Episode selection cancelled.', xbmc.LOGNOTICE)
+                    return
             log('Found subs for "{0}"'.format(query), xbmc.LOGNOTICE)
             display_subs(results.subtitles, results.episode_url, filename)
 

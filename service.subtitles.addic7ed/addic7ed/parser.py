@@ -123,7 +123,7 @@ def get_episode(link, languages=None):
             raise SubsSearchError
 
 
-def parse_episode(sub_cell, languages):
+def parse_episode(sub_cells, languages):
     """
     Parse episode page. Accepts an episode page and a language.
     languages param must be a list of tuples
@@ -141,7 +141,7 @@ def parse_episode(sub_cell, languages):
     :type languages:
     :return: generator function that yields :class:`SubsItem` items.
     """
-    for sub_cell in sub_cell:
+    for sub_cell in sub_cells:
         version = re.search(r'Version (.*?),',
                             sub_cell.find('td',
                                           {'colspan': '3',
