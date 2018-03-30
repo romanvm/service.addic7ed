@@ -8,14 +8,15 @@
 # Licence:     GPL v.3 http://www.gnu.org/licenses/gpl.html
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 import re
 from contextlib import closing
 from collections import namedtuple
 import requests
 from bs4 import BeautifulSoup
 from xbmcvfs import File
-from add7_exceptions import ConnectionError, SubsSearchError, DailyLimitError
-from functions import LanguageData
+from .exceptions import ConnectionError, SubsSearchError, DailyLimitError
+from .functions import LanguageData
 
 SITE = 'http://www.addic7ed.com'
 SubsSearchResult = namedtuple('SubsSearchResult', ['subtitles', 'episode_url'])

@@ -2,6 +2,7 @@
 # Created on: 07.04.2016
 # Author: Roman Miroshnychenko aka Roman V.M. (romanvm@yandex.ua)
 
+from __future__ import absolute_import
 #Standard modules
 import os
 import sys
@@ -16,9 +17,8 @@ import xbmcplugin
 import xbmcgui
 import xbmcvfs
 
-import parser
-import functions
-from add7_exceptions import *
+from . import parser, functions
+from .exceptions import *
 
 __all__ = ['router']
 
@@ -52,7 +52,7 @@ def ui_string(string_id):
     :param string_id: UI string ID
     :return: UI string
     """
-    return _addon.getLocalizedString(string_id).encode('utf-8')
+    return _addon.getLocalizedString(string_id)
 
 
 def display_subs(subs_list, episode_url, filename):

@@ -4,11 +4,12 @@
 # Created on: 03.12.2014
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
+from __future__ import absolute_import
 import json
 import re
 from collections import namedtuple
 import xbmc
-from add7_exceptions import ParseError
+from .exceptions import ParseError
 
 EPISODE_PATTERNS = (
     r'^(.*?)[ \.](?:\d*?[ \.])?s(\d+)[ \.]?e(\d+)\.',
