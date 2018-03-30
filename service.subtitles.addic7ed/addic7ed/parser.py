@@ -164,7 +164,7 @@ def parse_episode(sub_cells, languages):
                     yield SubsItem(language=language.kodi_lang,
                                    version=version,
                                    link=SITE + download_tag['href'],
-                                   hi=(download_tag.findNext('tr').contents[1].find(
+                                   hi=(download_tag.find_next('tr').contents[1].find(
                                        'img', title='Hearing Impaired') is not None))
                     break
 
