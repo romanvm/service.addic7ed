@@ -21,3 +21,11 @@ class ConnectionError(Add7Exception):
 
 class DailyLimitError(Add7Exception):
     pass
+
+
+class CookiesError(Add7Exception):
+    pass
+
+
+class LoginError(Add7Exception):
+    pass

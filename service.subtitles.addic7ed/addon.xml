@@ -8,6 +8,7 @@
   <import addon="script.module.beautifulsoup4"/>
   <import addon="script.module.html5lib"/>
   <import addon="script.module.requests"/>
+  <import addon="script.module.web-pdb" />
 </requires>
 <extension point="xbmc.subtitle.module" library="main.py" />
 <extension point="xbmc.addon.metadata">
@@ -18,5 +19,6 @@
   <description lang="ru">Служба субтитров для сайта Addic7ed.com.</description>
   <description lang="uk">Служба субтитрів для сайту Addic7ed.com.</description>
   <platform>all</platform>
+  <reuselanguageinvoker>false</reuselanguageinvoker>
 </extension>
 </addon>

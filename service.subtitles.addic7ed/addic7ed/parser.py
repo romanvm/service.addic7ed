@@ -12,39 +12,18 @@ from __future__ import absolute_import
 import re
 from contextlib import closing
 from collections import namedtuple
-import requests
 from bs4 import BeautifulSoup
 from xbmcvfs import File
-from .exceptions import ConnectionError, SubsSearchError, DailyLimitError
+from .exceptions import SubsSearchError, DailyLimitError
 from .functions import LanguageData
+from .webclient import Session
 
-SITE = 'http://www.addic7ed.com'
+__all__ = ['search_episode', 'get_episode', 'download_subs']
+
+session = Session()
 SubsSearchResult = namedtuple('SubsSearchResult', ['subtitles', 'episode_url'])
 EpisodeItem = namedtuple('EpisodeItem', ['title', 'link'])
 SubsItem = namedtuple('SubsItem', ['language', 'version', 'link', 'hi'])
-
-
-def open_url(url, ref=SITE, params=None):
-    """
-    Open webpage from url
-
-    :param url: URL to open
-    :type url: str
-    :param ref: referer header contents
-    :type ref: str
-    :param params: query params
-    :type params: dict
-    :return: response object
-    """
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Host': SITE[7:],
-        'Referer': ref,
-        'Accept-Charset': 'UTF-8',
-        'Accept-Encoding': 'gzip,deflate'
-        }
-    return requests.get(url, params=params, headers=headers)
 
 
 def search_episode(query, languages=None):
@@ -68,26 +47,22 @@ def search_episode(query, languages=None):
     """
     if languages is None:
         languages = [LanguageData('English', 'English')]
-    try:
-        response = open_url(SITE + '/search.php', params={'search': query, 'Submit': 'Search'})
-    except requests.RequestException:
-        raise ConnectionError
+    webpage = session.load_page('/search.php', params={'search': query, 'Submit': 'Search'})
+    soup = BeautifulSoup(webpage, 'html5lib')
+    table = soup.find('table',
+                      {'class': 'tabel', 'align': 'center', 'width': '80%',
+                       'border': '0'}
+                      )
+    if table is not None:
+        return list(parse_search_results(table))
     else:
-        soup = BeautifulSoup(response.text, 'html5lib')
-        table = soup.find('table',
-                          {'class': 'tabel', 'align': 'center', 'width': '80%',
-                           'border': '0'}
-                          )
-        if table is not None:
-            return list(parse_search_results(table))
+        sub_cells = soup.find_all('table',
+                              {'width': '100%', 'border': '0', 'align': 'center', 'class': 'tabel95'}
+                              )
+        if sub_cells:
+            return SubsSearchResult(parse_episode(sub_cells, languages), session.last_url)
         else:
-            sub_cells = soup.find_all('table',
-                                  {'width': '100%', 'border': '0', 'align': 'center', 'class': 'tabel95'}
-                                  )
-            if sub_cells:
-                return SubsSearchResult(parse_episode(sub_cells , languages), response.url)
-            else:
-                raise SubsSearchError
+            raise SubsSearchError
 
 
 def parse_search_results(table):
@@ -109,19 +84,15 @@ def get_episode(link, languages=None):
     """
     if languages is None:
         languages = [LanguageData('English', 'English')]
-    try:
-        response = open_url(SITE + '/' + link)
-    except requests.RequestException:
-        raise ConnectionError
+    webpage = session.load_page('/' + link)
+    soup = BeautifulSoup(webpage, 'html5lib')
+    sub_cells = soup.find_all('table',
+                              {'width': '100%', 'border': '0', 'align': 'center',
+                               'class': 'tabel95'})
+    if sub_cells:
+        return SubsSearchResult(parse_episode(sub_cells, languages), session.last_url)
     else:
-        soup = BeautifulSoup(response.text, 'html5lib')
-        sub_cells = soup.find_all('table',
-                                  {'width': '100%', 'border': '0', 'align': 'center',
-                                   'class': 'tabel95'})
-        if sub_cells:
-            return SubsSearchResult(parse_episode(sub_cells, languages), response.url)
-        else:
-            raise SubsSearchError
+        raise SubsSearchError
 
 
 def parse_episode(sub_cells, languages):
@@ -163,18 +134,18 @@ def parse_episode(sub_cells, languages):
                     download_tag = download_button.parent.parent
                     yield SubsItem(language=language.kodi_lang,
                                    version=version,
-                                   link=SITE + download_tag['href'],
+                                   link=download_tag['href'],
                                    hi=(download_tag.find_next('tr').contents[1].find(
                                        'img', title='Hearing Impaired') is not None))
                     break
 
 
-def download_subs(url, referer, filename='subtitles.srt'):
+def download_subs(link, referer, filename='subtitles.srt'):
     """
     Download subtitles from addic7ed.com
 
-    :param url: subtitles URL
-    :type url: str
+    :param link: relative lint to .srt file
+    :type link: str
     :param referer: episode page for referer header
     :type referer: str
     :param filename: file name for subtitles
@@ -182,13 +153,9 @@ def download_subs(url, referer, filename='subtitles.srt'):
     :raises: ConnectionError if addic7ed.com cannot be opened
     :raises: DailyLimitError if a user exceeded their daily download quota (10 subtitles).
     """
-    try:
-        subtitles = open_url(url, ref=referer).content
-    except requests.RequestException:
-        raise ConnectionError
+    subtitles = session.download_subs(link, referer=referer)
+    if subtitles[:9].lower() != '<!doctype':
+        with closing(File(filename, 'w')) as fo:
+            fo.write(subtitles)
     else:
-        if subtitles[:9].lower() != '<!doctype':
-            with closing(File(filename, 'w')) as fo:
-                fo.write(subtitles)
-        else:
-            raise DailyLimitError
+        raise DailyLimitError

@@ -41,4 +41,40 @@ msgstr "Всегда искать субтитры по имени файла"
 
 msgctxt "#32008"
 msgid "Select episode"
-msgstr "Виберите серию"
+msgstr "Выберите серию"
+
+msgctxt "#32009"
+msgid "Login error!"
+msgstr "Ошибка входа."
+
+msgctxt "#32010"
+msgid "Login to Addic7ed.com"
+msgstr "Вход на Addic7ed.com"
+
+msgctxt "#32011"
+msgid "Username"
+msgstr "Имя пользователя"
+
+msgctxt "#32012"
+msgid "Password"
+msgstr "Пароль"
+
+msgctxt "#32013"
+msgid "Clean cookies"
+msgstr "Очистить куки"
+
+msgctxt "#32014"
+msgid "This will logout you from Addic7ed.com."
+msgstr "Это приведет к выходу с Addic7ed.com"
+
+msgctxt "#32015"
+msgid "Are you sure?"
+msgstr "Вы уверены?"
+
+msgctxt "#32016"
+msgid "Cookies removed successfully."
+msgstr "Куки успешно удалены."
+
+msgctxt "#32017"
+msgid "Unable to remove cookies!"
+msgstr "Не удалось удалить куки."
