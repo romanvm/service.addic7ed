@@ -1,6 +1,6 @@
 # coding: utf-8
 # Created on: 07.04.2016
-# Author: Roman Miroshnychenko aka Roman V.M. (romanvm@yandex.ua)
+# Author: Roman Miroshnychenko aka Roman V.M. (roman1972@gmail.com)
 
 from __future__ import absolute_import
 #Standard modules
