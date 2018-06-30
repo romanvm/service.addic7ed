@@ -129,8 +129,9 @@ class Session(object):
         except requests.RequestException:
             log_error('Unable to connect to Addic7ed.com!')
             raise ConnectionError
-        log_debug('Addic7ed.com returned status: {0}'.format(response.status_code))
         if response.status_code not in (200, 301, 302):
+            log_error('Addic7ed.com returned status: {0}'.format(response.status_code))
+            log_debug(response.content)
             raise ConnectionError
         return response
 
