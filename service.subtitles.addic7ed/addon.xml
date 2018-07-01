@@ -18,8 +18,8 @@
   <description lang="en_GB">Subtitles service for Addic7ed.com. It supports only TV shows.</description>
   <description lang="ru_RU">Служба субтитров для сайта Addic7ed.com. Служба поддерживает только сериалы.</description>
   <description lang="uk_UA">Служба субтитрів для сайту Addic7ed.com. Служба підтримує лише серіали.</description>
+  <disclaimer lang="en_GB">All rights to Addic7ed.com logo belong to the site owners.</disclaimer>
   <platform>all</platform>
-  <reuselanguageinvoker>false</reuselanguageinvoker>
   <assets>
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
@@ -27,5 +27,6 @@
   <news>v.2.2.0:
 - Addic7ed.com login support. Check addon settings.
 - New addon icon and fanart (thanks to Jean-Pierre).</news>
+  <reuselanguageinvoker>false</reuselanguageinvoker>
 </extension>
 </addon>
