@@ -31,6 +31,7 @@ handle = int(sys.argv[1])
 VIDEOFILES = ('.avi', '.mkv', '.mp4', '.ts', '.m2ts', '.mov')
 dialog = xbmcgui.Dialog()
 
+
 def display_subs(subs_list, episode_url, filename):
     """
     Display the list of found subtitles
