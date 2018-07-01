@@ -24,5 +24,8 @@
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
   </assets>
+  <news>v.2.2.0:
+- Addic7ed.com login support. Check addon settings.
+- New addon icon and fanart (thanks to Jean-Pierre).</news>
 </extension>
 </addon>
