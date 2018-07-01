@@ -6,7 +6,7 @@ from xbmcaddon import Addon
 
 __all__ = ['ADDON_ID', 'addon', 'path', 'profile', 'icon', 'get_ui_string']
 
-ADDON_ID = 'script.service.addic7ed'
+ADDON_ID = 'service.subtitles.addic7ed'
 addon = Addon(ADDON_ID)
 path = xbmc.translatePath(addon.getAddonInfo('path')).decode('utf-8')
 profile = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
