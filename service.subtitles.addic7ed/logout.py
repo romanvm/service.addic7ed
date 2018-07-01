@@ -1,43 +1,32 @@
 # coding: utf-8
 
 import os
-import xbmc
-from xbmcaddon import Addon
 from xbmcgui import Dialog
+from addic7ed import addon
+from addic7ed.functions import log_error, log_debug
 
-ADDON_ID = 'service.subtitles.addic7ed'
-addon = Addon(ADDON_ID)
-profile_dir = xbmc.translatePath(addon.getAddonInfo('profile').decode('utf-8'))
-cookies = os.path.join(profile_dir, 'cookies.pickle')
+
+cookies = os.path.join(addon.profile, 'cookies.pickle')
 dialog = Dialog()
-
-
-def ui_string(string_id):
-    """
-    Get language string by ID
-
-    :param string_id: UI string ID
-    :return: UI string
-    """
-    return addon.getLocalizedString(string_id)
 
 
 def do_logout():
     """
     Clean cookie file to logout from the site
     """
-    if dialog.yesno(ui_string(32013), ui_string(32014), ui_string(32015)):
+    if dialog.yesno(addon.get_ui_string(32013), addon.get_ui_string(32014),
+                    addon.get_ui_string(32015)):
         if os.path.exists(cookies):
             try:
                 os.remove(cookies)
             except OSError:
                 pass
             else:
-                dialog.notification(ADDON_ID, ui_string(ui_string(32016)))
-                xbmc.log(ADDON_ID + ': Cookies removed successfully.', xbmc.LOGDEBUG)
+                dialog.notification(addon.ADDON_ID, addon.get_ui_string(32016))
+                log_debug('Cookies removed successfully.')
                 return
-        dialog.notification(ADDON_ID, ui_string(32017), icon='error')
-        xbmc.log(ADDON_ID + ': Unable to remove cookies!', xbmc.LOGERROR)
+        dialog.notification(addon.ADDON_ID, addon.get_ui_string(32017), icon='error')
+        log_error('Unable to remove cookies!')
 
 
 if __name__ == '__main__':
