@@ -4,17 +4,14 @@ from __future__ import absolute_import
 import os
 import cPickle as pickle
 import requests
-import xbmc
-from xbmcaddon import Addon
 from xbmcgui import Dialog
+from .addon import ADDON_ID, addon, profile, get_ui_string
 from .exceptions import CookiesError, LoginError, ConnectionError
+from .functions import log_notice, log_error, log_debug
 
 __all__ = ['Session']
 
-addon = Addon()
-addon_id = addon.getAddonInfo('id')
-profile_dir = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
-cookies = os.path.join(profile_dir, 'cookies.pickle')
+cookies = os.path.join(profile, 'cookies.pickle')
 SITE = 'http://www.addic7ed.com'
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0',
@@ -23,18 +20,6 @@ HEADERS = {
     'Accept-Charset': 'UTF-8',
     'Accept-Encoding': 'gzip,deflate'
 }
-
-
-def log_notice(message):
-    xbmc.log('{0}: {1}'.format(addon_id, message), xbmc.LOGNOTICE)
-
-
-def log_error(message):
-    xbmc.log('{0}: {1}'.format(addon_id, message), xbmc.LOGERROR)
-
-
-def log_debug(message):
-    xbmc.log('{0}: {1}'.format(addon_id, message), xbmc.LOGDEBUG)
 
 
 class Session(object):
@@ -58,8 +43,8 @@ class Session(object):
             except LoginError:
                 log_error('Login error! Check username and password.')
                 Dialog().notification(
-                    addon_id,
-                    addon.getLocalizedString(32009),
+                    ADDON_ID,
+                    get_ui_string(32009),
                     icon='error'
                 )
             else:
