@@ -9,7 +9,18 @@ import json
 import re
 from collections import namedtuple
 import xbmc
+from .addon import ADDON_ID
 from .exceptions import ParseError
+
+__all__ = [
+    'log_notice',
+    'log_error',
+    'log_debug',
+    'get_now_played',
+    'normalize_showname',
+    'get_languages',
+    'parse_filename',
+]
 
 EPISODE_PATTERNS = (
     r'^(.*?)[ \.](?:\d*?[ \.])?s(\d+)[ \.]?e(\d+)\.',
@@ -18,6 +29,28 @@ EPISODE_PATTERNS = (
     )
 
 LanguageData = namedtuple('LanguageData', ['kodi_lang', 'add7_lang'])
+
+
+def log(message, level):
+    """
+    Write message to the Kodi log
+    for debuging purposes.
+    """
+    if isinstance(message, unicode):
+        message = message.encode('utf-8')
+    xbmc.log('{0}: {1}'.format(ADDON_ID, message), level)
+
+
+def log_notice(message):
+    log(message, xbmc.LOGNOTICE)
+
+
+def log_error(message):
+    log(message, xbmc.LOGERROR)
+
+
+def log_debug(message):
+    log(message, xbmc.LOGDEBUG)
 
 
 def get_now_played():
