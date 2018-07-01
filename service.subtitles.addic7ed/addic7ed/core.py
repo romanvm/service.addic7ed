@@ -17,14 +17,14 @@ import xbmcgui
 import xbmcvfs
 
 from . import parser
-from .addon import addon, get_ui_string, icon
+from .addon import addon, profile, get_ui_string, icon
 from .exceptions import *
 from .functions import (log_notice, log_error, log_debug, get_languages,
                         get_now_played, parse_filename, normalize_showname)
 
 __all__ = ['router']
 
-temp = os.path.join(addon.profile, 'temp')
+temp = os.path.join(profile, 'temp')
 handle = int(sys.argv[1])
 
 
