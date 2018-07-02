@@ -118,6 +118,7 @@ class Session(object):
             log_error('Addic7ed.com returned status: {0}'.format(response.status_code))
             log_debug(response.content)
             raise ConnectionError
+        response.encoding = 'utf-8'  # Encoding is detected incorrectly for some reason
         return response
 
     def load_page(self, path, params=None):

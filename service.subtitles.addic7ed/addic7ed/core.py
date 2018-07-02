@@ -59,7 +59,7 @@ def display_subs(subs_list, episode_url, filename):
     for item in subs_list:
         list_item = xbmcgui.ListItem(
             label=item.language,
-            label2=item.version.encode('utf-8'),
+            label2=item.version,
             thumbnailImage=xbmc.convertLanguage(item.language, xbmc.ISO_639_1)
         )
         if item.hi:
