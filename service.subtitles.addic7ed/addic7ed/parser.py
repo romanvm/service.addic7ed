@@ -24,6 +24,8 @@ session = Session()
 SubsSearchResult = namedtuple('SubsSearchResult', ['subtitles', 'episode_url'])
 EpisodeItem = namedtuple('EpisodeItem', ['title', 'link'])
 SubsItem = namedtuple('SubsItem', ['language', 'version', 'link', 'hi'])
+serie_re = re.compile(r'^serie')
+version_re = re.compile(r'Version (.*?),')
 
 
 def search_episode(query, languages=None):
@@ -71,7 +73,7 @@ def parse_search_results(table):
     :param table: 
     :return: 
     """
-    a_tags = table.find_all('a', href=re.compile(r'^serie'))
+    a_tags = table.find_all('a', href=serie_re)
     for tag in a_tags:
         yield EpisodeItem(tag.text, tag['href'])
 
@@ -114,7 +116,7 @@ def parse_episode(sub_cells, languages):
     :return: generator function that yields :class:`SubsItem` items.
     """
     for sub_cell in sub_cells:
-        version = re.search(r'Version (.*?),',
+        version = version_re.search(
                             sub_cell.find('td',
                                           {'colspan': '3',
                                            'align': 'center',

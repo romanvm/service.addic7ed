@@ -22,11 +22,12 @@ __all__ = [
     'parse_filename',
 ]
 
-EPISODE_PATTERNS = (
-    r'^(.*?)[ \.](?:\d*?[ \.])?s(\d+)[ \.]?e(\d+)\.',
-    r'^(.*?)[ \.](?:\d*?[ \.])?(\d+)x(\d+)\.',
-    r'^(.*?)[ \.](?:\d*?[ \.])?(\d{1,2}?)[ \.]?(\d{2})\.',
+episode_patterns = (
+    re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?s(\d+)[ \.]?e(\d+)\.', re.I | re.U),
+    re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?(\d+)x(\d+)\.', re.I | re.U),
+    re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?(\d{1,2}?)[ \.]?(\d{2})\.', re.I | re.U),
     )
+spanish_re = re.compile(r'Spanish \(.*?\)')
 
 LanguageData = namedtuple('LanguageData', ['kodi_lang', 'add7_lang'])
 
@@ -105,7 +106,7 @@ def get_languages(languages_raw):
             add7_lang = 'English'
         elif kodi_lang == 'Portuguese (Brazil)':
             add7_lang = 'Portuguese (Brazilian)'
-        elif re.search(r'Spanish \(.*?\)', kodi_lang) is not None:
+        elif spanish_re.search(kodi_lang) is not None:
             add7_lang = 'Spanish (Latin America)'
         else:
             add7_lang = language
@@ -123,8 +124,8 @@ def parse_filename(filename):
     :rtype: EpisodeData
     :raises: ParseError if the filename does not match any episode patterns
     """
-    for regexp in EPISODE_PATTERNS:
-        episode_data = re.search(regexp, filename, re.I | re.U)
+    for regexp in episode_patterns:
+        episode_data = regexp.search(filename)
         if episode_data is not None:
             showname = episode_data.group(1).replace('.', ' ')
             season = episode_data.group(2).zfill(2)

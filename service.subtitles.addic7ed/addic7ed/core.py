@@ -30,6 +30,7 @@ handle = int(sys.argv[1])
 
 VIDEOFILES = ('.avi', '.mkv', '.mp4', '.ts', '.m2ts', '.mov')
 dialog = xbmcgui.Dialog()
+release_re = re.compile(r'-(.*?)(?:\[.*?\])?\.')
 
 
 def display_subs(subs_list, episode_url, filename):
@@ -66,7 +67,7 @@ def display_subs(subs_list, episode_url, filename):
             list_item.setProperty('hearing_imp', 'true')
         # Check the release name in the filename (e.g. DIMENSION)
         # and compare it with the subs description on addic7ed.com.
-        release_match = re.search(r'-(.*?)\.', filename)
+        release_match = release_re.search(filename)
         if release_match is not None and release_match.group(1).lower() in item.version.lower():
             # Set 'sync' = 'true' if the subs for the same release.
             list_item.setProperty('sync', 'true')
