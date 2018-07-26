@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="service.subtitles.addic7ed"
   name="Addic7ed.com"
-  version="2.2.1"
+  version="2.2.2"
   provider-name="Roman V.M.">
 <requires>
   <import addon="xbmc.python" version="2.24.0"/>
