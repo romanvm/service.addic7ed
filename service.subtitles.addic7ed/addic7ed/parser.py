@@ -124,7 +124,7 @@ def parse_episode(sub_cells, languages):
                             ).group(1)
         works_with = sub_cell.find('td', {'class': 'newsDate', 'colspan': '3'}).get_text(strip=True)
         if works_with:
-            version += ', ' + works_with
+            version += u', ' + works_with
         lang_cells = sub_cell.find_all('td', {'class': 'language'})
         for lang_cell in lang_cells:
             for language in languages:
