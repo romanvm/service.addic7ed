@@ -24,7 +24,7 @@
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
   </assets>
-  <news>v.2.2.1:
+  <news>v.2.2.2:
 - Minor fixes.
 v.2.2.1:
 - Fixed encoding issue for non-ASCII characters.
