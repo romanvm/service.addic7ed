@@ -13,9 +13,7 @@ from .addon import ADDON_ID
 from .exceptions import ParseError
 
 __all__ = [
-    'log_notice',
-    'log_error',
-    'log_debug',
+    'logger',
     'get_now_played',
     'normalize_showname',
     'get_languages',
@@ -32,26 +30,24 @@ spanish_re = re.compile(r'Spanish \(.*?\)')
 LanguageData = namedtuple('LanguageData', ['kodi_lang', 'add7_lang'])
 
 
-def log(message, level):
-    """
-    Write message to the Kodi log
-    for debuging purposes.
-    """
-    if isinstance(message, unicode):
-        message = message.encode('utf-8')
-    xbmc.log('{0}: {1}'.format(ADDON_ID, message), level)
+class logger(object):
+    @staticmethod
+    def log(message, level=xbmc.LOGDEBUG):
+        if isinstance(message, unicode):
+            message = message.encode('utf-8')
+        xbmc.log('{0}: {1}'.format(ADDON_ID, message), level)
 
+    @staticmethod
+    def notice(message):
+        logger.log(message, xbmc.LOGNOTICE)
 
-def log_notice(message):
-    log(message, xbmc.LOGNOTICE)
+    @staticmethod
+    def error(message):
+        logger.log(message, xbmc.LOGERROR)
 
-
-def log_error(message):
-    log(message, xbmc.LOGERROR)
-
-
-def log_debug(message):
-    log(message, xbmc.LOGDEBUG)
+    @staticmethod
+    def debug(message):
+        logger.log(message, xbmc.LOGDEBUG)
 
 
 def get_now_played():
