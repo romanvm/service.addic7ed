@@ -151,8 +151,8 @@ def download_subs(link, referer, filename='subtitles.srt'):
     :param link: relative lint to .srt file
     :param referer: episode page for referer header
     :param filename: file name for subtitles
-    :raises: ConnectionError if addic7ed.com cannot be opened
-    :raises: DailyLimitError if a user exceeded their daily download quota
+    :raises ConnectionError: if addic7ed.com cannot be opened
+    :raises DailyLimitError: if a user exceeded their daily download quota
         (10 subtitles).
     """
     subtitles = session.download_subs(link, referer=referer)

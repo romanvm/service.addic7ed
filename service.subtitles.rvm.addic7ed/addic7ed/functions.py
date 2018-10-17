@@ -20,6 +20,13 @@ __all__ = [
     'parse_filename',
 ]
 
+# Convert show names from TheTVDB format to Addic7ed.com format
+# Keys must be all lowercase
+NAME_CONVERSIONS = {
+    'castle (2009)': 'castle',
+    'law & order: special victims unit': 'Law and order SVU',
+}
+
 episode_patterns = (
     re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?s(\d+)[ \.]?e(\d+)\.', re.I | re.U),
     re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?(\d+)x(\d+)\.', re.I | re.U),
@@ -70,14 +77,11 @@ def normalize_showname(showname):
     between TheTVDB and Addic7ed
 
     :param showname: TV show name
-    :type showname: str
     :return: normalized show name
-    :rtype: str
     """
-    if 'castle' in showname.lower():
-        showname = showname.replace('(2009)', '')
-    elif showname.lower() == 'law & order: special victims unit':
-        showname = 'Law and order SVU'
+    showname = showname.strip().lower()
+    if showname in NAME_CONVERSIONS:
+        showname = NAME_CONVERSIONS[showname]
     return showname.replace(':', '')
 
 
@@ -89,9 +93,7 @@ def get_languages(languages_raw):
     the addic7ed web site parser.
 
     :param languages_raw: the list of subtitle languages from Kodi
-    :type languages_raw: list
     :return: the list of language pairs
-    :rtype: list
     """
     languages = []
     for language in languages_raw:
@@ -113,10 +115,8 @@ def parse_filename(filename):
     Filename parser for extracting show name, season # and episode # from a filename.
 
     :param filename: episode filename
-    :type filename: str
     :return: parsed showname, season and episode
-    :rtype: EpisodeData
-    :raises: ParseError if the filename does not match any episode patterns
+    :raises ParseError: if the filename does not match any episode patterns
     """
     for regexp in episode_patterns:
         episode_data = regexp.search(filename)
