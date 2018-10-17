@@ -27,6 +27,7 @@
   </assets>
   <news>v.3.0.0
 - Changed addon ID to avoid clashes with similar addons.
+- Changed icon and fanart to generic versions.
 - Converted code to Python 3 compatible.
 - Code refactoring and cleanup.</news>
   <reuselanguageinvoker>false</reuselanguageinvoker>
