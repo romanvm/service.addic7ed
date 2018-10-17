@@ -24,10 +24,14 @@ def do_logout():
                 pass
             else:
                 if not os.path.exists(cookies):
-                    dialog.notification(addon.ADDON_ID, addon.get_ui_string(32016))
+                    dialog.notification(addon.ADDON_ID,
+                                        addon.get_ui_string(32016),
+                                        icon=addon.icon
+                                        )
                     logger.debug('Cookies removed successfully.')
                     return
-        dialog.notification(addon.ADDON_ID, addon.get_ui_string(32017), icon='error')
+        dialog.notification(addon.ADDON_ID, addon.get_ui_string(32017),
+                            icon='error')
         logger.error('Unable to remove cookies!')
 
 
