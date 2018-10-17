@@ -4,11 +4,11 @@
 # Created on: 03.12.2014
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 import json
 import re
 from collections import namedtuple
-import xbmc
+from kodi_six import xbmc
 from .addon import ADDON_ID
 from .exceptions import ParseError
 
@@ -33,8 +33,6 @@ LanguageData = namedtuple('LanguageData', ['kodi_lang', 'add7_lang'])
 class logger(object):
     @staticmethod
     def log(message, level=xbmc.LOGDEBUG):
-        if isinstance(message, unicode):
-            message = message.encode('utf-8')
         xbmc.log('{0}: {1}'.format(ADDON_ID, message), level)
 
     @staticmethod

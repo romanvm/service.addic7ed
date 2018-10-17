@@ -6,4 +6,7 @@ import sys
 from addic7ed.core import router
 
 if __name__ == '__main__':
-    router(sys.argv[2][1:])
+    from web_pdb import catch_post_mortem
+
+    with catch_post_mortem():
+        router(sys.argv[2][1:])

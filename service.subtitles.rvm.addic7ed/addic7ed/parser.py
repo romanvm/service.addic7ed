@@ -8,12 +8,12 @@
 # Licence:     GPL v.3 http://www.gnu.org/licenses/gpl.html
 #-------------------------------------------------------------------------------
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 import re
 from contextlib import closing
 from collections import namedtuple
 from bs4 import BeautifulSoup
-from xbmcvfs import File
+from kodi_six.xbmcvfs import File
 from .exceptions import SubsSearchError, DailyLimitError
 from .functions import LanguageData
 from .webclient import Session
@@ -30,13 +30,14 @@ version_re = re.compile(r'Version (.*?),')
 
 def search_episode(query, languages=None):
     """
-    Search episode function. Accepts a TV show name, a season #, an episode # and language.
-    Note that season and episode #s must be strings, not integers!
-    For better search results relevance, season and episode #s should be 2-digit, e.g. 04.
-    languages param must be a list of tuples
+    Search episode function. Accepts a TV show name, a season #, an episode #
+    and language. Note that season and episode #s must be strings, not integers!
+    For better search results relevance, season and episode #s
+    should be 2-digit, e.g. 04. languages param must be a list of tuples
     ('Kodi language name', 'addic7ed language name')
-    If search returns only 1 match, addic7ed.com redirects to the found episode page.
-    In this case the function returns the list of available subs and an episode page URL.
+    If search returns only 1 match, addic7ed.com redirects to the found episode
+    page. In this case the function returns the list of available subs
+    and an episode page URL.
 
     :param query: subs search query
     :type query: str
@@ -49,7 +50,8 @@ def search_episode(query, languages=None):
     """
     if languages is None:
         languages = [LanguageData('English', 'English')]
-    webpage = session.load_page('/search.php', params={'search': query, 'Submit': 'Search'})
+    webpage = session.load_page('/search.php',
+                                params={'search': query, 'Submit': 'Search'})
     soup = BeautifulSoup(webpage, 'html5lib')
     table = soup.find('table',
                       {'class': 'tabel', 'align': 'center', 'width': '80%',
@@ -58,41 +60,38 @@ def search_episode(query, languages=None):
     if table is not None:
         return list(parse_search_results(table))
     else:
-        sub_cells = soup.find_all('table',
-                              {'width': '100%', 'border': '0', 'align': 'center', 'class': 'tabel95'}
-                              )
+        sub_cells = soup.find_all(
+            'table',
+            {'width': '100%', 'border': '0',
+             'align': 'center', 'class': 'tabel95'}
+        )
         if sub_cells:
-            return SubsSearchResult(parse_episode(sub_cells, languages), session.last_url)
+            return SubsSearchResult(
+                parse_episode(sub_cells, languages), session.last_url
+            )
         else:
             raise SubsSearchError
 
 
 def parse_search_results(table):
-    """
-    
-    :param table: 
-    :return: 
-    """
     a_tags = table.find_all('a', href=serie_re)
     for tag in a_tags:
         yield EpisodeItem(tag.text, tag['href'])
 
 
 def get_episode(link, languages=None):
-    """
-    
-    :param link: 
-    :return: 
-    """
     if languages is None:
         languages = [LanguageData('English', 'English')]
     webpage = session.load_page('/' + link)
     soup = BeautifulSoup(webpage, 'html5lib')
-    sub_cells = soup.find_all('table',
-                              {'width': '100%', 'border': '0', 'align': 'center',
-                               'class': 'tabel95'})
+    sub_cells = soup.find_all(
+        'table',
+        {'width': '100%', 'border': '0', 'align': 'center', 'class': 'tabel95'}
+    )
     if sub_cells:
-        return SubsSearchResult(parse_episode(sub_cells, languages), session.last_url)
+        return SubsSearchResult(
+            parse_episode(sub_cells, languages), session.last_url
+        )
     else:
         raise SubsSearchError
 
@@ -112,7 +111,6 @@ def parse_episode(sub_cells, languages):
 
     :param sub_cell: BS nodes with episode subtitles
     :param languages: the list of languages to search
-    :type languages:
     :return: generator function that yields :class:`SubsItem` items.
     """
     for sub_cell in sub_cells:
@@ -122,7 +120,9 @@ def parse_episode(sub_cells, languages):
                                            'align': 'center',
                                            'class': 'NewsTitle'}).text
                             ).group(1)
-        works_with = sub_cell.find('td', {'class': 'newsDate', 'colspan': '3'}).get_text(strip=True)
+        works_with = sub_cell.find(
+            'td', {'class': 'newsDate', 'colspan': '3'}
+        ).get_text(strip=True)
         if works_with:
             version += u', ' + works_with
         lang_cells = sub_cell.find_all('td', {'class': 'language'})
@@ -134,11 +134,13 @@ def parse_episode(sub_cells, languages):
                     if download_button is None:
                         download_button = download_cell.find(text='Download')
                     download_tag = download_button.parent.parent
-                    yield SubsItem(language=language.kodi_lang,
-                                   version=version,
-                                   link=download_tag['href'],
-                                   hi=(download_tag.find_next('tr').contents[1].find(
-                                       'img', title='Hearing Impaired') is not None))
+                    yield SubsItem(
+                        language=language.kodi_lang,
+                        version=version,
+                        link=download_tag['href'],
+                        hi=(download_tag.find_next('tr').contents[1].find(
+                            'img', title='Hearing Impaired') is not None)
+                    )
                     break
 
 
@@ -147,13 +149,11 @@ def download_subs(link, referer, filename='subtitles.srt'):
     Download subtitles from addic7ed.com
 
     :param link: relative lint to .srt file
-    :type link: str
     :param referer: episode page for referer header
-    :type referer: str
     :param filename: file name for subtitles
-    :type filename: str
     :raises: ConnectionError if addic7ed.com cannot be opened
-    :raises: DailyLimitError if a user exceeded their daily download quota (10 subtitles).
+    :raises: DailyLimitError if a user exceeded their daily download quota
+        (10 subtitles).
     """
     subtitles = session.download_subs(link, referer=referer)
     if subtitles[:9].lower() != '<!doctype':

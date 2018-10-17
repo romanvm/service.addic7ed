@@ -1,9 +1,10 @@
 # coding: utf-8
 
+from __future__ import unicode_literals
 import os
-from xbmcgui import Dialog
+from kodi_six.xbmcgui import Dialog
 from addic7ed import addon
-from addic7ed.functions import log_error, log_debug
+from addic7ed.functions import logger
 
 
 cookies = os.path.join(addon.profile, 'cookies.pickle')
@@ -24,10 +25,10 @@ def do_logout():
             else:
                 if not os.path.exists(cookies):
                     dialog.notification(addon.ADDON_ID, addon.get_ui_string(32016))
-                    log_debug('Cookies removed successfully.')
+                    logger.debug('Cookies removed successfully.')
                     return
         dialog.notification(addon.ADDON_ID, addon.get_ui_string(32017), icon='error')
-        log_error('Unable to remove cookies!')
+        logger.error('Unable to remove cookies!')
 
 
 if __name__ == '__main__':

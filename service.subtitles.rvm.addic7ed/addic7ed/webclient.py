@@ -1,13 +1,16 @@
 # coding: utf-8
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
+from future import standard_library
+standard_library.install_aliases()
+
 import os
-import cPickle as pickle
+import pickle
 import requests
-from xbmcgui import Dialog
+from kodi_six.xbmcgui import Dialog
 from .addon import ADDON_ID, addon, profile, get_ui_string
 from .exceptions import CookiesError, LoginError, ConnectionError
-from .functions import log_notice, log_error, log_debug
+from .functions import logger
 
 __all__ = ['Session']
 
@@ -41,14 +44,14 @@ class Session(object):
             try:
                 self._login()
             except LoginError:
-                log_error('Login error! Check username and password.')
+                logger.error('Login error! Check username and password.')
                 Dialog().notification(
                     ADDON_ID,
                     get_ui_string(32009),
                     icon='error'
                 )
             else:
-                log_notice('Successful login.')
+                logger.notice('Successful login.')
 
     @property
     def is_logged_in(self):
@@ -56,7 +59,6 @@ class Session(object):
         Check if cookies contain user login data
 
         :return: if user is logged in
-        :rtype: bool
         """
         return 'wikisubtitlesuser' in self._session.cookies
 
@@ -66,7 +68,6 @@ class Session(object):
         Get actual url (with redirect) of the last loaded webpage
 
         :return: URL of the last webpage
-        :rtype: str
         """
         return self._last_url
 
@@ -101,22 +102,22 @@ class Session(object):
             }
         )
         if not self.is_logged_in:
-            log_debug(response.content)
+            logger.debug(response.content)
             raise LoginError
         with open(cookies, 'wb') as fo:
             pickle.dump(self._session.cookies, fo, protocol=2)
 
     def _open_url(self, url, params, referer):
-        log_debug('Opening URL: {0}'.format(url))
+        logger.debug('Opening URL: {0}'.format(url))
         self._session.headers['Referer'] = referer
         try:
             response = self._session.get(url, params=params)
         except requests.RequestException:
-            log_error('Unable to connect to Addic7ed.com!')
+            logger.error('Unable to connect to Addic7ed.com!')
             raise ConnectionError
         if response.status_code not in (200, 301, 302):
-            log_error('Addic7ed.com returned status: {0}'.format(response.status_code))
-            log_debug(response.content)
+            logger.error('Addic7ed.com returned status: {0}'.format(response.status_code))
+            logger.debug(response.content)
             raise ConnectionError
         response.encoding = 'utf-8'  # Encoding is detected incorrectly for some reason
         return response
@@ -126,11 +127,8 @@ class Session(object):
         Load webpage by its relative path on the site
 
         :param path: relative path starting from '/'
-        :type path: str
         :param params: URL query params
-        :type params: dict
         :return: webpage content as a Unicode string
-        :rtype: unicode
         :raises ConnectionError: if unable to connect to the server
         """
         response = self._open_url(SITE + path, params, referer=SITE + '/')
@@ -142,11 +140,8 @@ class Session(object):
         Download subtitles by their URL
 
         :param path: relative path to .srt starting from '/'
-        :type path: str
         :param referer: referer page
-        :type referer: str
         :return: subtitles as a byte string
-        :rtype: str
         :raises ConnectionError: if unable to connect to the server
         """
         response = self._open_url(SITE + path, params=None, referer=referer)

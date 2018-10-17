@@ -88,3 +88,4 @@ target/
 publish.py
 venv/
 .venv/
+.venv3/

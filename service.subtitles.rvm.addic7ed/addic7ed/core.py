@@ -2,21 +2,20 @@
 # Created on: 07.04.2016
 # Author: Roman Miroshnychenko aka Roman V.M. (roman1972@gmail.com)
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
+from future import standard_library
+standard_library.install_aliases()
+from builtins import dict
+
 import os
 import sys
-import urlparse
 import re
-import urllib
 import shutil
-import xbmc
-import xbmcplugin
-import xbmcgui
-import xbmcvfs
-
+from urllib import parse
+from kodi_six import xbmc, xbmcplugin, xbmcgui, xbmcvfs
 from . import parser
 from .addon import addon, profile, get_ui_string, icon
-from .exceptions import *
+from .exceptions import DailyLimitError, ParseError, SubsSearchError
 from .functions import logger, get_languages, get_now_played, parse_filename, \
     normalize_showname
 
@@ -59,8 +58,10 @@ def display_subs(subs_list, episode_url, filename):
     - url: a plugin call URL for downloading selected subs.
     """
     for item in subs_list:
-        list_item = xbmcgui.ListItem(label=item.language, label2=item.version,
-            thumbnailImage=xbmc.convertLanguage(item.language, xbmc.ISO_639_1))
+        list_item = xbmcgui.ListItem(
+            label=item.language, label2=item.version,
+            thumbnailImage=xbmc.convertLanguage(item.language, xbmc.ISO_639_1)
+        )
         if item.hi:
             list_item.setProperty('hearing_imp', 'true')
         release_match = release_re.search(filename)
@@ -69,7 +70,7 @@ def display_subs(subs_list, episode_url, filename):
             list_item.setProperty('sync', 'true')
         url = '{0}?{1}'.format(
             sys.argv[0],
-            urllib.urlencode(
+            parse.urlencode(
                 {'action': 'download',
                  'link': item.link,
                  'ref': episode_url,
@@ -127,9 +128,9 @@ def download_subs(link, referrer, filename):
 
 def search_subs(params):
     logger.notice('Searching for subs...')
-    languages = get_languages(urllib.unquote_plus(params['languages']).split(','))
+    languages = get_languages(parse.unquote_plus(params['languages']).split(','))
     now_played = get_now_played()
-    filename = os.path.basename(urllib.unquote(now_played['file']))
+    filename = os.path.basename(parse.unquote(now_played['file']))
     if addon.getSetting('use_filename') == 'true' or not now_played['showtitle']:
         # Try to get showname/season/episode data from
         # the filename if 'use_filename' setting is true
@@ -170,7 +171,7 @@ def search_subs(params):
     if params['action'] == 'search':
         # Create a search query string
         query = '{0} {1}x{2}'.format(
-            normalize_showname(showname).encode('utf-8'),
+            normalize_showname(showname),
             season,
             episode
         )
@@ -220,12 +221,12 @@ def router(paramstring):
     :type paramstring: str
     """
     # Get plugin call params
-    params = dict(urlparse.parse_qsl(paramstring))
+    params = dict(parse.parse_qsl(paramstring))
     if params['action'] in ('search', 'manualsearch'):
         # Search and display subs.
         search_subs(params)
     elif params['action'] == 'download':
         download_subs(
-            params['link'], params['ref'], urllib.unquote_plus(params['filename'])
+            params['link'], params['ref'], parse.unquote_plus(params['filename'])
         )
     xbmcplugin.endOfDirectory(handle)

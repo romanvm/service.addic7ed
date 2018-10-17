@@ -1,15 +1,15 @@
 # coding: utf-8
 
+from __future__ import unicode_literals
 import os
-import xbmc
-from xbmcaddon import Addon
+from kodi_six import xbmc, xbmcaddon
 
 __all__ = ['ADDON_ID', 'addon', 'path', 'profile', 'icon', 'get_ui_string']
 
-ADDON_ID = 'service.subtitles.addic7ed'
-addon = Addon(ADDON_ID)
-path = xbmc.translatePath(addon.getAddonInfo('path')).decode('utf-8')
-profile = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
+ADDON_ID = 'service.subtitles.rvm.addic7ed'
+addon = xbmcaddon.Addon(ADDON_ID)
+path = xbmc.translatePath(addon.getAddonInfo('path'))
+profile = xbmc.translatePath(addon.getAddonInfo('profile'))
 icon = os.path.join(path, 'icon.png')
 
 
