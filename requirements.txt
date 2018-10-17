@@ -1,4 +1,4 @@
-future
+six
 git+https://github.com/romanvm/kodi.six.git
 bs4
 html5lib
