@@ -223,6 +223,7 @@ def router(paramstring):
         search_subs(params)
     elif params['action'] == 'download':
         download_subs(
-            params['link'], params['ref'], urlparse.unquote_plus(params['filename'])
+            params['link'], params['ref'],
+            urlparse.unquote_plus(params['filename'])
         )
     xbmcplugin.endOfDirectory(handle)
