@@ -158,6 +158,6 @@ def download_subs(link, referer, filename='subtitles.srt'):
     subtitles = session.download_subs(link, referer=referer)
     if subtitles[:9].lower() != '<!doctype':
         with closing(File(filename, 'w')) as fo:
-            fo.write(subtitles)
+            fo.write(bytearray(subtitles))
     else:
         raise DailyLimitError
