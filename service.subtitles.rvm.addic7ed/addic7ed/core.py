@@ -3,15 +3,11 @@
 # Author: Roman Miroshnychenko aka Roman V.M. (roman1972@gmail.com)
 
 from __future__ import absolute_import, unicode_literals
-from future import standard_library
-standard_library.install_aliases()
-from builtins import dict
-
 import os
 import sys
 import re
 import shutil
-from urllib import parse
+from six.moves.urllib import parse as urlparse
 from kodi_six import xbmc, xbmcplugin, xbmcgui, xbmcvfs
 from . import parser
 from .addon import addon, profile, get_ui_string, icon
@@ -70,7 +66,7 @@ def display_subs(subs_list, episode_url, filename):
             list_item.setProperty('sync', 'true')
         url = '{0}?{1}'.format(
             sys.argv[0],
-            parse.urlencode(
+            urlparse.urlencode(
                 {'action': 'download',
                  'link': item.link,
                  'ref': episode_url,
@@ -128,9 +124,9 @@ def download_subs(link, referrer, filename):
 
 def search_subs(params):
     logger.notice('Searching for subs...')
-    languages = get_languages(parse.unquote_plus(params['languages']).split(','))
+    languages = get_languages(urlparse.unquote_plus(params['languages']).split(','))
     now_played = get_now_played()
-    filename = os.path.basename(parse.unquote(now_played['file']))
+    filename = os.path.basename(urlparse.unquote(now_played['file']))
     if addon.getSetting('use_filename') == 'true' or not now_played['showtitle']:
         # Try to get showname/season/episode data from
         # the filename if 'use_filename' setting is true
@@ -221,12 +217,12 @@ def router(paramstring):
     :type paramstring: str
     """
     # Get plugin call params
-    params = dict(parse.parse_qsl(paramstring))
+    params = dict(urlparse.parse_qsl(paramstring))
     if params['action'] in ('search', 'manualsearch'):
         # Search and display subs.
         search_subs(params)
     elif params['action'] == 'download':
         download_subs(
-            params['link'], params['ref'], parse.unquote_plus(params['filename'])
+            params['link'], params['ref'], urlparse.unquote_plus(params['filename'])
         )
     xbmcplugin.endOfDirectory(handle)
