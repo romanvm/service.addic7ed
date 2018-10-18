@@ -10,7 +10,7 @@
   <import addon="script.module.requests"/>
   <import addon="script.module.six"/>
   <import addon="script.module.kodi-six"/>
-  <import addon="script.module.web-pdb"/>
+  <!--<import addon="script.module.web-pdb"/>-->
 </requires>
 <extension point="xbmc.subtitle.module" library="main.py" />
 <extension point="xbmc.addon.metadata">
