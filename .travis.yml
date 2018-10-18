@@ -19,10 +19,10 @@ deploy:
     on:
       tags: true
   # Deploy to my Kodi repo
-  - provider: script
-    skip_cleanup: true
-    script: python deploy_addon.py -r
-    on:
-      tags: true
+#  - provider: script
+#    skip_cleanup: true
+#    script: python deploy_addon.py -r
+#    on:
+#      tags: true
 notifications:
   email: false
