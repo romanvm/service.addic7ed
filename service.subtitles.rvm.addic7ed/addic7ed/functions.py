@@ -63,11 +63,15 @@ def get_now_played():
     :return: currently played item's data
     :rtype: dict
     """
-    request = json.dumps({'jsonrpc': '2.0',
-                          'method': 'Player.GetItem',
-                          'params': {'playerid': 1,
-                                     'properties': ['file', 'showtitle', 'season', 'episode']},
-                          'id': '1'})
+    request = json.dumps(
+        {'jsonrpc': '2.0',
+         'method': 'Player.GetItem',
+         'params': {
+             'playerid': 1,
+             'properties': ['file', 'showtitle', 'season', 'episode']
+         },
+         'id': '1'}
+    )
     return json.loads(xbmc.executeJSONRPC(request))['result']['item']
 
 
@@ -112,7 +116,8 @@ def get_languages(languages_raw):
 
 def parse_filename(filename):
     """
-    Filename parser for extracting show name, season # and episode # from a filename.
+    Filename parser for extracting show name, season # and episode # from
+    a filename.
 
     :param filename: episode filename
     :return: parsed showname, season and episode
@@ -126,4 +131,3 @@ def parse_filename(filename):
             episode = episode_data.group(3).zfill(2)
             return showname, season, episode
     raise ParseError
-
