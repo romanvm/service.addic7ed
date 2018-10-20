@@ -7,6 +7,7 @@ import os
 import sys
 import re
 import shutil
+from collections import namedtuple
 from six.moves.urllib import parse as urlparse
 from kodi_six import xbmc, xbmcplugin, xbmcgui, xbmcvfs
 from . import parser
@@ -24,6 +25,9 @@ handle = int(sys.argv[1])
 VIDEOFILES = ('.avi', '.mkv', '.mp4', '.ts', '.m2ts', '.mov')
 dialog = xbmcgui.Dialog()
 release_re = re.compile(r'-(.*?)(?:\[.*?\])?\.')
+
+FullEpisodeData = namedtuple('FullEpisodeData',
+                             ['showname', 'season', 'episode', 'filename'])
 
 
 def display_subs(subs_list, episode_url, filename):
@@ -122,9 +126,13 @@ def download_subs(link, referrer, filename):
         logger.notice('Subs downloaded.')
 
 
-def search_subs(params):
-    logger.notice('Searching for subs...')
-    languages = get_languages(urlparse.unquote_plus(params['languages']).split(','))
+def extract_episode_data():
+    """
+    Extract episode data for searching
+
+    :return: named tuple (showname, season, episode, filename)
+    :raises ParseError: if cannot determine episode data
+    """
     now_played = get_now_played()
     filename = os.path.basename(urlparse.unquote(now_played['file']))
     if addon.getSetting('use_filename') == 'true' or not now_played['showtitle']:
@@ -148,7 +156,7 @@ def search_subs(params):
                 )
                 dialog.notification(get_ui_string(32002), get_ui_string(32006),
                                     'error', 3000)
-                return
+                raise
     else:
         # Get get showname/season/episode data from
         # Kodi if the video-file is being played from
@@ -161,15 +169,27 @@ def search_subs(params):
                 showname.encode('utf-8'), season, episode
             )
         logger.debug('Using library metadata: {0} - {1}x{2}'.format(
-            showname.encode('utf-8'), season, episode)
+            showname, season, episode)
         )
+    return FullEpisodeData(showname, season, episode, filename)
+
+
+def search_subs(params):
+    logger.notice('Searching for subs...')
+    languages = get_languages(
+        urlparse.unquote_plus(params['languages']).split(',')
+    )
+    try:
+        full_episode_data = extract_episode_data()
+    except ParseError:
+        return
     # Search subtitles in Addic7ed.com.
     if params['action'] == 'search':
         # Create a search query string
         query = '{0} {1}x{2}'.format(
-            normalize_showname(showname),
-            season,
-            episode
+            normalize_showname(full_episode_data.showname),
+            full_episode_data.season,
+            full_episode_data.episode
         )
     else:
         # Get the query string typed on the on-screen keyboard
@@ -206,7 +226,8 @@ def search_subs(params):
                     logger.notice('Episode selection cancelled.')
                     return
             logger.notice('Found subs for "{0}"'.format(query))
-            display_subs(results.subtitles, results.episode_url, filename)
+            display_subs(results.subtitles, results.episode_url,
+                         full_episode_data.filename)
 
 
 def router(paramstring):
