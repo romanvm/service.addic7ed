@@ -7,7 +7,7 @@ import requests
 from kodi_six.xbmcgui import Dialog
 from .addon import ADDON_ID, addon, profile, get_ui_string
 from .exceptions import CookiesError, LoginError, ConnectionError
-from .functions import logger
+from .utils import logger
 
 __all__ = ['Session']
 

@@ -13,7 +13,7 @@ from kodi_six import xbmc, xbmcplugin, xbmcgui, xbmcvfs
 from . import parser
 from .addon import addon, profile, get_ui_string, icon
 from .exceptions import DailyLimitError, ParseError, SubsSearchError
-from .functions import logger, get_languages, get_now_played, parse_filename, \
+from .utils import logger, get_languages, get_now_played, parse_filename, \
     normalize_showname
 
 __all__ = ['router']

@@ -15,7 +15,7 @@ from collections import namedtuple
 from bs4 import BeautifulSoup
 from kodi_six.xbmcvfs import File
 from .exceptions import SubsSearchError, DailyLimitError
-from .functions import LanguageData
+from .utils import LanguageData
 from .webclient import Session
 
 __all__ = ['search_episode', 'get_episode', 'download_subs']

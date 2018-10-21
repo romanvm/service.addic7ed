@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import os
 from kodi_six.xbmcgui import Dialog
 from addic7ed import addon
-from addic7ed.functions import logger
+from addic7ed.utils import logger
 
 
 cookies = os.path.join(addon.profile, 'cookies.pickle')
