@@ -40,13 +40,11 @@ def search_episode(query, languages=None):
     and an episode page URL.
 
     :param query: subs search query
-    :type query: str
     :param languages: the list of languages to search
-    :type languages: list
-    :return: search results as the list of subtitles and episode page URL
-    :rtype: SubsSearchResult
+    :return: search results as the list of potential episodes for multiple matches
+        or the list of subtitles and episode page URL for a single match
     :raises: ConnectionError if addic7ed.com cannot be opened
-    :raises: SubsSearchError if search returns ambiguous results or no results
+    :raises: SubsSearchError if search returns no results
     """
     if languages is None:
         languages = [LanguageData('English', 'English')]
