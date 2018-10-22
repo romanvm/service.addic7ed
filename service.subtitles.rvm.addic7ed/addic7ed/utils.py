@@ -25,6 +25,7 @@ __all__ = [
 NAME_CONVERSIONS = {
     'castle (2009)': 'castle',
     'law & order: special victims unit': 'Law and order SVU',
+    'bodyguard (2018)': 'bodyguard',
 }
 
 episode_patterns = (
