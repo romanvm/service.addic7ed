@@ -120,6 +120,7 @@ class Session(object):
             logger.debug(response.content)
             raise ConnectionError
         response.encoding = 'utf-8'  # Encoding is detected incorrectly for some reason
+        logger.debug('Addic7ed.com returned page:\n{}'.format(response.text))
         return response
 
     def load_page(self, path, params=None):
