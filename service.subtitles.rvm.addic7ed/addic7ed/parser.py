@@ -58,7 +58,10 @@ def search_episode(query, languages=None):
                        'border': '0'}
                       )
     if table is not None:
-        return list(parse_search_results(table))
+        result = list(parse_search_results(table))
+        if not result:
+            raise SubsSearchError
+        return result
     else:
         sub_cells = soup.find_all(
             'table',
