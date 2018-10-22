@@ -50,7 +50,6 @@ def display_subs(subs_list, episode_url, filename):
 
     - label: Kodi language name (e.g. 'English')
     - label2: a descriptive text for subs
-      (e.g. 'LOL, works with DIMENSION release').
     - thumbnailImage: a 2-letter language code (e.g. 'en') to display a country
       flag.
     - 'hearing_imp': if 'true' then 'CC' icon is displayed for the list item.
