@@ -166,7 +166,7 @@ def extract_episode_data():
         episode = str(now_played['episode']).zfill(2)
         if not os.path.splitext(filename)[1].lower() in VIDEOFILES:
             filename = '{0}.{1}x{2}.foo'.format(
-                showname.encode('utf-8'), season, episode
+                showname, season, episode
             )
         logger.debug('Using library metadata: {0} - {1}x{2}'.format(
             showname, season, episode)
