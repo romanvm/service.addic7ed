@@ -17,7 +17,8 @@ __all__ = ['Session']
 cookies = os.path.join(profile, 'cookies.pickle')
 SITE = 'http://www.addic7ed.com'
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0',
+    'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:60.0) '
+                  'Gecko/20100101 Firefox/60.0',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Host': SITE[7:],
     'Accept-Charset': 'UTF-8',
@@ -116,10 +117,12 @@ class Session(object):
             logger.error('Unable to connect to Addic7ed.com!')
             raise ConnectionError
         if response.status_code not in (200, 301, 302):
-            logger.error('Addic7ed.com returned status: {0}'.format(response.status_code))
+            logger.error('Addic7ed.com returned status: {0}'.format(
+                response.status_code)
+            )
             logger.debug(response.content)
             raise ConnectionError
-        response.encoding = 'utf-8'  # Encoding is detected incorrectly for some reason
+        response.encoding = 'utf-8'  # Encoding is auto-detected incorrectly
         logger.debug('Addic7ed.com returned page:\n{}'.format(response.text))
         return response
 
