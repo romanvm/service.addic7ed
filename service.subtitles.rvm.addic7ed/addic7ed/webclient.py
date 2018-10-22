@@ -1,8 +1,11 @@
 # coding: utf-8
 
 from __future__ import absolute_import, unicode_literals
+from future import standard_library
+standard_library.install_aliases()
+
 import os
-from six.moves import cPickle as pickle
+import pickle
 import requests
 from kodi_six.xbmcgui import Dialog
 from .addon import ADDON_ID, addon, profile, get_ui_string
