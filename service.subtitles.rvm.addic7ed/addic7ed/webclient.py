@@ -103,7 +103,8 @@ class Session(object):
             }
         )
         if not self.is_logged_in:
-            logger.debug(response.content)
+            response.encoding = 'utf-8'
+            logger.debug(response.text)
             raise LoginError
         with open(cookies, 'wb') as fo:
             pickle.dump(self._session.cookies, fo, protocol=2)
@@ -116,14 +117,13 @@ class Session(object):
         except requests.RequestException:
             logger.error('Unable to connect to Addic7ed.com!')
             raise ConnectionError
+        response.encoding = 'utf-8'  # Encoding is auto-detected incorrectly
+        logger.debug('Addic7ed.com returned page:\n{}'.format(response.text))
         if response.status_code not in (200, 301, 302):
             logger.error('Addic7ed.com returned status: {0}'.format(
                 response.status_code)
             )
-            logger.debug(response.content)
             raise ConnectionError
-        response.encoding = 'utf-8'  # Encoding is auto-detected incorrectly
-        logger.debug('Addic7ed.com returned page:\n{}'.format(response.text))
         return response
 
     def load_page(self, path, params=None):
@@ -145,7 +145,7 @@ class Session(object):
 
         :param path: relative path to .srt starting from '/'
         :param referer: referer page
-        :return: subtitles as a byte string
+        :return: subtitles file contents as a byte string
         :raises ConnectionError: if unable to connect to the server
         """
         response = self._open_url(SITE + path, params=None, referer=referer)
