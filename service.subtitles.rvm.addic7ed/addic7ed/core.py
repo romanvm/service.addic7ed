@@ -204,10 +204,10 @@ def search_subs(params):
                 get_ui_string(32002), get_ui_string(32005), 'error'
             )
         except SubsSearchError:
-            logger.notice('No subs found.')
+            logger.notice('No subs for "{}" found.'.format(query))
         else:
             if isinstance(results, list):
-                logger.notice('Multiple episode found:\n{0}'.format(results))
+                logger.notice('Multiple episodes found:\n{0}'.format(results))
                 i = dialog.select(
                     get_ui_string(32008), [item.title for item in results]
                 )
