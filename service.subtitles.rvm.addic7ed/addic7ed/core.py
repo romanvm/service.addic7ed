@@ -8,6 +8,7 @@ import sys
 import re
 import shutil
 from collections import namedtuple
+from six import text_type as str
 from six.moves.urllib import parse as urlparse
 from kodi_six import xbmc, xbmcplugin, xbmcgui, xbmcvfs
 from . import parser
