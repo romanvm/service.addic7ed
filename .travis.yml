@@ -7,7 +7,7 @@ install: true
 script: echo "Nothing to build"
 before_deploy:
   - pip install -q git+https://github.com/romanvm/kodi-addon-submitter.git
-  - submit-addon -z service.subtitles.rvm.addic7ded
+  - submit-addon -z service.subtitles.rvm.addic7ed
   - export RELEASE_ZIP=$(ls *.zip)
 deploy:
   - provider: releases
