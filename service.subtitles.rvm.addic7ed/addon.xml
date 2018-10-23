@@ -21,6 +21,8 @@
   <description lang="ru_RU">Служба субтитров для сайта Addic7ed.com. Служба поддерживает только сериалы.</description>
   <description lang="uk_UA">Служба субтитрів для сайту Addic7ed.com. Служба підтримує лише серіали.</description>
   <platform>all</platform>
+  <source>https://github.com/romanvm/service.addic7ed</source>
+  <license>GPL v.3</license>
   <assets>
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
