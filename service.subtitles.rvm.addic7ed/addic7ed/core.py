@@ -22,7 +22,7 @@ from .utils import logger, get_languages, get_now_played, parse_filename, \
 
 __all__ = ['router']
 
-temp = os.path.join(profile, 'temp')
+temp_dir = os.path.join(profile, 'temp')
 handle = int(sys.argv[1])
 
 
@@ -97,11 +97,11 @@ def download_subs(link, referrer, filename):
         label - the download location for subs.
     """
     # Re-create a download location in a temporary folder
-    if xbmcvfs.exists(temp):
-        shutil.rmtree(temp)
-    xbmcvfs.mkdirs(temp)
+    if xbmcvfs.exists(temp_dir):
+        shutil.rmtree(temp_dir)
+    xbmcvfs.mkdirs(temp_dir)
     # Combine a path where to download the subs
-    subspath = os.path.join(temp, filename[:-3] + 'srt')
+    subspath = os.path.join(temp_dir, filename[:-3] + 'srt')
     # Download the subs from addic7ed.com
     try:
         parser.download_subs(link, referrer, subspath)
