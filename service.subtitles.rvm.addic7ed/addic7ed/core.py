@@ -61,9 +61,9 @@ def display_subs(subs_list, episode_url, filename):
     - url: a plugin call URL for downloading selected subs.
     """
     for item in subs_list:
-        list_item = xbmcgui.ListItem(
-            label=item.language, label2=item.version,
-            thumbnailImage=xbmc.convertLanguage(item.language, xbmc.ISO_639_1)
+        list_item = xbmcgui.ListItem(label=item.language, label2=item.version)
+        list_item.setArt(
+            {'thumb': xbmc.convertLanguage(item.language, xbmc.ISO_639_1)}
         )
         if item.hi:
             list_item.setProperty('hearing_imp', 'true')
