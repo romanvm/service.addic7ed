@@ -19,7 +19,10 @@ previous versions of this addon must be uninstalled manually.
 
 ## Installation
 
-An installable .zip file can be downloaded from "Releases" tab of this repository.
+This addon is available in **Subtitles** section of the official Kodi addon
+repository and can be installed via Kodi Addon Manager.
+Also, an installable .zip file can be downloaded from "Releases" tab
+of this GitHub repository.
 
 ## License
 
