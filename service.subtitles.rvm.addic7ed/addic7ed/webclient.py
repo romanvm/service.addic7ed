@@ -119,7 +119,7 @@ class Session(object):
             raise ConnectionError
         response.encoding = 'utf-8'  # Encoding is auto-detected incorrectly
         logger.debug('Addic7ed.com returned page:\n{}'.format(response.text))
-        if response.status_code not in (200, 301, 302):
+        if not response.ok:
             logger.error('Addic7ed.com returned status: {0}'.format(
                 response.status_code)
             )
