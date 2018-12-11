@@ -23,7 +23,7 @@ deploy:
     on:
       tags: true
   - provider: script
-    script: submit-addon -r repo-scripts -b $BRANCH --pull-request $ADDON_ID
+    script: submit-addon -r repo-scripts -b $BRANCH -s --pull-request $ADDON_ID
     on:
       tags: true
 notifications:
