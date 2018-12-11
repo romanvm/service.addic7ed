@@ -29,7 +29,7 @@ handle = int(sys.argv[1])
 
 VIDEOFILES = ('.avi', '.mkv', '.mp4', '.ts', '.m2ts', '.mov')
 dialog = xbmcgui.Dialog()
-release_re = re.compile(r'-(.*?)(?:\[.*?\])?\.')
+release_re = re.compile(r'-(.*?)(?:\[.*?\])?\.', re.I)
 
 EpisodeData = namedtuple('EpisodeData',
                          ['showname', 'season', 'episode', 'filename'])
@@ -69,8 +69,10 @@ def display_subs(subs_list, episode_url, filename):
         if item.hi:
             list_item.setProperty('hearing_imp', 'true')
         release_match = release_re.search(filename)
+        lowercase_version = item.version.lower()
         if (release_match is not None and
-                release_match.group(1).lower() in item.version.lower()):
+                release_match.group(1).lower() in lowercase_version and
+                'sync from' not in lowercase_version):
             list_item.setProperty('sync', 'true')
         url = '{0}?{1}'.format(
             sys.argv[0],
