@@ -29,7 +29,7 @@ handle = int(sys.argv[1])
 
 VIDEOFILES = ('.avi', '.mkv', '.mp4', '.ts', '.m2ts', '.mov')
 dialog = xbmcgui.Dialog()
-release_re = re.compile(r'-(.*?)(?:\[.*?\])?\.', re.I)
+release_re = re.compile(r'-(.*?)(?:\[.*?\])?\.')
 
 EpisodeData = namedtuple('EpisodeData',
                          ['showname', 'season', 'episode', 'filename'])
