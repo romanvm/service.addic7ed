@@ -26,6 +26,8 @@ EpisodeItem = namedtuple('EpisodeItem', ['title', 'link'])
 SubsItem = namedtuple('SubsItem', ['language', 'version', 'link', 'hi'])
 serie_re = re.compile(r'^serie')
 version_re = re.compile(r'Version (.*?),')
+original_download_re = re.compile(r'^/original')
+updated_download_re = re.compile(r'^/updated')
 
 
 def search_episode(query, languages=None):
@@ -131,14 +133,20 @@ def parse_episode(sub_cells, languages):
             for language in languages:
                 if language.add7_lang in lang_cell.text:
                     download_cell = lang_cell.find_next('td', {'colspan': '3'})
-                    download_button = download_cell.find(text='most updated')
+                    download_button = download_cell.find(
+                        class_='buttonDownload',
+                        href=updated_download_re
+                    )
                     if download_button is None:
-                        download_button = download_cell.find(text='Download')
+                        download_button = download_cell.find(
+                            class_='buttonDownload',
+                            href=original_download_re
+                        )
                     download_tag = download_button.parent.parent
                     yield SubsItem(
                         language=language.kodi_lang,
                         version=version,
-                        link=download_tag['href'],
+                        link=download_button['href'],
                         hi=(download_tag.find_next('tr').contents[1].find(
                             'img', title='Hearing Impaired') is not None)
                     )
