@@ -69,10 +69,14 @@ def display_subs(subs_list, episode_url, filename):
         if item.hi:
             list_item.setProperty('hearing_imp', 'true')
         release_match = release_re.search(filename)
+        if release_match is not None:
+            release = release_match.group(1).lower()
+        else:
+            release = ''
         lowercase_version = item.version.lower()
-        if (release_match is not None and
-                release_match.group(1).lower() in lowercase_version and
-                'sync from' not in lowercase_version):
+        resync_pattern = r'sync from.+?{}'.format(release)
+        if (release and release in lowercase_version and
+                re.search(resync_pattern, lowercase_version, re.I) is None):
             list_item.setProperty('sync', 'true')
         url = '{0}?{1}'.format(
             sys.argv[0],
