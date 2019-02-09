@@ -62,6 +62,8 @@ def display_subs(subs_list, episode_url, filename):
     - url: a plugin call URL for downloading selected subs.
     """
     for item in subs_list:
+        if addon.getSetting('do_login') != 'true' and item.unfinished:
+            continue
         list_item = xbmcgui.ListItem(label=item.language, label2=item.version)
         list_item.setArt(
             {'thumb': xbmc.convertLanguage(item.language, xbmc.ISO_639_1)}
