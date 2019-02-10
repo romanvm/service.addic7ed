@@ -30,7 +30,7 @@
   <news>v.3.0.3:
 - Now unfinished translations are hidden from users that aren't logged in.
 - Fixed parsing translated episode pages (non-English).
-- Fixed re-synced subtitles are no longer marked as "sync".</news>
+- Fixed re-synced subtitles marked as "sync".</news>
   <reuselanguageinvoker>false</reuselanguageinvoker>
 </extension>
 </addon>
