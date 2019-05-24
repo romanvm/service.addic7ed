@@ -85,7 +85,7 @@ def display_subs(subs_list, episode_url, filename):
         reverse=True
     )
     for item, synced in subs_list:
-        if addon.getSetting('do_login') != 'true' and item.unfinished:
+        if item.unfinished:
             continue
         list_item = xbmcgui.ListItem(label=item.language, label2=item.version)
         list_item.setArt(
