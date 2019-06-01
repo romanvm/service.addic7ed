@@ -5,6 +5,7 @@
 from __future__ import absolute_import, unicode_literals
 from future import standard_library
 from future.builtins import str, dict
+from future.utils import PY2
 standard_library.install_aliases()
 
 import os
@@ -265,6 +266,8 @@ def router(paramstring):
     :type paramstring: str
     """
     # Get plugin call params
+    if PY2:
+        paramstring = urlparse.unquote(paramstring).decode('utf-8')
     params = dict(urlparse.parse_qsl(paramstring))
     if params['action'] in ('search', 'manualsearch'):
         # Search and display subs.
@@ -272,6 +275,6 @@ def router(paramstring):
     elif params['action'] == 'download':
         download_subs(
             params['link'], params['ref'],
-            urlparse.unquote_plus(params['filename'])
+            urlparse.unquote(params['filename'])
         )
     xbmcplugin.endOfDirectory(handle)
