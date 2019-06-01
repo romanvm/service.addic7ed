@@ -4,7 +4,9 @@ from __future__ import absolute_import, unicode_literals
 from future import standard_library
 standard_library.install_aliases()
 
-import requests
+import urllib.request as urllib2
+from urllib.parse import urlencode
+from contextlib import closing
 from .exceptions import Add7ConnectionError
 from .utils import logger
 
@@ -17,7 +19,6 @@ HEADERS = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Host': SITE[7:],
     'Accept-Charset': 'UTF-8',
-    'Accept-Encoding': 'gzip,deflate'
 }
 
 
@@ -26,8 +27,7 @@ class Session(object):
     Webclient Session class
     """
     def __init__(self):
-        self._session = requests.Session()
-        self._session.headers = HEADERS.copy()
+        self._headers = HEADERS.copy()
         self._last_url = ''
 
     @property
@@ -41,20 +41,29 @@ class Session(object):
 
     def _open_url(self, url, params, referer):
         logger.debug('Opening URL: {0}'.format(url))
-        self._session.headers['Referer'] = referer
+        self._headers['Referer'] = referer
+        if params:
+            url += '?' + urlencode(params)
+        request = urllib2.Request(url, headers=self._headers)
         try:
-            response = self._session.get(url, params=params)
-        except requests.RequestException:
+            with closing(urllib2.urlopen(request)) as response:
+                status = response.getcode()
+                if status >= 400:
+                    logger.error(
+                        'Addic7ed.com returned status: {0}'.format(status)
+                    )
+                    raise Add7ConnectionError
+                byte_content = response.read()
+                self._last_url = response.geturl()
+        except IOError:
             logger.error('Unable to connect to Addic7ed.com!')
             raise Add7ConnectionError
-        response.encoding = 'utf-8'  # Encoding is auto-detected incorrectly
-        logger.debug('Addic7ed.com returned page:\n{}'.format(response.text))
-        if not response.ok:
-            logger.error('Addic7ed.com returned status: {0}'.format(
-                response.status_code)
+        logger.debug(
+            'Addic7ed.com returned page:\n{}'.format(
+                byte_content.decode('utf-8')
             )
-            raise Add7ConnectionError
-        return response
+        )
+        return byte_content
 
     def load_page(self, path, params=None):
         """
@@ -65,9 +74,8 @@ class Session(object):
         :return: webpage content as a Unicode string
         :raises ConnectionError: if unable to connect to the server
         """
-        response = self._open_url(SITE + path, params, referer=SITE + '/')
-        self._last_url = response.url
-        return response.text
+        byte_content = self._open_url(SITE + path, params, referer=SITE + '/')
+        return byte_content.decode('utf-8')
 
     def download_subs(self, path, referer):
         """
@@ -78,6 +86,4 @@ class Session(object):
         :return: subtitles file contents as a byte string
         :raises ConnectionError: if unable to connect to the server
         """
-        response = self._open_url(SITE + path, params=None, referer=referer)
-        self._last_url = response.url
-        return response.content
+        return self._open_url(SITE + path, params=None, referer=referer)
