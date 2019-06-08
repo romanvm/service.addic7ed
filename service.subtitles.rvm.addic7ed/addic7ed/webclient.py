@@ -51,6 +51,7 @@ class Session(object):
                 response.status_code)
             )
             raise Add7ConnectionError
+        self._last_url = response.url
         return response
 
     def load_page(self, path, params=None):
@@ -76,5 +77,4 @@ class Session(object):
         :raises ConnectionError: if unable to connect to the server
         """
         response = self._open_url(SITE + path, params=None, referer=referer)
-        self._last_url = response.url
         return response.content
