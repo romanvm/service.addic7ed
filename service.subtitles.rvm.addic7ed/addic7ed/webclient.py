@@ -7,12 +7,12 @@ from .utils import logger
 
 __all__ = ['Session']
 
-SITE = 'http://www.addic7ed.com'
+SITE = 'https://www.addic7ed.com'
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:67.0) '
                   'Gecko/20100101 Firefox/67.0',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Host': SITE[7:],
+    'Host': SITE[8:],
     'Accept-Charset': 'UTF-8',
     'Accept-Encoding': 'gzip,deflate'
 }
