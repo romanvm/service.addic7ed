@@ -28,7 +28,9 @@
     <fanart>fanart.jpg</fanart>
   </assets>
   <news>v.3.1.0:
-- Removed login feature because of changes on Addic7ed.com.</news>
+- Removed login feature because of changes on Addic7ed.com.
+- Fixed exception when a filename contained a non-ASCII character.
+- Various optimizations.</news>
   <reuselanguageinvoker>false</reuselanguageinvoker>
 </extension>
 </addon>
