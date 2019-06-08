@@ -3,17 +3,13 @@
 # Author: Roman Miroshnychenko aka Roman V.M. (roman1972@gmail.com)
 
 from __future__ import absolute_import, unicode_literals
-from future import standard_library
-from future.builtins import str, dict
-from future.utils import PY2
-standard_library.install_aliases()
-
 import os
 import sys
 import re
 import shutil
 from collections import namedtuple
-from urllib import parse as urlparse
+from six import PY2
+from six.moves import urllib_parse as urlparse
 from kodi_six import xbmc, xbmcplugin, xbmcgui, xbmcvfs
 from . import parser
 from .addon import addon, profile, get_ui_string, icon

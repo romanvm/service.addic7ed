@@ -8,7 +8,7 @@
   <import addon="script.module.beautifulsoup4"/>
   <import addon="script.module.html5lib"/>
   <import addon="script.module.requests"/>
-  <import addon="script.module.future"/>
+  <import addon="script.module.six"/>
   <import addon="script.module.kodi-six"/>
   <!--<import addon="script.module.web-pdb"/>-->
 </requires>

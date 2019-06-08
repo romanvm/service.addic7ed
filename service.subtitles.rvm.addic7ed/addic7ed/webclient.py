@@ -1,9 +1,6 @@
 # coding: utf-8
 
 from __future__ import absolute_import, unicode_literals
-from future import standard_library
-standard_library.install_aliases()
-
 import requests
 from .exceptions import Add7ConnectionError
 from .utils import logger
