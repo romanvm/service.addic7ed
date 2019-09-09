@@ -1,3 +1,4 @@
+Kodistubs
 future
 git+https://github.com/romanvm/kodi.six.git
 bs4
