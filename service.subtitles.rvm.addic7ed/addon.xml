@@ -26,6 +26,7 @@
   <description lang="nl_NL">Ondertiteling dienst voor Addic7ed.com. Ondersteunt enkel TV series.</description>
   <platform>all</platform>
   <source>https://github.com/romanvm/service.addic7ed</source>
+  <website>www.addic7ed.com</website>
   <license>GPL v.3</license>
   <assets>
     <icon>icon.png</icon>
