@@ -203,7 +203,6 @@ def search_subs(params):
     languages = get_languages(
         urlparse.unquote_plus(params['languages']).split(',')
     )
-    episode_data = {}
     # Search subtitles in Addic7ed.com.
     if params['action'] == 'search':
         try:
@@ -216,9 +215,11 @@ def search_subs(params):
             episode_data.season,
             episode_data.episode
         )
+        filename = episode_data.filename
     else:
         # Get the query string typed on the on-screen keyboard
         query = params['searchstring']
+        filename = query
     if query:
         logger.debug('Search query: {0}'.format(query))
         try:
@@ -252,7 +253,7 @@ def search_subs(params):
                     return
             logger.notice('Found subs for "{0}"'.format(query))
             display_subs(results.subtitles, results.episode_url,
-                         episode_data.get('filename') or query)
+                         filename)
 
 
 def router(paramstring):
