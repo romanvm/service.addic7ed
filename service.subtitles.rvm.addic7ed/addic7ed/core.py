@@ -122,7 +122,8 @@ def download_subs(link, referrer, filename):
         shutil.rmtree(temp_dir)
     xbmcvfs.mkdirs(temp_dir)
     # Combine a path where to download the subs
-    subspath = os.path.join(temp_dir, filename[:-3] + 'srt')
+    filename = os.path.splitext(filename)[0] + '.srt'
+    subspath = os.path.join(temp_dir, filename)
     # Download the subs from addic7ed.com
     try:
         parser.download_subs(link, referrer, subspath)
