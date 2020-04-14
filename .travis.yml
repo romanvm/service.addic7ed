@@ -14,7 +14,7 @@ jobs:
     - if: branch = matrix
       env: BRANCH=matrix
 install:
-  - pip install kodi-addon-checker
+  - pip install -q kodi-addon-checker
 script:
   - kodi-addon-checker --branch $BRANCH $ADDON_ID
 before_deploy:
