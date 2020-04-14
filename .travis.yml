@@ -5,7 +5,8 @@ branches:
 language: python
 python: "3.6"
 env:
-  - ADDON_ID=service.subtitles.rvm.addic7ed
+  global:
+    - ADDON_ID=service.subtitles.rvm.addic7ed
 jobs:
   include:
     - if: tag IS present
