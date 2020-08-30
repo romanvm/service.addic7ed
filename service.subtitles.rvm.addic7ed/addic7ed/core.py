@@ -147,7 +147,7 @@ def download_subs(link, referrer, filename):
                                     isFolder=False)
         dialog.notification(get_ui_string(32000), get_ui_string(32001), icon,
                             3000, False)
-        logger.notice('Subs downloaded.')
+        logger.info('Subs downloaded.')
 
 
 def extract_episode_data():
@@ -199,7 +199,7 @@ def extract_episode_data():
 
 
 def search_subs(params):
-    logger.notice('Searching for subs...')
+    logger.info('Searching for subs...')
     languages = get_languages(
         urlparse.unquote_plus(params['languages']).split(',')
     )
@@ -228,10 +228,10 @@ def search_subs(params):
                 get_ui_string(32002), get_ui_string(32005), 'error'
             )
         except SubsSearchError:
-            logger.notice('No subs for "{}" found.'.format(query))
+            logger.info('No subs for "{}" found.'.format(query))
         else:
             if isinstance(results, list):
-                logger.notice('Multiple episodes found:\n{0}'.format(results))
+                logger.info('Multiple episodes found:\n{0}'.format(results))
                 i = dialog.select(
                     get_ui_string(32008), [item.title for item in results]
                 )
@@ -244,12 +244,12 @@ def search_subs(params):
                                             get_ui_string(32005), 'error')
                         return
                     except SubsSearchError:
-                        logger.notice('No subs found.')
+                        logger.info('No subs found.')
                         return
                 else:
-                    logger.notice('Episode selection cancelled.')
+                    logger.info('Episode selection cancelled.')
                     return
-            logger.notice('Found subs for "{0}"'.format(query))
+            logger.info('Found subs for "{0}"'.format(query))
             display_subs(results.subtitles, results.episode_url,
                          episode_data.filename)
 
