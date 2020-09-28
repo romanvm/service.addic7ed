@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Exception logger with extended diagnostic info"""
+from __future__ import absolute_import, unicode_literals
 
 import inspect
 import sys
