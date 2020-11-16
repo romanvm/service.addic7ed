@@ -1,13 +1,20 @@
 branches:
   only:
     - /\d+\.\d+\.\d+/
+    - matrix
 language: python
 python: "3.6"
 env:
-  - ADDON_ID=service.subtitles.rvm.addic7ed
-    BRANCH=krypton
+  global:
+    - ADDON_ID=service.subtitles.rvm.addic7ed
+jobs:
+  include:
+    - if: tag IS present
+      env: BRANCH=krypton
+    - if: branch = matrix
+      env: BRANCH=matrix
 install:
-  - pip install kodi-addon-checker
+  - pip install -q kodi-addon-checker
 script:
   - kodi-addon-checker --branch $BRANCH $ADDON_ID
 before_deploy:
@@ -23,8 +30,13 @@ deploy:
     on:
       tags: true
   - provider: script
-    script: submit-addon -r repo-scripts -b $BRANCH -s --pull-request $ADDON_ID
+    script: submit-addon -r repo-scripts -b $BRANCH -s -m --pull-request $ADDON_ID
     on:
       tags: true
+  # This is used to submit only to matrix branch
+  - provider: script
+    script: submit-addon -r repo-scripts -b $BRANCH -s --pull-request $ADDON_ID
+    on:
+      branch: matrix
 notifications:
   email: false
