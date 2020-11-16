@@ -27,7 +27,7 @@
   <platform>all</platform>
   <source>https://github.com/romanvm/service.addic7ed</source>
   <website>www.addic7ed.com</website>
-  <license>GPL v.3</license>
+  <license>GPL-3.0-only</license>
   <assets>
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
