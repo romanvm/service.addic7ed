@@ -120,7 +120,7 @@ def download_subs(link, referrer, filename):
     # Re-create a download location in a temporary folder
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
-    os.mkdir(temp_dir)
+    xbmcvfs.mkdirs(temp_dir)
     # Combine a path where to download the subs
     filename = os.path.splitext(filename)[0] + '.srt'
     subspath = os.path.join(temp_dir, filename)
