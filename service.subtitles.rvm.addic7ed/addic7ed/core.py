@@ -24,7 +24,7 @@ temp_dir = os.path.join(profile, 'temp')
 handle = int(sys.argv[1])
 
 
-VIDEOFILES = frozenset(('.avi', '.mkv', '.mp4', '.ts', '.m2ts', '.mov'))
+VIDEOFILES = {'.avi', '.mkv', '.mp4', '.ts', '.m2ts', '.mov'}
 dialog = xbmcgui.Dialog()
 release_re = re.compile(r'-(.*?)(?:\[.*?\])?\.')
 
