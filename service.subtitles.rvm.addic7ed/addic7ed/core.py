@@ -10,7 +10,7 @@ import shutil
 from collections import namedtuple
 from six import PY2
 from six.moves import urllib_parse as urlparse
-from kodi_six import xbmc, xbmcplugin, xbmcgui, xbmcvfs
+from kodi_six import xbmc, xbmcplugin, xbmcgui
 from . import parser
 from .addon import addon, profile, get_ui_string, icon
 from .exceptions import DailyLimitError, ParseError, SubsSearchError, \
