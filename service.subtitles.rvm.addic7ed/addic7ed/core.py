@@ -118,6 +118,8 @@ def download_subs(link, referrer, filename):
         label - the download location for subs.
     """
     # Re-create a download location in a temporary folder
+    if not os.path.exists(profile):
+        os.mkdir(profile)
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
     os.mkdir(temp_dir)
