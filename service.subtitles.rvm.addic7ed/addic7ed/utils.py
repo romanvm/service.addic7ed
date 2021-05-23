@@ -72,18 +72,6 @@ def get_now_played():
     item['showtitle'] = xbmc.getInfoLabel("VideoPlayer.TVShowTitle") # Show
     item['file']      = xbmc.Player().getPlayingFile()               # Full path of a playing file
     return item
-    """
-    request = json.dumps(
-        {'jsonrpc': '2.0',
-         'method': 'Player.GetItem',
-         'params': {
-             'playerid': 1,
-             'properties': ['file', 'showtitle', 'season', 'episode']
-         },
-         'id': '1'}
-    )
-    return json.loads(xbmc.executeJSONRPC(request))['result']['item']
-    """
 
 
 def normalize_showname(showname):
