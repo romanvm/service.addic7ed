@@ -5,7 +5,6 @@
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 from __future__ import absolute_import, unicode_literals
-import json
 import re
 from collections import namedtuple
 from kodi_six import xbmc
@@ -66,11 +65,12 @@ def get_now_played():
     :return: currently played item's data
     :rtype: dict
     """
-    item = {}
-    item['season']    = xbmc.getInfoLabel("VideoPlayer.Season")      # Season
-    item['episode']   = xbmc.getInfoLabel("VideoPlayer.Episode")     # Episode
-    item['showtitle'] = xbmc.getInfoLabel("VideoPlayer.TVShowTitle") # Show
-    item['file']      = xbmc.Player().getPlayingFile()               # Full path of a playing file
+    item = {
+        'season': xbmc.getInfoLabel('VideoPlayer.Season'),
+        'episode': xbmc.getInfoLabel('VideoPlayer.Episode'),
+        'showtitle': xbmc.getInfoLabel('VideoPlayer.TVShowTitle'),
+        'file': xbmc.Player().getPlayingFile(),
+    }
     return item
 
 
