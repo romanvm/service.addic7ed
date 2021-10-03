@@ -9,8 +9,8 @@ __all__ = ['Session']
 
 SITE = 'https://www.addic7ed.com'
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:67.0) '
-                  'Gecko/20100101 Firefox/67.0',
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
+                  '(KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Host': SITE[8:],
     'Accept-Charset': 'UTF-8',
@@ -40,7 +40,7 @@ class Session(object):
         logger.debug('Opening URL: {0}'.format(url))
         self._session.headers['Referer'] = referer
         try:
-            response = self._session.get(url, params=params)
+            response = self._session.get(url, params=params, verify=False)
         except requests.RequestException:
             logger.error('Unable to connect to Addic7ed.com!')
             raise Add7ConnectionError
