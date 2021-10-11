@@ -37,6 +37,6 @@
 3.1.6:
 - Fixed compatibility with Kodi 20 "Nexus".
 - Various internal changes.</news>
-  <reuselanguageinvoker>false</reuselanguageinvoker>
+  <reuselanguageinvoker>true</reuselanguageinvoker>
 </extension>
 </addon>
