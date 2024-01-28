@@ -1,9 +1,21 @@
-# coding: utf-8
+# Copyright (C) 2016, Roman Miroshnychenko aka Roman V.M.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import, unicode_literals
-import requests
-from .exceptions import Add7ConnectionError
-from .utils import logger
+from addic7ed import simple_requests as requests
+from addic7ed.exceptions import Add7ConnectionError
+from addic7ed.utils import logger
 
 __all__ = ['Session']
 
@@ -22,10 +34,6 @@ class Session(object):
     """
     Webclient Session class
     """
-    def __init__(self):
-        self._session = requests.Session()
-        self._session.headers = HEADERS.copy()
-        self._last_url = ''
 
     @property
     def last_url(self):
@@ -38,13 +46,13 @@ class Session(object):
 
     def _open_url(self, url, params, referer):
         logger.debug('Opening URL: {0}'.format(url))
-        self._session.headers['Referer'] = referer
+        headers = HEADERS.copy()
+        headers['Referer'] = referer
         try:
-            response = self._session.get(url, params=params, verify=False)
-        except requests.RequestException:
+            response = requests.get(url, params=params, headers=headers, verify=False)
+        except requests.RequestException as exc:
             logger.error('Unable to connect to Addic7ed.com!')
-            raise Add7ConnectionError
-        response.encoding = 'utf-8'  # Encoding is auto-detected incorrectly
+            raise Add7ConnectionError from exc
         logger.debug('Addic7ed.com returned page:\n{}'.format(response.text))
         if not response.ok:
             logger.error('Addic7ed.com returned status: {0}'.format(

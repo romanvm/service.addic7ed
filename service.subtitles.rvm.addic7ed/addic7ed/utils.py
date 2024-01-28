@@ -1,16 +1,26 @@
-# -*- coding: utf-8 -*-
-# Module: functions
-# Author: Roman V. M.
-# Created on: 03.12.2014
-# License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
+# Copyright (C) 2016, Roman Miroshnychenko aka Roman V.M.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import, unicode_literals
 import json
 import re
 from collections import namedtuple
-from kodi_six import xbmc
-from .addon import ADDON_ID
-from .exceptions import ParseError
+
+import xbmc
+
+from addic7ed.addon import ADDON_ID
+from addic7ed.exceptions import ParseError
 
 __all__ = [
     'logger',
@@ -72,7 +82,8 @@ def get_now_played():
          },
         'id': '1'
     })
-    item = json.loads(xbmc.executeJSONRPC(request))['result']['item']
+    response = xbmc.executeJSONRPC(request)
+    item = json.loads(response)['result']['item']
     item['file'] = xbmc.Player().getPlayingFile()  # It provides more correct result
     return item
 

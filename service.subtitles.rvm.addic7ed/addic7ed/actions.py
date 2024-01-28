@@ -1,32 +1,45 @@
-# coding: utf-8
-# Created on: 07.04.2016
-# Author: Roman Miroshnychenko aka Roman V.M. (roman1972@gmail.com)
+# Copyright (C) 2016, Roman Miroshnychenko aka Roman V.M.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import, unicode_literals
 import os
-import sys
 import re
 import shutil
+import sys
 from collections import namedtuple
-from six import PY2
-from six.moves import urllib_parse as urlparse
-from kodi_six import xbmc, xbmcplugin, xbmcgui
-from . import parser
-from .addon import addon, profile, get_ui_string, icon
-from .exceptions import DailyLimitError, ParseError, SubsSearchError, \
+from urllib import parse as urlparse
+
+import xbmc
+import xbmcgui
+import xbmcplugin
+
+from addic7ed import parser
+from addic7ed.addon import ADDON, PROFILE, ICON, get_ui_string
+from addic7ed.exceptions import DailyLimitError, ParseError, SubsSearchError, \
     Add7ConnectionError
-from .utils import logger, get_languages, get_now_played, parse_filename, \
+from addic7ed.utils import logger, get_languages, get_now_played, parse_filename, \
     normalize_showname
 
 __all__ = ['router']
 
-temp_dir = os.path.join(profile, 'temp')
-handle = int(sys.argv[1])
+TEMP_DIR = os.path.join(PROFILE, 'temp')
+HANDLE = int(sys.argv[1])
 
 
 VIDEOFILES = {'.avi', '.mkv', '.mp4', '.ts', '.m2ts', '.mov'}
-dialog = xbmcgui.Dialog()
-release_re = re.compile(r'-(.*?)(?:\[.*?\])?\.')
+DIALOG = xbmcgui.Dialog()
+RELEASE_RE = re.compile(r'-(.*?)(?:\[.*?\])?\.')
 
 EpisodeData = namedtuple('EpisodeData',
                          ['showname', 'season', 'episode', 'filename'])
@@ -42,7 +55,7 @@ def _detect_synced_subs(subs_list, filename):
     """
     listing = []
     for item in subs_list:
-        release_match = release_re.search(filename)
+        release_match = RELEASE_RE.search(filename)
         if release_match is not None:
             release = release_match.group(1).lower()
         else:
@@ -101,7 +114,7 @@ def display_subs(subs_list, episode_url, filename):
                  'filename': filename}
             )
         )
-        xbmcplugin.addDirectoryItem(handle=handle, url=url, listitem=list_item,
+        xbmcplugin.addDirectoryItem(handle=HANDLE, url=url, listitem=list_item,
                                     isFolder=False)
 
 
@@ -118,22 +131,22 @@ def download_subs(link, referrer, filename):
         label - the download location for subs.
     """
     # Re-create a download location in a temporary folder
-    if not os.path.exists(profile):
-        os.mkdir(profile)
-    if os.path.exists(temp_dir):
-        shutil.rmtree(temp_dir)
-    os.mkdir(temp_dir)
+    if not os.path.exists(PROFILE):
+        os.mkdir(PROFILE)
+    if os.path.exists(TEMP_DIR):
+        shutil.rmtree(TEMP_DIR)
+    os.mkdir(TEMP_DIR)
     # Combine a path where to download the subs
     filename = os.path.splitext(filename)[0] + '.srt'
-    subspath = os.path.join(temp_dir, filename)
+    subspath = os.path.join(TEMP_DIR, filename)
     # Download the subs from addic7ed.com
     try:
         parser.download_subs(link, referrer, subspath)
     except Add7ConnectionError:
         logger.error('Unable to connect to addic7ed.com')
-        dialog.notification(get_ui_string(32002), get_ui_string(32005), 'error')
+        DIALOG.notification(get_ui_string(32002), get_ui_string(32005), 'error')
     except DailyLimitError:
-        dialog.notification(get_ui_string(32002), get_ui_string(32003), 'error',
+        DIALOG.notification(get_ui_string(32002), get_ui_string(32003), 'error',
                             3000)
         logger.error('Exceeded daily limit for subs downloads.')
     else:
@@ -144,11 +157,11 @@ def download_subs(link, referrer, filename):
         # in 'Settings > Video > Subtitles' section.
         # A 2-letter language code will be added to subs filename.
         list_item = xbmcgui.ListItem(label=subspath)
-        xbmcplugin.addDirectoryItem(handle=handle,
+        xbmcplugin.addDirectoryItem(handle=HANDLE,
                                     url=subspath,
                                     listitem=list_item,
                                     isFolder=False)
-        dialog.notification(get_ui_string(32000), get_ui_string(32001), icon,
+        DIALOG.notification(get_ui_string(32000), get_ui_string(32001), ICON,
                             3000, False)
         logger.info('Subs downloaded.')
 
@@ -163,7 +176,7 @@ def extract_episode_data():
     now_played = get_now_played()
     parsed = urlparse.urlparse(now_played['file'])
     filename = os.path.basename(parsed.path)
-    if addon.getSetting('use_filename') == 'true' or not now_played['showtitle']:
+    if ADDON.getSetting('use_filename') == 'true' or not now_played['showtitle']:
         # Try to get showname/season/episode data from
         # the filename if 'use_filename' setting is true
         # or if the video-file does not have library metadata.
@@ -182,7 +195,7 @@ def extract_episode_data():
                 logger.error(
                     'Unable to determine episode data for {0}'.format(filename)
                 )
-                dialog.notification(get_ui_string(32002), get_ui_string(32006),
+                DIALOG.notification(get_ui_string(32002), get_ui_string(32006),
                                     'error', 3000)
                 raise
     else:
@@ -230,7 +243,7 @@ def search_subs(params):
             results = parser.search_episode(query, languages)
         except Add7ConnectionError:
             logger.error('Unable to connect to addic7ed.com')
-            dialog.notification(
+            DIALOG.notification(
                 get_ui_string(32002), get_ui_string(32005), 'error'
             )
         except SubsSearchError:
@@ -238,7 +251,7 @@ def search_subs(params):
         else:
             if isinstance(results, list):
                 logger.info('Multiple episodes found:\n{0}'.format(results))
-                i = dialog.select(
+                i = DIALOG.select(
                     get_ui_string(32008), [item.title for item in results]
                 )
                 if i >= 0:
@@ -246,7 +259,7 @@ def search_subs(params):
                         results = parser.get_episode(results[i].link, languages)
                     except Add7ConnectionError:
                         logger.error('Unable to connect to addic7ed.com')
-                        dialog.notification(get_ui_string(32002),
+                        DIALOG.notification(get_ui_string(32002),
                                             get_ui_string(32005), 'error')
                         return
                     except SubsSearchError:
@@ -268,8 +281,6 @@ def router(paramstring):
     :type paramstring: str
     """
     # Get plugin call params
-    if PY2:
-        paramstring = urlparse.unquote(paramstring).decode('utf-8')
     params = dict(urlparse.parse_qsl(paramstring))
     if params['action'] in ('search', 'manualsearch'):
         # Search and display subs.
@@ -279,4 +290,4 @@ def router(paramstring):
             params['link'], params['ref'],
             urlparse.unquote(params['filename'])
         )
-    xbmcplugin.endOfDirectory(handle)
+    xbmcplugin.endOfDirectory(HANDLE)

@@ -1,22 +1,28 @@
-# -*- coding: utf-8 -*-
-#-------------------------------------------------------------------------------
-# Name:        addic7ed
-# Purpose:     Parsing and downloading subs from addic7ed.com
-# Author:      Roman Miroshnychenko
-# Created on:  05.03.2013
-# Copyright:   (c) Roman Miroshnychenko, 2013
-# Licence:     GPL v.3 http://www.gnu.org/licenses/gpl.html
-#-------------------------------------------------------------------------------
+## Copyright (C) 2013, Roman Miroshnychenko aka Roman V.M.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import, unicode_literals
 import re
-from contextlib import closing
 from collections import namedtuple
+from contextlib import closing
+
 from bs4 import BeautifulSoup
-from kodi_six.xbmcvfs import File
-from .exceptions import SubsSearchError, DailyLimitError
-from .utils import LanguageData
-from .webclient import Session
+from xbmcvfs import File
+
+from addic7ed.exceptions import SubsSearchError, DailyLimitError
+from addic7ed.utils import LanguageData
+from addic7ed.webclient import Session
 
 __all__ = ['search_episode', 'get_episode', 'download_subs']
 
