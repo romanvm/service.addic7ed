@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="service.subtitles.rvm.addic7ed"
   name="Addic7ed.com"
-  version="3.1.8"
+  version="3.1.9"
   provider-name="Roman V.M.">
 <requires>
-  <import addon="xbmc.python" version="2.25.0"/>
+  <import addon="xbmc.python" version="3.0.0"/>
   <import addon="script.module.beautifulsoup4"/>
   <import addon="script.module.html5lib"/>
   <import addon="script.module.requests"/>
@@ -32,11 +32,8 @@
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
   </assets>
-  <news>3.1.8:
-- Performance optimization.
-
-3.1.7:
-- Fixed crashes when playing non-medialibrary items.</news>
+  <news>3.1.9:
+- Removed Python 2 compatibility.</news>
   <reuselanguageinvoker>true</reuselanguageinvoker>
 </extension>
 </addon>
