@@ -7,6 +7,7 @@
 from __future__ import absolute_import, unicode_literals
 import json
 import re
+import os
 from collections import namedtuple
 from kodi_six import xbmc
 from .addon import ADDON_ID
@@ -73,7 +74,12 @@ def get_now_played():
         'id': '1'
     })
     item = json.loads(xbmc.executeJSONRPC(request))['result']['item']
-    item['file'] = xbmc.Player().getPlayingFile()  # It provides more correct result
+    path = xbmc.getInfoLabel('Window(10000).Property(videoinfo.current_path)')
+    if path:
+        item['file'] = os.path.basename(path)
+        logger.debug("Using file path from addon: {}".format(item['file']))
+    else:
+        item['file'] = xbmc.Player().getPlayingFile()  # It provides more correct result
     return item
 
 
