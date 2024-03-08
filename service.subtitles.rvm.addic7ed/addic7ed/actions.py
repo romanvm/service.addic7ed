@@ -37,7 +37,7 @@ TEMP_DIR = os.path.join(PROFILE, 'temp')
 HANDLE = int(sys.argv[1])
 
 
-VIDEOFILES = {'.avi', '.mkv', '.mp4', '.ts', '.m2ts', '.mov'}
+VIDEOFILE_EXTENSIONS = {'.avi', '.mkv', '.mp4', '.ts', '.m2ts', '.mov'}
 DIALOG = xbmcgui.Dialog()
 RELEASE_RE = re.compile(r'-(.*?)(?:\[.*?\])?\.')
 
@@ -203,11 +203,13 @@ def extract_episode_data():
         # Get get showname/season/episode data from
         # Kodi if the video-file is being played from
         # the TV-Shows library.
-        season = str(now_played['season'] and now_played['season'] > -1 or
-                     xbmc.getInfoLabel("VideoPlayer.Season")).zfill(2)
-        episode = str(now_played['episode'] and now_played['episode'] > -1 or
-                      xbmc.getInfoLabel("VideoPlayer.Episode")).zfill(2)
-        if not os.path.splitext(filename)[1].lower() in VIDEOFILES:
+        season = str(now_played['season'] if now_played['season'] > -1
+                     else xbmc.getInfoLabel('VideoPlayer.Season'))
+        season = season.zfill(2)
+        episode = str(now_played['episode'] if now_played['episode'] > -1
+                      else xbmc.getInfoLabel('VideoPlayer.Episode'))
+        episode = episode.zfill(2)
+        if not os.path.splitext(filename)[1].lower() in VIDEOFILE_EXTENSIONS:
             filename = '{0}.{1}x{2}.foo'.format(
                 showname, season, episode
             )
