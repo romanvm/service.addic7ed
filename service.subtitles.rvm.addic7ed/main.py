@@ -15,8 +15,8 @@
 
 import sys
 from addic7ed.actions import router
-from addic7ed.exception_logger import log_exception
+from addic7ed.exception_logger import catch_exception
 
 if __name__ == '__main__':
-    with log_exception():
+    with catch_exception():
         router(sys.argv[2][1:])
