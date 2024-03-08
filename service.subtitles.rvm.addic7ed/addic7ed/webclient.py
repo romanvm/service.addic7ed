@@ -26,7 +26,6 @@ HEADERS = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Host': SITE[8:],
     'Accept-Charset': 'UTF-8',
-    'Accept-Encoding': 'gzip,deflate'
 }
 
 
