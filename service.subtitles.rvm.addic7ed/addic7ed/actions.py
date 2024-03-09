@@ -175,7 +175,7 @@ def extract_episode_data():
     """
     now_played = get_now_played()
     logger.debug(f'Played file info: {now_played}')
-    showname = now_played['showtitle'] or xbmc.getInfoLabel("VideoPlayer.TVshowtitle")
+    showname = now_played['showtitle'] or xbmc.getInfoLabel('VideoPlayer.TVshowtitle')
     parsed = urlparse.urlparse(now_played['file'])
     filename = os.path.basename(parsed.path)
     if ADDON.getSetting('use_filename') == 'true' or not showname:
