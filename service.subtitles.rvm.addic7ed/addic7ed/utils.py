@@ -14,22 +14,26 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import json
-import re
+import logging
 import os
+import re
 from collections import namedtuple
 
 import xbmc
 
-from addic7ed.addon import ADDON_ID
+from addic7ed.addon import ADDON_ID, ADDON_VERSION
+from addic7ed.exception_logger import format_exception, format_trace
 from addic7ed.exceptions import ParseError
 
 __all__ = [
-    'logger',
+    'initialize_logging',
     'get_now_played',
     'normalize_showname',
     'get_languages',
     'parse_filename',
 ]
+
+logger = logging.getLogger(__name__)
 
 # Convert show names from TheTVDB format to Addic7ed.com format
 # Keys must be all lowercase
@@ -38,6 +42,8 @@ NAME_CONVERSIONS = {
     'law & order: special victims unit': 'Law and order SVU',
     'bodyguard (2018)': 'bodyguard',
 }
+
+LOG_FORMAT = '[{addon_id} v.{addon_version}] {filename}:{lineno} - {message}'
 
 episode_patterns = (
     re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?s(\d+)[ \.]?e(\d+)\.', re.I | re.U),
@@ -49,22 +55,55 @@ spanish_re = re.compile(r'Spanish \(.*?\)')
 LanguageData = namedtuple('LanguageData', ['kodi_lang', 'add7_lang'])
 
 
-class logger(object):
-    @staticmethod
-    def log(message, level=xbmc.LOGDEBUG):
-        xbmc.log('{0}: {1}'.format(ADDON_ID, message), level)
+class KodiLogHandler(logging.Handler):
+    """
+    Logging handler that writes to the Kodi log with correct levels
 
-    @staticmethod
-    def info(message):
-        logger.log(message, xbmc.LOGINFO)
+    It also adds {addon_id} and {addon_version} variables available to log format.
+    """
+    LEVEL_MAP = {
+        logging.NOTSET: xbmc.LOGNONE,
+        logging.DEBUG: xbmc.LOGDEBUG,
+        logging.INFO: xbmc.LOGINFO,
+        logging.WARN: xbmc.LOGWARNING,
+        logging.WARNING: xbmc.LOGWARNING,
+        logging.ERROR: xbmc.LOGERROR,
+        logging.CRITICAL: xbmc.LOGFATAL,
+    }
 
-    @staticmethod
-    def error(message):
-        logger.log(message, xbmc.LOGERROR)
+    def emit(self, record):
+        record.addon_id = ADDON_ID
+        record.addon_version = ADDON_VERSION
+        extended_trace_info = getattr(self, 'extended_trace_info', False)
+        if extended_trace_info:
+            if record.exc_info is not None:
+                record.exc_text = format_exception(record.exc_info[1])
+            if record.stack_info is not None:
+                record.stack_info = format_trace(7)
+        message = self.format(record)
+        kodi_log_level = self.LEVEL_MAP.get(record.levelno, xbmc.LOGDEBUG)
+        xbmc.log(message, level=kodi_log_level)
 
-    @staticmethod
-    def debug(message):
-        logger.log(message, xbmc.LOGDEBUG)
+
+def initialize_logging(extended_trace_info=True):
+    """
+    Initialize the root logger that writes to the Kodi log
+
+    After initialization, you can use Python logging facilities as usual.
+
+    :param extended_trace_info: write extended trace info when exc_info=True
+        or stack_info=True parameters are passed to logging methods.
+    """
+    handler = KodiLogHandler()
+    # pylint: disable=attribute-defined-outside-init
+    handler.extended_trace_info = extended_trace_info
+    logging.basicConfig(
+        format=LOG_FORMAT,
+        style='{',
+        level=logging.DEBUG,
+        handlers=[handler],
+        force=True
+    )
 
 
 def get_now_played():
@@ -88,7 +127,7 @@ def get_now_played():
     path = xbmc.getInfoLabel('Window(10000).Property(videoinfo.current_path)')
     if path:
         item['file'] = os.path.basename(path)
-        logger.debug("Using file path from addon: {}".format(item['file']))
+        logger.debug("Using file path from addon: %s", item['file'])
     else:
         item['file'] = xbmc.Player().getPlayingFile()  # It provides more correct result
     return item

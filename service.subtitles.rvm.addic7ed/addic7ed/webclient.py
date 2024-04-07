@@ -13,11 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
+
 from addic7ed import simple_requests as requests
 from addic7ed.exceptions import Add7ConnectionError
-from addic7ed.utils import logger
 
 __all__ = ['Session']
+
+logger = logging.getLogger(__name__)
 
 SITE = 'https://www.addic7ed.com'
 HEADERS = {
@@ -44,7 +47,7 @@ class Session:
         return self._last_url
 
     def _open_url(self, url, params, referer):
-        logger.debug('Opening URL: {0}'.format(url))
+        logger.debug('Opening URL: %s', url)
         headers = HEADERS.copy()
         headers['Referer'] = referer
         try:
@@ -52,11 +55,9 @@ class Session:
         except requests.RequestException as exc:
             logger.error('Unable to connect to Addic7ed.com!')
             raise Add7ConnectionError from exc
-        logger.debug('Addic7ed.com returned page:\n{}'.format(response.text))
+        logger.debug('Addic7ed.com returned page:\n%s', response.text)
         if not response.ok:
-            logger.error('Addic7ed.com returned status: {0}'.format(
-                response.status_code)
-            )
+            logger.error('Addic7ed.com returned status: %s', response.status_code)
             raise Add7ConnectionError
         self._last_url = response.url
         return response
