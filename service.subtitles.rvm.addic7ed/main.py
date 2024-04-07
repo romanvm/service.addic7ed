@@ -14,10 +14,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import sys
+
 from addic7ed.actions import router
 from addic7ed.exception_logger import catch_exception
-from addic7ed.utils import logger
+from addic7ed.utils import initialize_logging
+
+initialize_logging()
 
 if __name__ == '__main__':
-    with catch_exception(logger.error):
+    with catch_exception():
         router(sys.argv[2][1:])

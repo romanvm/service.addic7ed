@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
 import os
 import re
 import shutil
@@ -28,10 +29,12 @@ from addic7ed import parser
 from addic7ed.addon import ADDON, PROFILE, ICON, get_ui_string
 from addic7ed.exceptions import DailyLimitError, ParseError, SubsSearchError, \
     Add7ConnectionError
-from addic7ed.utils import logger, get_languages, get_now_played, parse_filename, \
+from addic7ed.utils import get_languages, get_now_played, parse_filename, \
     normalize_showname
 
 __all__ = ['router']
+
+logger = logging.getLogger(__name__)
 
 TEMP_DIR = os.path.join(PROFILE, 'temp')
 HANDLE = int(sys.argv[1])
@@ -183,20 +186,16 @@ def extract_episode_data():
         # the filename if 'use_filename' setting is true
         # or if the video-file does not have library metadata.
         try:
-            logger.debug('Using filename: {0}'.format(filename))
+            logger.debug('Using filename: %s', filename)
             showname, season, episode = parse_filename(filename)
         except ParseError:
-            logger.debug(
-                'Filename {0} failed. Trying ListItem.Label...'.format(filename)
-            )
+            logger.debug('Filename %s failed. Trying ListItem.Label...', filename)
             try:
                 filename = now_played['label']
-                logger.debug('Using filename: {0}'.format(filename))
+                logger.debug('Using filename: %s', filename)
                 showname, season, episode = parse_filename(filename)
             except ParseError:
-                logger.error(
-                    'Unable to determine episode data for {0}'.format(filename)
-                )
+                logger.error('Unable to determine episode data for %s', filename)
                 DIALOG.notification(get_ui_string(32002), get_ui_string(32006),
                                     'error', 3000)
                 raise
@@ -211,12 +210,8 @@ def extract_episode_data():
                       else xbmc.getInfoLabel('VideoPlayer.Episode'))
         episode = episode.zfill(2)
         if not os.path.splitext(filename)[1].lower() in VIDEOFILE_EXTENSIONS:
-            filename = '{0}.{1}x{2}.foo'.format(
-                showname, season, episode
-            )
-        logger.debug('Using library metadata: {0} - {1}x{2}'.format(
-            showname, season, episode)
-        )
+            filename = f'{showname}.{season}x{episode}.foo'
+        logger.debug('Using library metadata: %s - %sx%s', showname, season, episode)
     return EpisodeData(showname, season, episode, filename)
 
 
@@ -232,18 +227,15 @@ def search_subs(params):
         except ParseError:
             return
         # Create a search query string
-        query = '{0} {1}x{2}'.format(
-            normalize_showname(episode_data.showname),
-            episode_data.season,
-            episode_data.episode
-        )
+        showname = normalize_showname(episode_data.showname)
+        query = f'{showname} {episode_data.season}x{episode_data.episode}'
         filename = episode_data.filename
     else:
         # Get the query string typed on the on-screen keyboard
         query = params['searchstring']
         filename = query
     if query:
-        logger.debug('Search query: {0}'.format(query))
+        logger.debug('Search query: %s', query)
         try:
             results = parser.search_episode(query, languages)
         except Add7ConnectionError:
@@ -252,10 +244,10 @@ def search_subs(params):
                 get_ui_string(32002), get_ui_string(32005), 'error'
             )
         except SubsSearchError:
-            logger.info('No subs for "{}" found.'.format(query))
+            logger.info('No subs for "%s" found.', query)
         else:
             if isinstance(results, list):
-                logger.info('Multiple episodes found:\n{0}'.format(results))
+                logger.info('Multiple episodes found:\n%s', results)
                 i = DIALOG.select(
                     get_ui_string(32008), [item.title for item in results]
                 )
@@ -273,9 +265,8 @@ def search_subs(params):
                 else:
                     logger.info('Episode selection cancelled.')
                     return
-            logger.info('Found subs for "{0}"'.format(query))
-            display_subs(results.subtitles, results.episode_url,
-                         filename)
+            logger.info('Found subs for "%s"', query)
+            display_subs(results.subtitles, results.episode_url, filename)
 
 
 def router(paramstring):

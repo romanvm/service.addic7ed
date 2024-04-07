@@ -18,10 +18,11 @@ import os
 import xbmcaddon
 from xbmcvfs import translatePath
 
-__all__ = ['ADDON_ID', 'ADDON', 'PATH', 'PROFILE', 'ICON', 'get_ui_string']
+__all__ = ['ADDON_ID', 'ADDON', 'ADDON_VERSION', 'PATH', 'PROFILE', 'ICON', 'get_ui_string']
 
-ADDON_ID = 'service.subtitles.rvm.addic7ed'
-ADDON = xbmcaddon.Addon(ADDON_ID)
+ADDON = xbmcaddon.Addon()
+ADDON_ID = ADDON.getAddonInfo('id')
+ADDON_VERSION = ADDON.getAddonInfo('version')
 PATH = translatePath(ADDON.getAddonInfo('path'))
 PROFILE = translatePath(ADDON.getAddonInfo('profile'))
 ICON = os.path.join(PATH, 'icon.png')
