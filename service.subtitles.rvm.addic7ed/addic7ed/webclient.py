@@ -29,7 +29,7 @@ HEADERS = {
 }
 
 
-class Session(object):
+class Session:
     """
     Webclient Session class
     """
