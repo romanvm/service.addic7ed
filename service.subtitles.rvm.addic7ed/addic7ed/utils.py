@@ -15,6 +15,7 @@
 
 import json
 import re
+import os
 from collections import namedtuple
 
 import xbmc
@@ -84,7 +85,12 @@ def get_now_played():
     })
     response = xbmc.executeJSONRPC(request)
     item = json.loads(response)['result']['item']
-    item['file'] = xbmc.Player().getPlayingFile()  # It provides more correct result
+    path = xbmc.getInfoLabel('Window(10000).Property(videoinfo.current_path)')
+    if path:
+        item['file'] = os.path.basename(path)
+        logger.debug("Using file path from addon: {}".format(item['file']))
+    else:
+        item['file'] = xbmc.Player().getPlayingFile()  # It provides more correct result
     return item
 
 
