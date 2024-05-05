@@ -15,7 +15,7 @@ jobs:
         python-version: "3.10"
     - name: Install dependencies
       run: |
-        pip install -q Pylint Kodistubs bs4 typing-extensions
+        pip install -q -r requirements.txt Pylint typing-extensions
     - name: Check with Pylint
       run: |
         pylint service.subtitles.rvm.addic7ed/addic7ed service.subtitles.rvm.addic7ed/main.py
