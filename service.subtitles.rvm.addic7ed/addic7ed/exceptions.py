@@ -30,5 +30,5 @@ class Add7ConnectionError(Add7Exception):
     pass
 
 
-class DailyLimitError(Add7Exception):
+class NoSubtitlesReturned(Add7Exception):
     pass

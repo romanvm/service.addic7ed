@@ -23,35 +23,16 @@ import xbmc
 
 from addic7ed.addon import ADDON_ID, ADDON_VERSION
 from addic7ed.exception_logger import format_exception, format_trace
-from addic7ed.exceptions import ParseError
 
 __all__ = [
     'initialize_logging',
     'get_now_played',
-    'normalize_showname',
     'get_languages',
-    'parse_filename',
 ]
 
 logger = logging.getLogger(__name__)
 
-# Convert show names from TheTVDB format to Addic7ed.com format
-# Keys must be all lowercase
-NAME_CONVERSIONS = {
-    'castle (2009)': 'castle',
-    'law & order: special victims unit': 'Law and order SVU',
-    'bodyguard (2018)': 'bodyguard',
-}
-
-LOG_FORMAT = '[{addon_id} v.{addon_version}] {filename}:{lineno} - {message}'
-
-episode_patterns = (
-    re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?s(\d+)[ \.]?e(\d+)\.', re.I | re.U),
-    re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?(\d+)x(\d+)\.', re.I | re.U),
-    re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?(\d{1,2}?)[ \.]?(\d{2})\.', re.I | re.U),
-    )
 spanish_re = re.compile(r'Spanish \(.*?\)')
-
 LanguageData = namedtuple('LanguageData', ['kodi_lang', 'add7_lang'])
 
 
@@ -61,6 +42,7 @@ class KodiLogHandler(logging.Handler):
 
     It also adds {addon_id} and {addon_version} variables available to log format.
     """
+    LOG_FORMAT = '[{addon_id} v.{addon_version}] {filename}:{lineno} - {message}'
     LEVEL_MAP = {
         logging.NOTSET: xbmc.LOGNONE,
         logging.DEBUG: xbmc.LOGDEBUG,
@@ -98,7 +80,7 @@ def initialize_logging(extended_trace_info=True):
     # pylint: disable=attribute-defined-outside-init
     handler.extended_trace_info = extended_trace_info
     logging.basicConfig(
-        format=LOG_FORMAT,
+        format=KodiLogHandler.LOG_FORMAT,
         style='{',
         level=logging.DEBUG,
         handlers=[handler],
@@ -133,20 +115,6 @@ def get_now_played():
     return item
 
 
-def normalize_showname(showname):
-    """
-    Normalize showname if there are differences
-    between TheTVDB and Addic7ed
-
-    :param showname: TV show name
-    :return: normalized show name
-    """
-    showname = showname.strip().lower()
-    if showname in NAME_CONVERSIONS:
-        showname = NAME_CONVERSIONS[showname]
-    return showname.replace(':', '')
-
-
 def get_languages(languages_raw):
     """
     Create the list of pairs of language names.
@@ -170,23 +138,3 @@ def get_languages(languages_raw):
             add7_lang = language
         languages.append(LanguageData(kodi_lang, add7_lang))
     return languages
-
-
-def parse_filename(filename):
-    """
-    Filename parser for extracting show name, season # and episode # from
-    a filename.
-
-    :param filename: episode filename
-    :return: parsed showname, season and episode
-    :raises ParseError: if the filename does not match any episode patterns
-    """
-    filename = filename.replace(' ', '.')
-    for regexp in episode_patterns:
-        episode_data = regexp.search(filename)
-        if episode_data is not None:
-            showname = episode_data.group(1).replace('.', ' ')
-            season = episode_data.group(2).zfill(2)
-            episode = episode_data.group(3).zfill(2)
-            return showname, season, episode
-    raise ParseError

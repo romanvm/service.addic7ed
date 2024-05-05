@@ -27,10 +27,11 @@ import xbmcplugin
 
 from addic7ed import parser
 from addic7ed.addon import ADDON, PROFILE, ICON, get_ui_string
-from addic7ed.exceptions import DailyLimitError, ParseError, SubsSearchError, \
+from addic7ed.exceptions import NoSubtitlesReturned, ParseError, SubsSearchError, \
     Add7ConnectionError
-from addic7ed.utils import get_languages, get_now_played, parse_filename, \
-    normalize_showname
+from addic7ed.parser import parse_filename, normalize_showname
+from addic7ed.utils import get_languages, get_now_played
+from addic7ed.webclient import Session
 
 __all__ = ['router']
 
@@ -108,7 +109,7 @@ def display_subs(subs_list, episode_url, filename):
             list_item.setProperty('hearing_imp', 'true')
         if synced:
             list_item.setProperty('sync', 'true')
-        url = '{0}?{1}'.format(
+        url = '{}?{}'.format(
             sys.argv[0],
             urlparse.urlencode(
                 {'action': 'download',
@@ -144,11 +145,11 @@ def download_subs(link, referrer, filename):
     subspath = os.path.join(TEMP_DIR, filename)
     # Download the subs from addic7ed.com
     try:
-        parser.download_subs(link, referrer, subspath)
+        Session().download_subs(link, referrer, subspath)
     except Add7ConnectionError:
         logger.error('Unable to connect to addic7ed.com')
         DIALOG.notification(get_ui_string(32002), get_ui_string(32005), 'error')
-    except DailyLimitError:
+    except NoSubtitlesReturned:
         DIALOG.notification(get_ui_string(32002), get_ui_string(32003), 'error',
                             3000)
         logger.error('Exceeded daily limit for subs downloads.')

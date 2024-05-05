@@ -15,8 +15,10 @@
 
 import logging
 
+from xbmcvfs import File
+
 from addic7ed import simple_requests as requests
-from addic7ed.exceptions import Add7ConnectionError
+from addic7ed.exceptions import Add7ConnectionError, NoSubtitlesReturned
 
 __all__ = ['Session']
 
@@ -36,15 +38,15 @@ class Session:
     """
     Webclient Session class
     """
+    _instance = None
 
-    @property
-    def last_url(self):
-        """
-        Get actual url (with redirect) of the last loaded webpage
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__()
+        return cls._instance
 
-        :return: URL of the last webpage
-        """
-        return self._last_url
+    def __init__(self):
+        self.last_url = ''
 
     def _open_url(self, url, params, referer):
         logger.debug('Opening URL: %s', url)
@@ -59,7 +61,7 @@ class Session:
         if not response.ok:
             logger.error('Addic7ed.com returned status: %s', response.status_code)
             raise Add7ConnectionError
-        self._last_url = response.url
+        self.last_url = response.url
         return response
 
     def load_page(self, path, params=None):
@@ -72,17 +74,23 @@ class Session:
         :raises ConnectionError: if unable to connect to the server
         """
         response = self._open_url(SITE + path, params, referer=SITE + '/')
-        self._last_url = response.url
+        self.last_url = response.url
         return response.text
 
-    def download_subs(self, path, referer):
+    def download_subs(self, path, referer, filename='subtitles.srt'):
         """
         Download subtitles by their URL
 
         :param path: relative path to .srt starting from '/'
         :param referer: referer page
+        :param filename: subtitles filename
         :return: subtitles file contents as a byte string
         :raises ConnectionError: if unable to connect to the server
+        :raises NoSubtitlesReturned: if a HTML page is returned instead of subtitles
         """
         response = self._open_url(SITE + path, params=None, referer=referer)
-        return response.content
+        subtitles = response.content
+        if subtitles[:9].lower() == b'<!doctype':
+            raise NoSubtitlesReturned
+        with File(filename, 'w') as fo:
+            fo.write(bytearray(subtitles))

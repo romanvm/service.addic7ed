@@ -15,16 +15,14 @@
 
 import re
 from collections import namedtuple
-from contextlib import closing
 
 from bs4 import BeautifulSoup
-from xbmcvfs import File
 
-from addic7ed.exceptions import SubsSearchError, DailyLimitError
+from addic7ed.exceptions import SubsSearchError, ParseError
 from addic7ed.utils import LanguageData
 from addic7ed.webclient import Session
 
-__all__ = ['search_episode', 'get_episode', 'download_subs']
+__all__ = ['search_episode', 'get_episode', 'parse_filename', 'normalize_showname']
 
 session = Session()
 SubsSearchResult = namedtuple('SubsSearchResult', ['subtitles', 'episode_url'])
@@ -35,6 +33,19 @@ version_re = re.compile(r'Version (.*?),')
 original_download_re = re.compile(r'^/original')
 updated_download_re = re.compile(r'^/updated')
 jointranslation_re = re.compile('^/jointranslation')
+
+episode_patterns = (
+    re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?s(\d+)[ \.]?e(\d+)\.', re.I | re.U),
+    re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?(\d+)x(\d+)\.', re.I | re.U),
+    re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?(\d{1,2}?)[ \.]?(\d{2})\.', re.I | re.U),
+)
+# Convert show names from TheTVDB format to Addic7ed.com format
+# Keys must be all lowercase
+NAME_CONVERSIONS = {
+    'castle (2009)': 'castle',
+    'law & order: special victims unit': 'Law and order SVU',
+    'bodyguard (2018)': 'bodyguard',
+}
 
 
 def search_episode(query, languages=None):
@@ -165,20 +176,35 @@ def parse_episode(sub_cells, languages):
                     break
 
 
-def download_subs(link, referer, filename='subtitles.srt'):
+def parse_filename(filename):
     """
-    Download subtitles from addic7ed.com
+    Filename parser for extracting show name, season # and episode # from
+    a filename.
 
-    :param link: relative lint to .srt file
-    :param referer: episode page for referer header
-    :param filename: file name for subtitles
-    :raises ConnectionError: if addic7ed.com cannot be opened
-    :raises DailyLimitError: if a user exceeded their daily download quota
-        (10 subtitles).
+    :param filename: episode filename
+    :return: parsed showname, season and episode
+    :raises ParseError: if the filename does not match any episode patterns
     """
-    subtitles = session.download_subs(link, referer=referer)
-    if subtitles[:9].lower() != b'<!doctype':
-        with closing(File(filename, 'w')) as fo:
-            fo.write(bytearray(subtitles))
-    else:
-        raise DailyLimitError
+    filename = filename.replace(' ', '.')
+    for regexp in episode_patterns:
+        episode_data = regexp.search(filename)
+        if episode_data is not None:
+            showname = episode_data.group(1).replace('.', ' ')
+            season = episode_data.group(2).zfill(2)
+            episode = episode_data.group(3).zfill(2)
+            return showname, season, episode
+    raise ParseError
+
+
+def normalize_showname(showname):
+    """
+    Normalize showname if there are differences
+    between TheTVDB and Addic7ed
+
+    :param showname: TV show name
+    :return: normalized show name
+    """
+    showname = showname.strip().lower()
+    if showname in NAME_CONVERSIONS:
+        showname = NAME_CONVERSIONS[showname]
+    return showname.replace(':', '')
