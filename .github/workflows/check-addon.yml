@@ -1,0 +1,27 @@
+name: Check addon
+
+on: [push, pull_request]
+
+jobs:
+  check:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      run: |
+        pip install -q Pylint Kodistubs typing-extensions
+    - name: Check with Pylint
+      run: |
+        pylint service.subtitles.rvm.addic7ed/addic7ed service.subtitles.rvm.addic7ed/main.py
+    - name: Install addon checker
+      run: |
+        pip install -q kodi-addon-checker
+    - name: Check with addon-checker
+      run: |
+        kodi-addon-checker --branch matrix
