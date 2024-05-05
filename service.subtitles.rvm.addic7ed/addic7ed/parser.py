@@ -77,9 +77,8 @@ def search_episode(query, languages=None):
                       )
     if table is not None:
         results = list(parse_search_results(table))
-        if not results:
-            raise SubsSearchError
-        return results
+        if results:
+            return results
     else:
         sub_cells = soup.find_all(
             'table',
@@ -90,8 +89,7 @@ def search_episode(query, languages=None):
             return SubsSearchResult(
                 parse_episode(sub_cells, languages), session.last_url
             )
-        else:
-            raise SubsSearchError
+    raise SubsSearchError
 
 
 def parse_search_results(table):
@@ -109,12 +107,11 @@ def get_episode(link, languages=None):
         'table',
         {'width': '100%', 'border': '0', 'align': 'center', 'class': 'tabel95'}
     )
-    if sub_cells:
-        return SubsSearchResult(
-            parse_episode(sub_cells, languages), session.last_url
-        )
-    else:
+    if not sub_cells:
         raise SubsSearchError
+    return SubsSearchResult(
+        parse_episode(sub_cells, languages), session.last_url
+    )
 
 
 def parse_episode(sub_cells, languages):
@@ -145,7 +142,7 @@ def parse_episode(sub_cells, languages):
             'td', {'class': 'newsDate', 'colspan': '3'}
         ).get_text(strip=True)
         if works_with:
-            version += u', ' + works_with
+            version += ', ' + works_with
         lang_cells = sub_cell.find_all('td', {'class': 'language'})
         for lang_cell in lang_cells:
             for language in languages:
@@ -205,6 +202,5 @@ def normalize_showname(showname):
     :return: normalized show name
     """
     showname = showname.strip().lower()
-    if showname in NAME_CONVERSIONS:
-        showname = NAME_CONVERSIONS[showname]
+    showname = NAME_CONVERSIONS.get(showname, showname)
     return showname.replace(':', '')

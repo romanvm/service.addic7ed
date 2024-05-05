@@ -65,7 +65,7 @@ def _detect_synced_subs(subs_list, filename):
         else:
             release = ''
         lowercase_version = item.version.lower()
-        resync_pattern = r'sync.+?{}'.format(release)
+        resync_pattern = rf'sync.+?{release}'
         synced = (release and
                   release in lowercase_version and
                   re.search(resync_pattern, lowercase_version, re.I) is None)
@@ -109,7 +109,7 @@ def display_subs(subs_list, episode_url, filename):
             list_item.setProperty('hearing_imp', 'true')
         if synced:
             list_item.setProperty('sync', 'true')
-        url = '{}?{}'.format(
+        url = '{}?{}'.format(  # pylint: disable=consider-using-f-string
             sys.argv[0],
             urlparse.urlencode(
                 {'action': 'download',
@@ -178,7 +178,7 @@ def extract_episode_data():
     :raises ParseError: if cannot determine episode data
     """
     now_played = get_now_played()
-    logger.debug(f'Played file info: {now_played}')
+    logger.debug('Played file info: %s', now_played)
     showname = now_played['showtitle'] or xbmc.getInfoLabel('VideoPlayer.TVshowtitle')
     parsed = urlparse.urlparse(now_played['file'])
     filename = os.path.basename(parsed.path)
