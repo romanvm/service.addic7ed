@@ -27,13 +27,9 @@ from addic7ed.exception_logger import format_exception, format_trace
 __all__ = [
     'initialize_logging',
     'get_now_played',
-    'get_languages',
 ]
 
 logger = logging.getLogger(__name__)
-
-spanish_re = re.compile(r'Spanish \(.*?\)')
-LanguageData = namedtuple('LanguageData', ['kodi_lang', 'add7_lang'])
 
 
 class KodiLogHandler(logging.Handler):
@@ -113,28 +109,3 @@ def get_now_played():
     else:
         item['file'] = xbmc.Player().getPlayingFile()  # It provides more correct result
     return item
-
-
-def get_languages(languages_raw):
-    """
-    Create the list of pairs of language names.
-    The 1st item in a pair is used by Kodi.
-    The 2nd item in a pair is used by
-    the addic7ed web site parser.
-
-    :param languages_raw: the list of subtitle languages from Kodi
-    :return: the list of language pairs
-    """
-    languages = []
-    for language in languages_raw:
-        kodi_lang = language
-        if 'English' in kodi_lang:
-            add7_lang = 'English'
-        elif kodi_lang == 'Portuguese (Brazil)':
-            add7_lang = 'Portuguese (Brazilian)'
-        elif spanish_re.search(kodi_lang) is not None:
-            add7_lang = 'Spanish (Latin America)'
-        else:
-            add7_lang = language
-        languages.append(LanguageData(kodi_lang, add7_lang))
-    return languages

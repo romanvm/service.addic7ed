@@ -29,8 +29,8 @@ from addic7ed import parser
 from addic7ed.addon import ADDON, PROFILE, ICON, get_ui_string
 from addic7ed.exceptions import NoSubtitlesReturned, ParseError, SubsSearchError, \
     Add7ConnectionError
-from addic7ed.parser import parse_filename, normalize_showname
-from addic7ed.utils import get_languages, get_now_played
+from addic7ed.parser import parse_filename, normalize_showname, get_languages
+from addic7ed.utils import get_now_played
 from addic7ed.webclient import Session
 
 __all__ = ['router']

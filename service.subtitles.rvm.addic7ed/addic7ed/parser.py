@@ -19,20 +19,29 @@ from collections import namedtuple
 from bs4 import BeautifulSoup
 
 from addic7ed.exceptions import SubsSearchError, ParseError
-from addic7ed.utils import LanguageData
 from addic7ed.webclient import Session
 
-__all__ = ['search_episode', 'get_episode', 'parse_filename', 'normalize_showname']
+__all__ = [
+    'search_episode',
+    'get_episode',
+    'parse_filename',
+    'normalize_showname',
+    'get_languages',
+]
 
 session = Session()
+
 SubsSearchResult = namedtuple('SubsSearchResult', ['subtitles', 'episode_url'])
 EpisodeItem = namedtuple('EpisodeItem', ['title', 'link'])
 SubsItem = namedtuple('SubsItem', ['language', 'version', 'link', 'hi', 'unfinished'])
+LanguageData = namedtuple('LanguageData', ['kodi_lang', 'add7_lang'])
+
 serie_re = re.compile(r'^serie')
 version_re = re.compile(r'Version (.*?),')
 original_download_re = re.compile(r'^/original')
 updated_download_re = re.compile(r'^/updated')
 jointranslation_re = re.compile('^/jointranslation')
+spanish_re = re.compile(r'Spanish \(.*?\)')
 
 episode_patterns = (
     re.compile(r'^(.*?)[ \.](?:\d*?[ \.])?s(\d+)[ \.]?e(\d+)\.', re.I | re.U),
@@ -204,3 +213,28 @@ def normalize_showname(showname):
     showname = showname.strip().lower()
     showname = NAME_CONVERSIONS.get(showname, showname)
     return showname.replace(':', '')
+
+
+def get_languages(languages_raw):
+    """
+    Create the list of pairs of language names.
+    The 1st item in a pair is used by Kodi.
+    The 2nd item in a pair is used by
+    the addic7ed web site parser.
+
+    :param languages_raw: the list of subtitle languages from Kodi
+    :return: the list of language pairs
+    """
+    languages = []
+    for language in languages_raw:
+        kodi_lang = language
+        if 'English' in kodi_lang:
+            add7_lang = 'English'
+        elif kodi_lang == 'Portuguese (Brazil)':
+            add7_lang = 'Portuguese (Brazilian)'
+        elif spanish_re.search(kodi_lang) is not None:
+            add7_lang = 'Spanish (Latin America)'
+        else:
+            add7_lang = language
+        languages.append(LanguageData(kodi_lang, add7_lang))
+    return languages
