@@ -111,7 +111,11 @@ class Response:
         :return: Response payload as decoded text
         """
         if self._text is None:
-            self._text = self.content.decode(self.encoding)
+            charset = self.headers.get_content_charset()
+            if charset:
+                self._text = self.content.decode(charset.lower())
+            else:
+                self._text = self.content.decode(self.encoding, errors='replace')
         return self._text
 
     def json(self) -> Optional[Union[Dict[str, Any], List[Any]]]:
