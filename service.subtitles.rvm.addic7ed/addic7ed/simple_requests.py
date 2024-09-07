@@ -112,10 +112,10 @@ class Response:
         """
         if self._text is None:
             charset = self.headers.get_content_charset()
-            if charset and len(charset) > 0:
+            if charset:
                 self._text = self.content.decode(charset.lower())
             else:
-                self._text = self.content
+                self._text = self.content.decode(self.encoding, errors='replace')
         return self._text
 
     def json(self) -> Optional[Union[Dict[str, Any], List[Any]]]:
