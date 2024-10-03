@@ -108,7 +108,7 @@ class Response:
     @headers.setter
     def headers(self, value: HTTPMessage):
         charset = value.get_content_charset()
-        if charset is not None:
+        if charset:
             self.encoding = charset
         self._headers = value
 
