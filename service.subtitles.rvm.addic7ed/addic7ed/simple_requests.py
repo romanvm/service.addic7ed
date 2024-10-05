@@ -124,7 +124,7 @@ class Response:
         if self._text is None:
             try:
                 self._text = self.content.decode(self.encoding)
-            except UnicodeDecodeError:
+            except (UnicodeDecodeError, LookupError):
                 self._text = self.content.decode('utf-8', 'replace')
         return self._text
 
