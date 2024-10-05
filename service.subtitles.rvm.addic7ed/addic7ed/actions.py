@@ -152,7 +152,7 @@ def download_subs(link, referrer, filename):
     except NoSubtitlesReturned:
         DIALOG.notification(get_ui_string(32002), get_ui_string(32003), 'error',
                             3000)
-        logger.error('Exceeded daily limit for subs downloads.')
+        logger.error('A HTML page returned instead of subtitles for link: %s', link)
     else:
         # Create a ListItem for downloaded subs and pass it
         # to the Kodi subtitles engine to move the downloaded subs file
