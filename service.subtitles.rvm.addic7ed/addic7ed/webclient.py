@@ -17,7 +17,8 @@ import logging
 
 from xbmcvfs import File
 
-from addic7ed import simple_requests as requests
+import simple_requests as requests
+
 from addic7ed.exceptions import Add7ConnectionError, NoSubtitlesReturned
 
 __all__ = ['Session']
@@ -93,4 +94,4 @@ class Session:
         if subtitles[:9].lower() == b'<!doctype':
             raise NoSubtitlesReturned
         with File(filename, 'w') as fo:
-            fo.write(bytearray(subtitles))
+            fo.write(subtitles)
