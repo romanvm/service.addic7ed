@@ -93,4 +93,4 @@ class Session:
         if subtitles[:9].lower() == b'<!doctype':
             raise NoSubtitlesReturned
         with File(filename, 'w') as fo:
-            fo.write(subtitles)
+            fo.write(bytearray(subtitles))
