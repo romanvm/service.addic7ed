@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="service.subtitles.rvm.addic7ed"
   name="Addic7ed.com"
-  version="3.2.2"
+  version="3.2.3"
   provider-name="Roman V.M.">
 <requires>
   <import addon="xbmc.python" version="3.0.0"/>
@@ -30,8 +30,7 @@
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
   </assets>
-  <news>3.2.2:
-- Fixed the issue with an empty content-charset header.
+  <news>3.2.3:
 - Internal changes.</news>
   <reuselanguageinvoker>true</reuselanguageinvoker>
 </extension>
