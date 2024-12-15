@@ -15,9 +15,8 @@
 
 import logging
 
-from xbmcvfs import File
-
 import simple_requests as requests
+from xbmcvfs import File
 
 from addic7ed.exceptions import Add7ConnectionError, NoSubtitlesReturned
 
