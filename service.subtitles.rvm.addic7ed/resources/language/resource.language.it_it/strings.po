@@ -56,10 +56,6 @@ msgctxt "#32012"
 msgid "Password"
 msgstr ""
 
-msgctxt "#32013"
-msgid "Clean cookies"
-msgstr ""
-
 msgctxt "#32014"
 msgid "This will logout you from Addic7ed.com."
 msgstr ""
