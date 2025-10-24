@@ -12,10 +12,6 @@ msgctxt "#32000"
 msgid "Success!"
 msgstr ""
 
-msgctxt "#32001"
-msgid "Subtitles downloaded."
-msgstr ""
-
 msgctxt "#32004"
 msgid "Unable to download subtitles."
 msgstr ""
