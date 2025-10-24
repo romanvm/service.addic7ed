@@ -24,10 +24,6 @@ msgctxt "#32006"
 msgid "Unable to determine episode data."
 msgstr ""
 
-msgctxt "#32008"
-msgid "Select episode"
-msgstr ""
-
 msgctxt "#32011"
 msgid "Username"
 msgstr ""
