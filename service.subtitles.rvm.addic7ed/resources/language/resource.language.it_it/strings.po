@@ -32,10 +32,6 @@ msgctxt "#32008"
 msgid "Select episode"
 msgstr ""
 
-msgctxt "#32009"
-msgid "Login error!"
-msgstr ""
-
 msgctxt "#32010"
 msgid "Login to Addic7ed.com"
 msgstr ""
