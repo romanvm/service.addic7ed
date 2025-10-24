@@ -60,10 +60,6 @@ msgctxt "#32014"
 msgid "This will logout you from Addic7ed.com."
 msgstr ""
 
-msgctxt "#32016"
-msgid "Cookies removed successfully."
-msgstr ""
-
 msgctxt "#32017"
 msgid "Unable to remove cookies!"
 msgstr ""
