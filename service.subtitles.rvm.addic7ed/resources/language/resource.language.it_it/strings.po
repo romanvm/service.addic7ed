@@ -16,10 +16,6 @@ msgctxt "#32001"
 msgid "Subtitles downloaded."
 msgstr ""
 
-msgctxt "#32003"
-msgid "Exceeded daily limit for subs downloads."
-msgstr ""
-
 msgctxt "#32004"
 msgid "Unable to download subtitles."
 msgstr ""
