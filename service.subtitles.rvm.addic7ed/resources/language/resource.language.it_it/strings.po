@@ -11,7 +11,3 @@ msgstr ""
 msgctxt "#32011"
 msgid "Username"
 msgstr ""
-
-msgctxt "#32014"
-msgid "This will logout you from Addic7ed.com."
-msgstr ""
