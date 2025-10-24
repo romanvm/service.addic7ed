@@ -20,10 +20,6 @@ msgctxt "#32004"
 msgid "Unable to download subtitles."
 msgstr ""
 
-msgctxt "#32005"
-msgid "Unable to connect to addic7ed.com."
-msgstr ""
-
 msgctxt "#32006"
 msgid "Unable to determine episode data."
 msgstr ""
