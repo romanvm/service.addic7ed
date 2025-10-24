@@ -36,10 +36,6 @@ msgctxt "#32006"
 msgid "Unable to determine episode data."
 msgstr ""
 
-msgctxt "#32007"
-msgid "Always use filename for subs search"
-msgstr ""
-
 msgctxt "#32008"
 msgid "Select episode"
 msgstr ""
