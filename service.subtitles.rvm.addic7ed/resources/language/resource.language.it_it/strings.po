@@ -8,10 +8,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-msgctxt "#32004"
-msgid "Unable to download subtitles."
-msgstr ""
-
 msgctxt "#32011"
 msgid "Username"
 msgstr ""
