@@ -43,43 +43,6 @@ msgctxt "#32008"
 msgid "Select episode"
 msgstr "Виберіть серію"
 
-msgctxt "#32009"
-msgid "Login error!"
-msgstr "Помилка входу."
-
-msgctxt "#32010"
-msgid "Login to Addic7ed.com"
-msgstr "Вхід на Addic7ed.com"
-
-msgctxt "#32011"
-msgid "Username"
-msgstr "Ім\'я користувача"
-
-msgctxt "#32012"
-msgid "Password"
-msgstr "Пароль"
-
-msgctxt "#32013"
-msgid "Clean cookies"
-msgstr "Очистити кукі"
-
-msgctxt "#32014"
-msgid "This will logout you from Addic7ed.com."
-msgstr "Це призведе до виходу з Addic7ed.com."
-
-msgctxt "#32015"
-msgid "Are you sure?"
-msgstr "Ви впевнені?"
-
-msgctxt "#32016"
-msgid "Cookies removed successfully."
-msgstr "Кукі успішно видалені."
-
-msgctxt "#32017"
-msgid "Unable to remove cookies!"
-msgstr "Не вдалося видалити кукі."
-
-
 msgctxt "addon.xml:summary"
 msgid "Addic7ed.com Subtitles"
 msgstr "Субтитри Addic7ed.com"

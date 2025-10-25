@@ -43,43 +43,6 @@ msgctxt "#32008"
 msgid "Select episode"
 msgstr "Selecteer aflevering"
 
-msgctxt "#32009"
-msgid "Login error!"
-msgstr "Fout tijdens aanmelden!"
-
-msgctxt "#32010"
-msgid "Login to Addic7ed.com"
-msgstr "Login bij Addic7ed.com"
-
-msgctxt "#32011"
-msgid "Username"
-msgstr "Gebruikersnaam"
-
-msgctxt "#32012"
-msgid "Password"
-msgstr "Wachtwoord"
-
-msgctxt "#32013"
-msgid "Clean cookies"
-msgstr "Kuis cookies op"
-
-msgctxt "#32014"
-msgid "This will logout you from Addic7ed.com."
-msgstr "Dit zal je afmelden van Addic7ed.com."
-
-msgctxt "#32015"
-msgid "Are you sure?"
-msgstr "Ben je zeker?"
-
-msgctxt "#32016"
-msgid "Cookies removed successfully."
-msgstr "Cookies opgekuist."
-
-msgctxt "#32017"
-msgid "Unable to remove cookies!"
-msgstr "Niet mogelijk om de cookies op te kuisen!"
-
-
 msgctxt "addon.xml:summary"
 msgid "Addic7ed.com Subtitles"
 msgstr "Addic7ed.com Ondertitels"

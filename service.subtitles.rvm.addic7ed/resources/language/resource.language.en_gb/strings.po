@@ -43,43 +43,6 @@ msgctxt "#32008"
 msgid "Select episode"
 msgstr ""
 
-msgctxt "#32009"
-msgid "Login error!"
-msgstr ""
-
-msgctxt "#32010"
-msgid "Login to Addic7ed.com"
-msgstr ""
-
-msgctxt "#32011"
-msgid "Username"
-msgstr ""
-
-msgctxt "#32012"
-msgid "Password"
-msgstr ""
-
-msgctxt "#32013"
-msgid "Clean cookies"
-msgstr ""
-
-msgctxt "#32014"
-msgid "This will logout you from Addic7ed.com."
-msgstr ""
-
-msgctxt "#32015"
-msgid "Are you sure?"
-msgstr ""
-
-msgctxt "#32016"
-msgid "Cookies removed successfully."
-msgstr ""
-
-msgctxt "#32017"
-msgid "Unable to remove cookies!"
-msgstr ""
-
-
 msgctxt "addon.xml:summary"
 msgid "Addic7ed.com Subtitles"
 msgstr ""

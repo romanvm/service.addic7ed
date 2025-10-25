@@ -43,43 +43,6 @@ msgctxt "#32008"
 msgid "Select episode"
 msgstr "Sélectionner l'épisode"
 
-msgctxt "#32009"
-msgid "Login error!"
-msgstr "Erreur de connexion!"
-
-msgctxt "#32010"
-msgid "Login to Addic7ed.com"
-msgstr "Connexion à Addic7ed.com"
-
-msgctxt "#32011"
-msgid "Username"
-msgstr "Nom utilisateur"
-
-msgctxt "#32012"
-msgid "Password"
-msgstr "Mot de passe"
-
-msgctxt "#32013"
-msgid "Clean cookies"
-msgstr "Effacer les cookies"
-
-msgctxt "#32014"
-msgid "This will logout you from Addic7ed.com."
-msgstr "Cela va vous déconnecter d'Addic7ed.com."
-
-msgctxt "#32015"
-msgid "Are you sure?"
-msgstr "Êtes-vous sûr(e)?"
-
-msgctxt "#32016"
-msgid "Cookies removed successfully."
-msgstr "Cookies effacés avec succès."
-
-msgctxt "#32017"
-msgid "Unable to remove cookies!"
-msgstr "Impossible d'effacer les cookies!"
-
-
 msgctxt "addon.xml:summary"
 msgid "Addic7ed.com Subtitles"
 msgstr "Sous-titres Addic7ed.com"
