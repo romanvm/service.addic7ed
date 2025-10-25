@@ -1,3 +1,4 @@
 Kodistubs
 bs4
 html5lib
+git+https://github.com/romanvm/kodi.simple-requests.git
