@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 
-import os
-import sys
+import argparse
 import re
+import sys
 import xml.etree.ElementTree as ET
-from glob import glob
+from pathlib import Path
 
 
 def find_language_dirs(addon_dir):
     """Find all language resource directories"""
-    pattern = os.path.join(addon_dir, 'resources', 'language', 'resource.language.*')
-    return glob(pattern)
+    addon_path = Path(addon_dir)
+    resources_path = addon_path / 'resources' / 'language'
+    return list(resources_path.glob('resource.language.*'))
 
 
 def get_language_code_from_dir(dir_path):
     """Extract language code from directory path"""
     # Extract the code from the directory name (resource.language.xx_yy)
-    lang_code = os.path.basename(dir_path).split('.')[-1]
+    lang_code = dir_path.name.split('.')[-1]
     # Convert to the format used in addon.xml (xx_YY)
     if '_' in lang_code:
         ll, cc = lang_code.split('_')
@@ -26,7 +27,7 @@ def get_language_code_from_dir(dir_path):
 
 def read_addon_xml(addon_dir):
     """Read and parse addon.xml file"""
-    addon_xml_path = os.path.join(addon_dir, 'addon.xml')
+    addon_xml_path = Path(addon_dir) / 'addon.xml'
     try:
         tree = ET.parse(addon_xml_path)
         return tree
@@ -66,20 +67,20 @@ def extract_addon_strings(tree):
 
 def read_po_file(po_path):
     """Read and parse a .po file"""
-    if not os.path.isfile(po_path):
+    po_file = Path(po_path)
+    if not po_file.is_file():
         print(f"Warning: PO file not found: {po_path}")
         return {}
 
-    with open(po_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+    content = po_file.read_text(encoding='utf-8')
 
     # Extract existing translation segments for addon.xml
     segments = {}
 
     # Look for summary translation
     summary_match = re.search(
-        r'msgctxt "addon\.xml:summary"\s*\nmsgid "(.*)"\s*\nmsgstr "(.*)"', 
-        content, 
+        r'msgctxt "addon\.xml:summary"\s*\nmsgid "(.*)"\s*\nmsgstr "(.*)"',
+        content,
         re.DOTALL
     )
     if summary_match:
@@ -90,8 +91,8 @@ def read_po_file(po_path):
 
     # Look for description translation
     desc_match = re.search(
-        r'msgctxt "addon\.xml:description"\s*\nmsgid "(.*)"\s*\nmsgstr "(.*)"', 
-        content, 
+        r'msgctxt "addon\.xml:description"\s*\nmsgid "(.*)"\s*\nmsgstr "(.*)"',
+        content,
         re.DOTALL
     )
     if desc_match:
@@ -155,8 +156,8 @@ def update_po_file(po_path, en_strings, lang_strings, is_en=False):
         updated_content += new_segment
 
     # Write updated content back to the file
-    with open(po_path, 'w', encoding='utf-8') as f:
-        f.write(updated_content)
+    po_file = Path(po_path)
+    po_file.write_text(updated_content, encoding='utf-8')
 
 
 def extract_translations_from_po(po_path):
@@ -209,8 +210,8 @@ def update_addon_xml(tree, translations_by_lang, addon_dir):
                 description.text = translations['description']
 
     # Write updated XML back to the file
-    addon_xml_path = os.path.join(addon_dir, 'addon.xml')
-    tree.write(addon_xml_path, encoding='UTF-8', xml_declaration=True)
+    addon_xml_path = Path(addon_dir) / 'addon.xml'
+    tree.write(str(addon_xml_path), encoding='UTF-8', xml_declaration=True)
 
 
 def dump_translations(addon_dir):
@@ -232,7 +233,7 @@ def dump_translations(addon_dir):
         print(f"Processing language: {lang_code}")
 
         # Find corresponding strings.po file
-        po_path = os.path.join(lang_dir, 'strings.po')
+        po_path = lang_dir / 'strings.po'
 
         # Check if it's English (source language)
         is_en = lang_code.lower() == 'en_gb'
@@ -269,7 +270,7 @@ def load_translations(addon_dir):
             continue
 
         # Find corresponding strings.po file
-        po_path = os.path.join(lang_dir, 'strings.po')
+        po_path = lang_dir / 'strings.po'
 
         # Extract translations from .po file
         translations = extract_translations_from_po(po_path)
@@ -283,33 +284,45 @@ def load_translations(addon_dir):
     print("Translation load completed.")
 
 
-def show_usage():
-    """Show script usage information"""
-    print("Usage: python sync_addon_info_translations.py <option> [addon_dir]")
-    print("Options:")
-    print("  -d, --dump-translations  : Copy strings from addon.xml to .po files")
-    print("  -l, --load-translations  : Copy translations from .po files to addon.xml")
-    print("Parameters:")
-    print("  addon_dir                : Path to the addon directory (default: current directory)")
-    sys.exit(1)
-
-
 def main():
     """Main entry point"""
-    if len(sys.argv) < 2 or len(sys.argv) > 3:
-        show_usage()
+    parser = argparse.ArgumentParser(
+        description='Sync addon information translations between addon.xml and strings.po files',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python sync_addon_info_translations.py -d service.subtitles.rvm.addic7ed
+  python sync_addon_info_translations.py --load-translations .
+        """
+    )
 
-    option = sys.argv[1]
+    # Create mutually exclusive group for the operation
+    operation_group = parser.add_mutually_exclusive_group(required=True)
+    operation_group.add_argument(
+        '-d', '--dump-translations',
+        action='store_true',
+        help='Copy strings from addon.xml to .po files'
+    )
+    operation_group.add_argument(
+        '-l', '--load-translations',
+        action='store_true',
+        help='Copy translations from .po files to addon.xml'
+    )
 
-    # Set addon directory - default to current directory if not specified
-    addon_dir = sys.argv[2] if len(sys.argv) == 3 else '.'
+    # Add addon directory argument
+    parser.add_argument(
+        'addon_dir',
+        nargs='?',
+        default='.',
+        help='Path to the addon directory (default: current directory)'
+    )
 
-    if option in ('-d', '--dump-translations'):
-        dump_translations(addon_dir)
-    elif option in ('-l', '--load-translations'):
-        load_translations(addon_dir)
-    else:
-        show_usage()
+    args = parser.parse_args()
+
+    if args.dump_translations:
+        dump_translations(args.addon_dir)
+    elif args.load_translations:
+        load_translations(args.addon_dir)
 
 
 if __name__ == '__main__':
