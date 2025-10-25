@@ -9,7 +9,7 @@
   <import addon="script.module.html5lib"/>
   <import addon="script.module.simple-requests"/>
 </requires>
-<extension point="xbmc.subtitle.module" library="main.py" />
+<extension point="xbmc.subtitle.module" library="main.py"/>
 <extension point="xbmc.addon.metadata">
   <summary lang="en_GB">Addic7ed.com Subtitles</summary>
   <summary lang="ru_RU">Субтитры Addic7ed.com</summary>
