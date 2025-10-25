@@ -30,7 +30,7 @@ jobs:
           python-version: '3.13'
 
       - name: Dump translations to .po files
-        run: python sync_addon_info_translations.py -d service.subtitles.rvm.addic7ed
+        run: python scripts/sync_addon_info_translations.py -d service.subtitles.rvm.addic7ed
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -55,7 +55,7 @@ jobs:
           python-version: '3.13'
 
       - name: Load translations to addon.xml
-        run: python sync_addon_info_translations.py -l service.subtitles.rvm.addic7ed
+        run: python scripts/sync_addon_info_translations.py -l service.subtitles.rvm.addic7ed
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5

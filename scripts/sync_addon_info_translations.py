@@ -6,11 +6,12 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 def find_language_dirs(addon_dir):
     """Find all language resource directories"""
-    addon_path = Path(addon_dir)
-    resources_path = addon_path / 'resources' / 'language'
+    resources_path = addon_dir / 'resources' / 'language'
     return list(resources_path.glob('resource.language.*'))
 
 
@@ -22,12 +23,12 @@ def get_language_code_from_dir(dir_path):
     if '_' in lang_code:
         ll, cc = lang_code.split('_')
         return f"{ll}_{cc.upper()}"
-    return lang_code.upper()
+    return lang_code.lower()
 
 
 def read_addon_xml(addon_dir):
     """Read and parse addon.xml file"""
-    addon_xml_path = Path(addon_dir) / 'addon.xml'
+    addon_xml_path = addon_dir / 'addon.xml'
     try:
         tree = ET.parse(addon_xml_path)
         return tree
@@ -65,11 +66,10 @@ def extract_addon_strings(tree):
     return strings
 
 
-def read_po_file(po_path):
+def read_po_file(po_file):
     """Read and parse a .po file"""
-    po_file = Path(po_path)
     if not po_file.is_file():
-        print(f"Warning: PO file not found: {po_path}")
+        print(f"Warning: PO file not found: {po_file}")
         return {}
 
     content = po_file.read_text(encoding='utf-8')
@@ -104,9 +104,9 @@ def read_po_file(po_path):
     return segments, content
 
 
-def update_po_file(po_path, en_strings, lang_strings, is_en=False):
+def update_po_file(po_file, en_strings, lang_strings, is_en=False):
     """Update .po file with addon.xml strings"""
-    segments, content = read_po_file(po_path)
+    segments, content = read_po_file(po_file)
     updated_content = content
 
     # Process summary
@@ -156,7 +156,6 @@ def update_po_file(po_path, en_strings, lang_strings, is_en=False):
         updated_content += new_segment
 
     # Write updated content back to the file
-    po_file = Path(po_path)
     po_file.write_text(updated_content, encoding='utf-8')
 
 
@@ -181,7 +180,7 @@ def update_addon_xml(tree, translations_by_lang, addon_dir):
 
     if metadata is None:
         print("No metadata found in addon.xml")
-        return
+        raise SystemExit(1)
 
     # Process each language
     for lang, translations in translations_by_lang.items():
@@ -210,7 +209,7 @@ def update_addon_xml(tree, translations_by_lang, addon_dir):
                 description.text = translations['description']
 
     # Write updated XML back to the file
-    addon_xml_path = Path(addon_dir) / 'addon.xml'
+    addon_xml_path = addon_dir / 'addon.xml'
     tree.write(str(addon_xml_path), encoding='UTF-8', xml_declaration=True)
 
 
@@ -233,7 +232,7 @@ def dump_translations(addon_dir):
         print(f"Processing language: {lang_code}")
 
         # Find corresponding strings.po file
-        po_path = lang_dir / 'strings.po'
+        po_file = lang_dir / 'strings.po'
 
         # Check if it's English (source language)
         is_en = lang_code.lower() == 'en_gb'
@@ -242,7 +241,7 @@ def dump_translations(addon_dir):
         lang_strings = addon_strings.get(lang_code, {})
 
         # Update the .po file
-        update_po_file(po_path, addon_strings, lang_strings, is_en)
+        update_po_file(po_file, addon_strings, lang_strings, is_en)
 
     print("Translation dump completed.")
 
@@ -292,7 +291,7 @@ def main():
         epilog="""
 Examples:
   python sync_addon_info_translations.py -d service.subtitles.rvm.addic7ed
-  python sync_addon_info_translations.py --load-translations .
+  python sync_addon_info_translations.py --load-translations service.subtitles.rvm.addic7ed
         """
     )
 
@@ -319,10 +318,11 @@ Examples:
 
     args = parser.parse_args()
 
+    addon_dir = BASE_DIR / args.addon_dir
     if args.dump_translations:
-        dump_translations(args.addon_dir)
+        dump_translations(addon_dir)
     elif args.load_translations:
-        load_translations(args.addon_dir)
+        load_translations(addon_dir)
 
 
 if __name__ == '__main__':
