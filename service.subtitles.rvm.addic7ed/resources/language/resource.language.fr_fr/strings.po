@@ -78,3 +78,12 @@ msgstr "Cookies effacés avec succès."
 msgctxt "#32017"
 msgid "Unable to remove cookies!"
 msgstr "Impossible d'effacer les cookies!"
+
+
+msgctxt "addon.xml:summary"
+msgid "Addic7ed.com Subtitles"
+msgstr "Sous-titres Addic7ed.com"
+
+msgctxt "addon.xml:description"
+msgid "Subtitles service for Addic7ed.com. It supports only TV shows."
+msgstr "Service de sous-titres pour Addic7ed.com. Fonctionne uniquement pour les séries TV."

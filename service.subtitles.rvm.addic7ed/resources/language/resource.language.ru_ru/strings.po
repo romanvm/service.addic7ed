@@ -78,3 +78,12 @@ msgstr "Куки успешно удалены."
 msgctxt "#32017"
 msgid "Unable to remove cookies!"
 msgstr "Не удалось удалить куки."
+
+
+msgctxt "addon.xml:summary"
+msgid "Addic7ed.com Subtitles"
+msgstr "Субтитры Addic7ed.com"
+
+msgctxt "addon.xml:description"
+msgid "Subtitles service for Addic7ed.com. It supports only TV shows."
+msgstr "Служба субтитров для сайта Addic7ed.com. Служба поддерживает только сериалы."
