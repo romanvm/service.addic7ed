@@ -36,7 +36,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: sync translations to .po files [skip ci]"
-          file_pattern: "resources/language/**/strings.po"
+          file_pattern: "service.subtitles.rvm.addic7ed/resources/language/**/strings.po"
 
   sync-to-xml:
     if: |
@@ -61,4 +61,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: sync translations to addon.xml [skip ci]"
-          file_pattern: "addon.xml"
+          file_pattern: "service.subtitles.rvm.addic7ed/addon.xml"
