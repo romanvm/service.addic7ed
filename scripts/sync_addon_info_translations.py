@@ -120,7 +120,7 @@ def update_po_file(po_file, en_strings, lang_strings, is_en=False):
 
         # Replace existing translation segment
         updated_content = re.sub(
-            r'msgctxt "addon\.xml:summary"\s*\nmsgid ".*"\s*\nmsgstr ".*"',
+            r'msgctxt "addon\.xml:summary"\s*?\nmsgid "[^"]*"\s*?\nmsgstr "[^"]*"',
             f'msgctxt "addon.xml:summary"\nmsgid "{en_summary}"\nmsgstr "{msgstr}"',
             updated_content,
             flags=re.DOTALL
@@ -143,7 +143,7 @@ def update_po_file(po_file, en_strings, lang_strings, is_en=False):
 
         # Replace existing translation segment
         updated_content = re.sub(
-            r'msgctxt "addon\.xml:description"\s*\nmsgid ".*"\s*\nmsgstr ".*"',
+            r'msgctxt "addon\.xml:description"\s*?\nmsgid "[^"]*"\s*?\nmsgstr "[^"]*"',
             f'msgctxt "addon.xml:description"\nmsgid "{en_description}"\nmsgstr "{msgstr}"',
             updated_content,
             flags=re.DOTALL
@@ -290,8 +290,8 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python sync_addon_info_translations.py -d service.subtitles.rvm.addic7ed
-  python sync_addon_info_translations.py --load-translations service.subtitles.rvm.addic7ed
+  python sync_addon_info_translations.py -d <addon directory>
+  python sync_addon_info_translations.py --load-translations <addon directory>
         """
     )
 
