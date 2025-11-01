@@ -79,7 +79,7 @@ def read_po_file(po_file):
 
     # Look for summary translation
     summary_match = re.search(
-        r'msgctxt "addon\.xml:summary"\s*\nmsgid "(.*)"\s*\nmsgstr "(.*)"',
+        r'msgctxt "addon\.xml:summary"\s*?\nmsgid "([^"]*)"\s*?\nmsgstr "([^"]*)"',
         content,
         re.DOTALL
     )
@@ -91,7 +91,7 @@ def read_po_file(po_file):
 
     # Look for description translation
     desc_match = re.search(
-        r'msgctxt "addon\.xml:description"\s*\nmsgid "(.*)"\s*\nmsgstr "(.*)"',
+        r'msgctxt "addon\.xml:description"\s*?\nmsgid "([^"]*)"\s*?\nmsgstr "([^"]*)"',
         content,
         re.DOTALL
     )
@@ -194,9 +194,20 @@ def update_addon_xml(tree, translations_by_lang, addon_dir):
             if summary is not None:
                 summary.text = translations['summary']
             else:
-                summary = ET.SubElement(metadata, 'summary')
-                summary.set('lang', lang)
-                summary.text = translations['summary']
+                # Find all existing summary tags and insert after the last one
+                summaries = metadata.findall('summary')
+                if summaries:
+                    last_summary = summaries[-1]
+                    children = list(metadata)
+                    insert_position = children.index(last_summary) + 1
+
+                    new_summary = ET.Element('summary')
+                    new_summary.set('lang', lang)
+                    new_summary.text = translations['summary']
+                    new_summary.tail = '\n  '
+                    metadata.insert(insert_position, new_summary)
+                else:
+                    raise RuntimeError('No summary tag found in addon.xml')
 
         # Update or create description tag
         if 'description' in translations:
@@ -204,9 +215,24 @@ def update_addon_xml(tree, translations_by_lang, addon_dir):
             if description is not None:
                 description.text = translations['description']
             else:
-                description = ET.SubElement(metadata, 'description')
-                description.set('lang', lang)
-                description.text = translations['description']
+                # Find all existing description tags and insert after the last one
+                descriptions = metadata.findall('description')
+                if descriptions:
+                    last_description = descriptions[-1]
+                    children = list(metadata)
+                    insert_position = children.index(last_description) + 1
+
+                    new_description = ET.Element('description')
+                    new_description.set('lang', lang)
+                    new_description.text = translations['description']
+                    new_description.tail = '\n'
+                    metadata.insert(insert_position, new_description)
+                else:
+                    raise RuntimeError('No description tag found in addon.xml')
+
+    # Write updated XML back to the file
+    addon_xml_path = addon_dir / 'addon.xml'
+    tree.write(str(addon_xml_path), encoding='UTF-8', xml_declaration=True)
 
     # Write updated XML back to the file
     addon_xml_path = addon_dir / 'addon.xml'
