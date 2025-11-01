@@ -230,13 +230,14 @@ def update_addon_xml(tree, translations_by_lang, addon_dir):
                 else:
                     raise RuntimeError('No description tag found in addon.xml')
 
-    # Write updated XML back to the file
-    addon_xml_path = addon_dir / 'addon.xml'
-    tree.write(str(addon_xml_path), encoding='UTF-8', xml_declaration=True)
+    # Get XML as string with double quotes in declaration
+    xml_string = ET.tostring(root, encoding='unicode')
+    xml_content = '<?xml version="1.0" encoding="UTF-8"?>\n' + xml_string
 
-    # Write updated XML back to the file
+    # Write to file
     addon_xml_path = addon_dir / 'addon.xml'
-    tree.write(str(addon_xml_path), encoding='UTF-8', xml_declaration=True)
+    with open(addon_xml_path, 'w', encoding='UTF-8') as f:
+        f.write(xml_content)
 
 
 def dump_translations(addon_dir):
