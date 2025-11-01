@@ -14,7 +14,7 @@ on:
       - master
 
 jobs:
-  sync-to-po:
+  sync-xml-to-po:
     if: |
       github.event_name == 'push' &&
       !contains(github.event.head_commit.message, '[skip ci]') &&
@@ -39,7 +39,7 @@ jobs:
           commit_message: "chore: sync translations to .po files [skip ci]"
           file_pattern: "service.subtitles.rvm.addic7ed/resources/language/**/strings.po"
 
-  sync-to-xml:
+  sync-po-to-xml:
     if: |
       github.event_name == 'pull_request' &&
       github.event.pull_request.merged == true &&
