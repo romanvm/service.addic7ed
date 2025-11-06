@@ -1,12 +1,15 @@
 # XBMC Media Center language file
 msgid ""
 msgstr ""
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-11-07 09:13+0000\n"
+"Last-Translator: Massimo Pissarello <mapi68@gmail.com>\n"
+"Language-Team: Italian <https://kodi.weblate.cloud/projects/"
+"kodi-add-ons-services/service-subtitles-rvm-addic7ed/it_it/>\n"
 "Language: it_it\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14\n"
 
 msgctxt "#32000"
 msgid "Success!"
@@ -18,11 +21,11 @@ msgstr ""
 
 msgctxt "#32002"
 msgid "Error!"
-msgstr ""
+msgstr "Errore!"
 
 msgctxt "#32003"
 msgid "Exceeded daily limit for subs downloads."
-msgstr ""
+msgstr "Limite giornaliero superato per i download di sottotitoli."
 
 msgctxt "#32004"
 msgid "Unable to download subtitles."
