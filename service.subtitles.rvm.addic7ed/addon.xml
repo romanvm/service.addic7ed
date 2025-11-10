@@ -14,12 +14,16 @@
   <summary lang="fr_FR">Sous-titres Addic7ed.com</summary>
   <summary lang="nl_NL">Addic7ed.com Ondertitels</summary>
   <summary lang="pl_PL">Napisy Addic7ed.com</summary>
+  <summary lang="sv_SE">Undertexter från Addic7ed.com</summary>
+  <summary lang="it_IT">Sottotitoli Addic7ed.com</summary>
   <description lang="en_GB">Subtitles service for Addic7ed.com. It supports only TV shows.</description>
   <description lang="ru_RU">Служба субтитров для сайта Addic7ed.com. Служба поддерживает только сериалы.</description>
   <description lang="uk_UA">Служба субтитрів для сайту Addic7ed.com. Служба підтримує лише серіали.</description>
   <description lang="fr_FR">Service de sous-titres pour Addic7ed.com. Fonctionne uniquement pour les séries TV.</description>
   <description lang="nl_NL">Ondertiteling dienst voor Addic7ed.com. Ondersteunt enkel TV series.</description>
   <description lang="pl_PL">Usługa napisów dla Addic7ed.com. Obsługuje tylko programy telewizyjne.</description>
+  <description lang="sv_SE">Undertexttjänst för Addic7ed.com. Den har endast stöd för tv-serier.</description>
+  <description lang="it_IT">Servizio sottotitoli per Addic7ed.com. Supporta solo serie TV.</description>
 <platform>all</platform>
   <source>https://github.com/romanvm/service.addic7ed</source>
   <website>www.addic7ed.com</website>
