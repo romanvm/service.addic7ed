@@ -1,4 +1,4 @@
-name: Sync addon.xml Translations
+name: Sync translations from XML to PO
 
 on:
   push:
@@ -7,11 +7,6 @@ on:
     paths:
       - 'service.subtitles.rvm.addic7ed/addon.xml'
       - 'service.subtitles.rvm.addic7ed/resources/language/**/strings.po'
-  pull_request:
-    types:
-      - closed
-    branches:
-      - master
 
 jobs:
   sync-xml-to-po:
@@ -38,30 +33,3 @@ jobs:
         with:
           commit_message: "chore: sync translations to .po files [skip ci]"
           file_pattern: "service.subtitles.rvm.addic7ed/resources/language/**/strings.po"
-
-  sync-po-to-xml:
-    if: |
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.merged == true &&
-      contains(github.event.pull_request.head.repo.full_name, 'weblate')
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-
-      - name: Load translations to addon.xml
-        run: python scripts/sync_addon_info_translations.py -l service.subtitles.rvm.addic7ed
-
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: sync translations to addon.xml [skip ci]"
-          file_pattern: "service.subtitles.rvm.addic7ed/addon.xml"
