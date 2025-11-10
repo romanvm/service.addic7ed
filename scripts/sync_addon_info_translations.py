@@ -225,7 +225,7 @@ def update_addon_xml(tree, translations_by_lang, addon_dir):
                     new_description = ET.Element('description')
                     new_description.set('lang', lang)
                     new_description.text = translations['description']
-                    new_description.tail = '\n'
+                    new_description.tail = '\n  '
                     metadata.insert(insert_position, new_description)
                 else:
                     raise RuntimeError('No description tag found in addon.xml')
