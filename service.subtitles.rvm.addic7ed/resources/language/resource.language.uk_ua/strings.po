@@ -1,11 +1,6 @@
 # Kodi Media Center language file
 msgid ""
-msgstr ""
-
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: uk\n"
-
+msgstr "PO-Revision-Date: 2025-12-16 07:13+0000\nLast-Translator: Pavlo Marianov <acid@jack.kyiv.ua>\nLanguage-Team: Ukrainian <https://kodi.weblate.cloud/projects/kodi-add-ons-services/service-subtitles-rvm-addic7ed/uk_ua/>\nLanguage: uk_ua\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\nX-Generator: Weblate 5.15\n"
 
 msgctxt "#32000"
 msgid "Success!"
@@ -25,11 +20,11 @@ msgstr "Перевищено щоденний ліміт завантаженн�
 
 msgctxt "#32004"
 msgid "Unable to download subtitles."
-msgstr "Не вдалося завантажити субтитри"
+msgstr "Не вдалось завантажити субтитри."
 
 msgctxt "#32005"
 msgid "Unable to connect to addic7ed.com."
-msgstr "Не вдалося підключится до addic7ed.com."
+msgstr "Не вдалось підключитись до addic7ed.com."
 
 msgctxt "#32006"
 msgid "Unable to determine episode data."
